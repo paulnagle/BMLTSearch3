@@ -10,5 +10,44 @@
 </ion-header>
 
 <ion-content>
-<h1>Do I have the BMLT?</h1>
+  <ion-card>
+    <ion-card-content>
+      <ion-card-title>
+        <ion-icon name="information-circle" item-left></ion-icon>
+        {{'IS_BMLT' | translate}}
+      </ion-card-title>
+      <ion-list>
+        <ion-item text-wrap>
+          <div *ngIf="bmltEnabled == 'true'">
+            <h1>{{'YES' | translate}}! <ion-icon name="md-happy" item-right></ion-icon></h1>
+            <h2>{{'IS_BMLT_YES_1' | translate}} {{ nearestMeeting[0].distance_in_miles | number:'1.1-1' }} {{'MILES' | translate}} (<i>{{ nearestMeeting[0].distance_in_km | number:'1.1-1' }} {{'KMS' | translate}}</i>) {{'AWAY' | translate}}</h2>
+            <h2>{{'IS_BMLT_YES_2' | translate}} (<i>{{ nearestMeeting[0].service_body_bigint }}</i>) {{'IS_BMLT_YES_3' | translate}}</h2>
+          </div>
+          <div *ngIf="bmltEnabled == 'false'">
+            <h1>{{'NO' | translate}} </h1>
+            <h2>{{'IS_BMLT_NO_1' | translate}} {{ nearestMeeting[0].distance_in_miles | number:'1.1-1' }} {{'MILES' | translate}} (<i>{{ nearestMeeting[0].distance_in_km | number:'1.1-1' }} {{'KMS' | translate}}</i>) {{'AWAY' | translate}</h2>
+            <h2>{{'IS_BMLT_NO_2' | translate}}</h2>
+          </div>
+          <div *ngIf="bmltEnabled == 'maybe'">
+            <h1>Checking...</h1>
+          </div>
+        </ion-item>
+      </ion-list>
+    </ion-card-content>
+  </ion-card>
+
+  <ion-card>
+    <ion-card-content>
+      <ion-card-title>{{'FIND_OUT_MORE' | translate}}</ion-card-title>
+      <ion-list>
+        <ion-item text-wrap>
+          <button ion-button small  (click)="openLink('https://www.facebook.com/groups/149214049107349/')"><ion-icon name="logo-facebook" item-left></ion-icon>&nbsp;{{'JOIN_FB_GROUP' | translate}}</button>
+        </ion-item>
+        <ion-item text-wrap>
+          <button ion-button small  (click)="openLink('https://bmlt.magshare.net/')"><ion-icon name="globe" item-left></ion-icon>&nbsp;{{'VISIT_WEBSITE' | translate}}</button>
+        </ion-item>
+      </ion-list>
+    </ion-card-content>
+  </ion-card>
+
 </ion-content>

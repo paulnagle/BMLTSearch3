@@ -8,6 +8,10 @@ import { DoIHaveTheBmltPageRoutingModule } from './do-i-have-the-bmlt-routing.mo
 
 import { DoIHaveTheBmltPage } from './do-i-have-the-bmlt.page';
 import { TranslateModule } from '@ngx-translate/core';
+import { InAppBrowser } from '@ionic-native/in-app-browser/ngx';
+import { MeetingListProvider } from 'src/app/providers/meeting-list.service';
+import { ServiceGroupsProvider } from 'src/app/providers/service-groups.service';
+import { Geolocation } from '@ionic-native/geolocation/ngx';
 
 @NgModule({
   imports: [
@@ -17,6 +21,7 @@ import { TranslateModule } from '@ngx-translate/core';
     TranslateModule,
     DoIHaveTheBmltPageRoutingModule
   ],
-  declarations: [DoIHaveTheBmltPage]
+  declarations: [DoIHaveTheBmltPage],
+  providers: [InAppBrowser, MeetingListProvider, ServiceGroupsProvider, Geolocation]
 })
 export class DoIHaveTheBmltPageModule {}

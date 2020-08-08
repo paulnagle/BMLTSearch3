@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { InAppBrowser } from '@ionic-native/in-app-browser/ngx';
 
 @Component({
   selector: 'app-contact',
@@ -12,11 +13,11 @@ export class ContactPage {
   bmltLink = 'https://bmlt.app/';
   fbGroupLink = 'https://www.facebook.com/groups/149214049107349/';
 
-  constructor() {
+  constructor(private iab: InAppBrowser) {
 
   }
   public openLink(url) {
-    window.open(url, '_system');
+    const browser = this.iab.create(url, '_system');
   }
 
 }

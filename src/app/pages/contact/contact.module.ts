@@ -8,6 +8,7 @@ import { ContactPageRoutingModule } from './contact-routing.module';
 
 import { ContactPage } from './contact.page';
 import { TranslateModule } from '@ngx-translate/core';
+import { InAppBrowser } from '@ionic-native/in-app-browser/ngx';
 
 @NgModule({
   imports: [
@@ -17,6 +18,7 @@ import { TranslateModule } from '@ngx-translate/core';
     TranslateModule,
     ContactPageRoutingModule
   ],
-  declarations: [ContactPage]
+  declarations: [ContactPage],
+  providers: [InAppBrowser]
 })
 export class ContactPageModule {}
