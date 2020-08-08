@@ -16,6 +16,7 @@ then
     ionic cordova plugin rm cordova-plugin-advanced-http
     ionic cordova plugin rm com-badrit-base64
     ionic cordova plugin rm cordova-plugin-ionic-webview
+    ionic cordova plugin rm cordova-plugin-inappbrowser
 
     rm -rf platform/*
 
@@ -30,16 +31,14 @@ then
     ionic cordova plugin add cordova-plugin-advanced-http
     ionic cordova plugin add com-badrit-base64
     ionic cordova plugin add cordova-plugin-ionic-webview@latest
+    ionic cordova plugin add cordova-plugin-inappbrowser
 fi
 
 ionic cordova prepare ios --prod
 # ionic cordova prepare android --prod
 # ionic cordova prepare browser --prod
 
-ionic cordova resources ios
+# ionic cordova resources ios
 #ionic cordova resources android
 
 # ionic build --prod  --minifyjs   --minifycss  --optimizejs
-
-# 3502dfab-4518-41fb-b0d4-f8f62469115e
-
