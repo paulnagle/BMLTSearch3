@@ -83,7 +83,7 @@ export class ListfullPage {
     } else {
       this.shownDay = day;
     }
-  };
+  }
 
   toggleL1Group(L1group) {
     if (this.isL1GroupShown(L1group)) {

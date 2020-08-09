@@ -26,7 +26,6 @@
       <div *ngIf="L1.childServiceGroup;else L1_no_children">
         <ion-item-divider  (click)="toggleL1Group(i)" [ngClass]="{active: isL1GroupShown(i)}" [color]="isL1GroupShown(i) ? 'secondary' : 'primary'" >
           <h3>{{ L1.name }}</h3>
-          <ion-ripple-effect></ion-ripple-effect>
           <ion-icon size="large" [color]="isL1GroupShown(i) ? 'primary' : 'secondary'" slot="end" [name]="isL1GroupShown(i) ? 'close-circle' : 'add-circle'"></ion-icon>
         </ion-item-divider>
       </div>
@@ -56,21 +55,21 @@
 
 
           <div *ngIf="isL2GroupShown(j)">
-            <div *ngFor="let L3 of L2.childServiceGroup; let k = index" [ngClass]="{active: isL3GroupShown(j)}">
+            <div *ngFor="let L3 of L2.childServiceGroup; let k = index" [ngClass]="{active: isL3GroupShown(k)}">
               <div *ngIf="L3.childServiceGroup;else L3_no_children">
-                <ion-item-divider  (click)="toggleL3Group(k)" [ngClass]="{active: isL3GroupShown(k)}">
+                <ion-item-divider  (click)="toggleL3Group(k)" [ngClass]="{active: isL3GroupShown(k)}" [color]="isL3GroupShown(k) ? 'four' : 'tertiary'">
                   <ion-icon name="chevron-forward-outline" slot="start" size="large"></ion-icon>
                   <ion-icon name="chevron-forward-outline" slot="start" size="large"></ion-icon>     
                   <h3>{{ L3.name }}</h3>
-                  <ion-icon size="large" color="icon" slot="end" [name]="isL3GroupShown(k) ? 'close-circle' : 'add-circle'"></ion-icon>
+                  <ion-icon size="large" [color]="isL3GroupShown(k) ? 'tertiary' : 'warning'" slot="end" [name]="isL3GroupShown(k) ? 'close-circle' : 'add-circle'"></ion-icon>
                 </ion-item-divider>
               </div>
               <ng-template #L3_no_children>
-                <ion-item-divider (click)="getMeetingsByArea(L3.id, L3.name)">
+                <ion-item-divider (click)="getMeetingsByArea(L3.id, L3.name)" [color]="isL3GroupShown(k) ? 'four' : 'tertiary'">
                   <ion-icon name="chevron-forward-outline" slot="start" size="large"></ion-icon>
                   <ion-icon name="chevron-forward-outline" slot="start" size="large"></ion-icon>
                   <h3>{{ L3.name }}</h3>
-                  <ion-icon size="large" color="icon" slot="end" name="play"></ion-icon>
+                  <ion-icon size="large" [color]="isL3GroupShown(k) ? 'tertiary' : 'warning'" slot="end" name="play"></ion-icon>
                 </ion-item-divider>
               </ng-template>
 
@@ -183,35 +182,35 @@
             </ion-card-header>
             <ion-card-content>
 
-                    <h1>{{group2.meeting_name}}</h1>
-                    <div *ngIf="group2.location_text">{{group2.location_text}}<br></div>
-                    <div *ngIf="group2.location_street">{{group2.location_street}}<br></div>
-                    <div *ngIf="group2.location_city_subsection">{{group2.location_city_subsection}}<br></div>
-                    <div *ngIf="group2.location_neighborhood">{{group2.location_neighborhood}}<br></div>
-                    <div *ngIf="group2.location_municipality">{{group2.location_municipality}}<br></div>
-                    <div *ngIf="group2.location_sub_province">{{group2.location_sub_province}}<br></div>
-                    <div *ngIf="group2.location_province">{{group2.location_province}}<br></div>
-                    <div *ngIf="group2.location_code_1">{{group2.location_code_1}}<br></div>
-                    <div *ngIf="group2.location_info">{{group2.location_info}}<br></div>
-                    <div *ngIf="group2.comments">{{group2.comments}}<br></div>
-                    <div *ngIf="group2.virtual_meeting_additional_info">{{group2.virtual_meeting_additional_info}}<br></div>
-                    <div *ngIf="group2.contact_phone_1">{{group2.contact_phone_1 | tidyDelimiter }}<br></div>
-                    <div *ngIf="group2.contact_email_1">{{group2.contact_email_1 | tidyDelimiter }}<br></div>
-                    <div *ngIf="group2.train_lines">{{'TRAIN' | translate}}: {{group2.train_lines | tidyDelimiter }}<br></div>
-                    <div *ngIf="group2.bus_lines">{{'BUS' | translate}}: {{group2.bus_lines | tidyDelimiter }}<br></div>
-                    <div *ngIf="group2.formats"><i>{{'FORMATS' | translate}}: {{group2.formats | tidyDelimiter }}</i><br></div>
+              <h1>{{group2.meeting_name}}</h1>
+              <div *ngIf="group2.location_text">{{group2.location_text}}<br></div>
+              <div *ngIf="group2.location_street">{{group2.location_street}}<br></div>
+              <div *ngIf="group2.location_city_subsection">{{group2.location_city_subsection}}<br></div>
+              <div *ngIf="group2.location_neighborhood">{{group2.location_neighborhood}}<br></div>
+              <div *ngIf="group2.location_municipality">{{group2.location_municipality}}<br></div>
+              <div *ngIf="group2.location_sub_province">{{group2.location_sub_province}}<br></div>
+              <div *ngIf="group2.location_province">{{group2.location_province}}<br></div>
+              <div *ngIf="group2.location_code_1">{{group2.location_code_1}}<br></div>
+              <div *ngIf="group2.location_info">{{group2.location_info}}<br></div>
+              <div *ngIf="group2.comments">{{group2.comments}}<br></div>
+              <div *ngIf="group2.virtual_meeting_additional_info">{{group2.virtual_meeting_additional_info}}<br></div>
+              <div *ngIf="group2.contact_phone_1">{{group2.contact_phone_1 | tidyDelimiter }}<br></div>
+              <div *ngIf="group2.contact_email_1">{{group2.contact_email_1 | tidyDelimiter }}<br></div>
+              <div *ngIf="group2.train_lines">{{'TRAIN' | translate}}: {{group2.train_lines | tidyDelimiter }}<br></div>
+              <div *ngIf="group2.bus_lines">{{'BUS' | translate}}: {{group2.bus_lines | tidyDelimiter }}<br></div>
+              <div *ngIf="group2.formats"><i>{{'FORMATS' | translate}}: {{group2.formats | tidyDelimiter }}</i><br></div>
+              <br>
+              <ion-button expand="block" color="primary" (click)="openMapsLink(group2.latitude , group2.longitude)">
+                <ion-icon size="large"name="map"> </ion-icon>&nbsp;{{'MAP' | translate}}
+              </ion-button>
 
-                    <ion-button color="primary" (click)="openMapsLink(group2.latitude , group2.longitude)">
-                      <ion-icon size="large"name="map"> </ion-icon>&nbsp;{{'MAP' | translate}}
-                    </ion-button>
-
-                    <ion-button color="primary"  *ngIf="group2.virtual_meeting_link" (click)="openLink(group2.virtual_meeting_link)">
-                      <ion-icon size="large"name="cloud"> </ion-icon>&nbsp;{{'VIRTUAL_LINK' | translate }}
-                    </ion-button>
-                    
-                    <ion-button color="primary"  *ngIf="group2.phone_meeting_number" (click)="dialNum(group2.phone_meeting_number)">
-                      <ion-icon size="large"name="call" > </ion-icon>&nbsp;{{'PHONE_MEETING' | translate }}
-                    </ion-button>
+              <ion-button expand="block" color="primary"  *ngIf="group2.virtual_meeting_link" (click)="openLink(group2.virtual_meeting_link)">
+                <ion-icon size="large"name="cloud"> </ion-icon>&nbsp;{{'VIRTUAL_LINK' | translate }}
+              </ion-button>
+              
+              <ion-button expand="block" color="primary"  *ngIf="group2.phone_meeting_number" (click)="dialNum(group2.phone_meeting_number)">
+                <ion-icon size="large"name="call" > </ion-icon>&nbsp;{{'PHONE_MEETING' | translate }}
+              </ion-button>
             </ion-card-content>
           </ion-card>
         </ion-list>
