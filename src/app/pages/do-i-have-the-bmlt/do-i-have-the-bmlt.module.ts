@@ -3,9 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
 import { IonicModule } from '@ionic/angular';
-
 import { DoIHaveTheBmltPageRoutingModule } from './do-i-have-the-bmlt-routing.module';
-
 import { DoIHaveTheBmltPage } from './do-i-have-the-bmlt.page';
 import { TranslateModule } from '@ngx-translate/core';
 import { InAppBrowser } from '@ionic-native/in-app-browser/ngx';

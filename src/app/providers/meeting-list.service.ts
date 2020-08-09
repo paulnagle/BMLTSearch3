@@ -18,7 +18,7 @@ export class MeetingListProvider {
       + long
       + '&lat_val='
       + lat
-      + '&sort_keys=longitude,latitude&callingApp=ionic-bmltapp';
+      + '&sort_keys=longitude,latitude&callingApp=bmlt_search_3_ionic';
     return this.http.get(getAutoRadiusMeetingsURL);
   }
 
@@ -32,7 +32,7 @@ export class MeetingListProvider {
       + long
       + '&lat_val='
       + lat
-      + '&sort_keys=longitude,latitude&callingApp=ionic-bmltapp';
+      + '&sort_keys=longitude,latitude&callingApp=bmlt_search_3_ionic';
     return this.http.get(getRadiusMeetingsURL);
   }
 
@@ -45,7 +45,7 @@ export class MeetingListProvider {
       + long
       + '&lat_val='
       + lat
-      + '&sort_keys=longitude,latitude&callingApp=ionic-bmltapp';
+      + '&sort_keys=longitude,latitude&callingApp=bmlt_search_3_ionic';
     return this.http.get(getAddressMeetingsURL);
   }
 
@@ -57,7 +57,7 @@ export class MeetingListProvider {
       + long
       + '&lat_val='
       + lat
-      + '&sort_keys=longitude,latitude&callingApp=ionic-bmltapp';
+      + '&sort_keys=longitude,latitude&callingApp=bmlt_search_3_ionic';
     return this.http.get(getAddressMeetingsURL);
   }
 
@@ -65,7 +65,7 @@ export class MeetingListProvider {
     const getMeetingsByAreaURL: string = this.tomatoBMLT
       + '?switcher=GetSearchResults&services='
       + areaID
-      + '&sort_keys=weekday_tinyint,start_time&callingApp=ionic-bmltapp';
+      + '&sort_keys=weekday_tinyint,start_time&callingApp=bmlt_search_3_ionic';
     return this.http.get(getMeetingsByAreaURL);
 
   }
