@@ -90,24 +90,30 @@ export class ListfullPage {
       this.shownGroupL1 = null;
     } else {
       this.shownGroupL1 = L1group;
+      this.shownGroupL2 = null;
+      this.shownGroupL3 = null;
+      this.shownGroupL4 = null;
     }
-  };
+  }
 
   toggleL2Group(L2group) {
     if (this.isL2GroupShown(L2group)) {
       this.shownGroupL2 = null;
     } else {
       this.shownGroupL2 = L2group;
+      this.shownGroupL3 = null;
+      this.shownGroupL4 = null;
     }
-  };
+  }
 
   toggleL3Group(L3group) {
     if (this.isL3GroupShown(L3group)) {
       this.shownGroupL3 = null;
     } else {
       this.shownGroupL3 = L3group;
+      this.shownGroupL4 = null;
     }
-  };
+  }
 
   toggleL4Group(L4group) {
     if (this.isL4GroupShown(L4group)) {
@@ -115,7 +121,7 @@ export class ListfullPage {
     } else {
       this.shownGroupL4 = L4group;
     }
-  };
+  }
 
   isDayShown(day) { return this.shownDay === day; }
   isL1GroupShown(L1group) { return this.shownGroupL1 === L1group; }
