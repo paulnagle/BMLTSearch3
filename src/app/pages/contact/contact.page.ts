@@ -8,8 +8,8 @@ import { InAppBrowser } from '@ionic-native/in-app-browser/ngx';
 })
 export class ContactPage {
 
-  sourceCodeLink = 'https://github.com/bmlt-enabled/BMLTSearch';
-  sourceBugs = 'https://github.com/bmlt-enabled/BMLTSearch/issues';
+  sourceCodeLink = 'https://github.com/bmlt-enabled/BMLTSearch3';
+  sourceBugs = 'https://github.com/bmlt-enabled/BMLTSearch3/issues';
   bmltLink = 'https://bmlt.app/';
   fbGroupLink = 'https://www.facebook.com/groups/149214049107349/';
 
