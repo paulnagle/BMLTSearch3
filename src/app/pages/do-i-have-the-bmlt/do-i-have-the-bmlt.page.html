@@ -20,7 +20,7 @@
         <ion-item text-wrap>
           <div *ngIf="bmltEnabled == 'true'">
             <br>
-            <h1>{{'YES' | translate}}! <ion-icon name="happy-outline"></ion-icon></ion-icon></h1>
+            <h1>{{'YES' | translate}}! <ion-icon name="happy-outline"></ion-icon></h1>
             <h2>{{'IS_BMLT_YES_1' | translate}} {{ nearestMeeting[0].distance_in_miles | number:'1.1-1' }} {{'MILES' | translate}} (<i>{{ nearestMeeting[0].distance_in_km | number:'1.1-1' }} {{'KMS' | translate}}</i>) {{'AWAY' | translate}}</h2>
             <h2>{{'IS_BMLT_YES_2' | translate}} (<i>{{ nearestMeeting[0].service_body_bigint }}</i>) {{'IS_BMLT_YES_3' | translate}}</h2>
           </div>
