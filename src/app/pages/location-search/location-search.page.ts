@@ -1,5 +1,4 @@
 import { Component } from '@angular/core';
-import { LoadingController } from '@ionic/angular';
 import { TranslateService } from '@ngx-translate/core';
 import { Storage } from '@ionic/storage';
 import { MeetingListProvider } from '../../providers/meeting-list.service';
@@ -47,46 +46,49 @@ export class LocationSearchPage  {
               private iab: InAppBrowser) {
     this.meetingsListGrouping = 'weekday_tinyint';
 
-    this.storage.get('searchRange')
-      .then(searchValue => {
-        if (searchValue) {
-          this.radius = searchValue;
-        } else {
-          this.radius = 25;
-        }
-      });
+    this.storage.ready().then(() => {
 
-    this.storage.get('timeDisplay')
-      .then(timeDisplay => {
-        if (timeDisplay) {
-          this.timeDisplay = timeDisplay;
-        } else {
-          this.timeDisplay = '24hr';
-        }
-
-        this.storage.get('savedAddressLat').then(value => {
-          if (value) {
-            this.addressLatitude = value;
-            this.storage.get('savedAddressLng').then(value => {
-              if (value) {
-                this.addressLongitude = value;
-                this.storage.get('savedAddress').then(value => {
-                  if (value) {
-                    this.currentAddress = value;
-                    this.getAllMeetings();
-                  } else {
-                    this.locatePhone();
-                  }
-                });
-              } else {
-                this.locatePhone();
-              }
-            });
+      this.storage.get('searchRange')
+        .then(searchValue => {
+          if (searchValue) {
+            this.radius = searchValue;
           } else {
-            this.locatePhone();
+            this.radius = 25;
           }
         });
-      });
+
+      this.storage.get('timeDisplay')
+        .then(timeDisplay => {
+          if (timeDisplay) {
+            this.timeDisplay = timeDisplay;
+          } else {
+            this.timeDisplay = '24hr';
+          }
+
+          this.storage.get('savedAddressLat').then(value => {
+            if (value) {
+              this.addressLatitude = value;
+              this.storage.get('savedAddressLng').then(value => {
+                if (value) {
+                  this.addressLongitude = value;
+                  this.storage.get('savedAddress').then(value => {
+                    if (value) {
+                      this.currentAddress = value;
+                      this.getAllMeetings();
+                    } else {
+                      this.locatePhone();
+                    }
+                  });
+                } else {
+                  this.locatePhone();
+                }
+              });
+            } else {
+              this.locatePhone();
+            }
+          });
+        });
+    });
 
   }
 
@@ -177,9 +179,8 @@ export class LocationSearchPage  {
   }
 
   locatePhone() {
-    this.translate.get('LOCATING').subscribe(value => { this.presentLoader(value); })
-    this.geolocation.getCurrentPosition({ timeout: 10000 }).then((resp) => {
-
+    this.translate.get('LOCATING').subscribe(value => { this.presentLoader(value); });
+    this.geolocation.getCurrentPosition().then((resp) => {
       this.addressLatitude = resp.coords.latitude;
       this.addressLongitude = resp.coords.longitude;
 
@@ -201,6 +202,8 @@ export class LocationSearchPage  {
       });
 
     }).catch((error) => {
+      console.log('Error getting location', error);
+
       this.currentAddress = 'Location not found';
       this.dismissLoader();
     });

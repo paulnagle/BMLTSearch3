@@ -7,8 +7,20 @@
       {{'MAP_SEARCH' | translate}}
     </ion-title>
   </ion-toolbar>
+  <ion-searchbar no-padding [(ngModel)]="autocomplete.input" (ionInput)="updateSearchResults()" placeholder="search">
+  </ion-searchbar>
+
+
 </ion-header>
 
 <ion-content>
-<h1>Map Search</h1>
+
+  <ion-list [hidden]="autocompleteItems.length == 0">
+    <ion-item *ngFor="let item of autocompleteItems" tappable (click)="selectSearchResult(item)">
+      {{ item.description }}
+    </ion-item>
+  </ion-list>
+
+  <div id="map_canvas"></div>
+
 </ion-content>
