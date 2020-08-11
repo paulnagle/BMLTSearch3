@@ -12,7 +12,7 @@ https://play.google.com/store/apps/details?id=ie.nasouth.bmltsearch&hl=en
 
 Download the master.zip file...
 
-https://github.com/paulnagle/BMLTSearch3/archive/master.zip
+https://github.com/bmlt-enabled/BMLTSearch3/archive/master.zip
 
 Unzip the zip file and cd into the directory that is created
 
