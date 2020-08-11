@@ -1,9 +1,16 @@
 // Ionic Variables and Theming. For more info, please see:
 // http://ionicframework.com/docs/theming/
 
+@font-face { 
+  font-family: Plex;
+  src: url("../assets/fonts/IBMPlexSans-Medium.ttf");
+}
+
 /** Ionic CSS Variables **/
 :root {
   --ion-background-color: #ffffff;
+
+  --ion-font-family: 'Plex'; 
 
 ion-card {
     --background: #eeeeee;
