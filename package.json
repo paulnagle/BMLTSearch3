@@ -34,8 +34,6 @@
     "@ngx-translate/http-loader": "^5.0.0",
     "com-badrit-base64": "^0.2.0",
     "cordova-ios": "^6.1.0",
-    "cordova-plugin-advanced-http": "^3.0.0",
-    "cordova-plugin-file": "^6.0.2",
     "cordova-plugin-geolocation": "^4.0.2",
     "cordova-plugin-googlemaps": "git+https://github.com/mapsplugin/cordova-plugin-googlemaps.git#multiple_maps",
     "cordova-plugin-googlemaps-sdk": "git+https://github.com/mapsplugin/cordova-plugin-googlemaps-sdk.git",
@@ -80,7 +78,6 @@
       "cordova-plugin-whitelist": {},
       "cordova-plugin-device": {},
       "cordova-plugin-ionic-keyboard": {},
-      "cordova-plugin-advanced-http": {},
       "cordova-plugin-splashscreen": {},
       "cordova-plugin-statusbar": {},
       "cordova-plugin-googlemaps": {

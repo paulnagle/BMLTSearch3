@@ -15,37 +15,37 @@ export class AppComponent implements OnInit {
 
   public appPages = [
     {
-      title: 'Home',
+      title: 'HOME',
       url: 'home',
       icon: 'home'
     },
     {
-      title: 'Settings',
+      title: 'SETTINGS',
       url: 'settings',
       icon: 'settings'
     },
     {
-      title: 'Map Search',
+      title: 'MAP_SEARCH',
       url: 'map-search',
       icon: 'map'
     },
     {
-      title: 'Current Location Search',
+      title: 'LOCATIONSEARCH',
       url: 'location-search',
       icon: 'search'
     },
     {
-      title: 'BMLT Meeting List',
+      title: 'LISTFULL',
       url: 'listfull',
       icon: 'list'
     },
     {
-      title: 'Do I have the BMLT?',
+      title: 'DOIHAVETHEBMLT',
       url: 'do-i-have-the-bmlt',
       icon: 'help'
     },
     {
-      title: 'About',
+      title: 'CONTACT',
       url: 'contact',
       icon: 'person'
     }
