@@ -17,7 +17,7 @@
     </div>
     <div *ngSwitchDefault>
       <div *ngFor="let group1 of meetingListGrouped; let i = index" (click)="toggleGroup(i)" [ngClass]="{active: isGroupShown(i)}">
-        <ion-item-divider [color]="isToday(group1[0].weekday_tinyint) ? 'secondary' : 'primary'">
+        <ion-item-divider sticky="true" color="primary">
           <div ngSwitch="{{ group1[0].weekday_tinyint }}">
             <div *ngSwitchCase="'1'">
               <h3>{{'SUNDAY' | translate}} ({{sunCount}})</h3></div>
