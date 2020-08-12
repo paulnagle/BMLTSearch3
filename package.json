@@ -33,6 +33,7 @@
     "@ngx-translate/core": "^12.1.2",
     "@ngx-translate/http-loader": "^5.0.0",
     "com-badrit-base64": "^0.2.0",
+    "cordova-androidx-build": "^1.0.4",
     "cordova-ios": "^6.1.0",
     "cordova-plugin-geolocation": "^4.0.2",
     "cordova-plugin-googlemaps": "git+https://github.com/mapsplugin/cordova-plugin-googlemaps.git#multiple_maps",
