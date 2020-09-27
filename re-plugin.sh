@@ -19,8 +19,8 @@ then
 
     rm -rf platform/*
 
-    ionic cordova platform add ios@latest
-    # ionic cordova platform add android@latest
+    # ionic cordova platform add ios@latest
+    ionic cordova platform add android@latest
     # ionic cordova platform add browser@latest
 
     ionic cordova plugin add cordova-plugin-splashscreen
@@ -32,8 +32,8 @@ then
     ionic cordova plugin add cordova-plugin-geolocation
 fi
 
-ionic cordova prepare ios --prod
-# ionic cordova prepare android --prod
+# ionic cordova prepare ios --prod
+ionic cordova prepare android --prod
 # ionic cordova prepare browser --prod
 
 # ionic cordova resources ios

@@ -69,5 +69,6 @@
     "CLOSE"             : "Zamknij",
     "CANCEL"            : "Anuluj",
     "VIRTUAL_LINK"      : "Virtual Link",
-    "PHONE_MEETING"     : "Phone Meeting Dial-in"
+    "PHONE_MEETING"     : "Phone Meeting Dial-in",
+    "TEMP_CLOSED"       : "Tymczasowo zamknięte"
 }
