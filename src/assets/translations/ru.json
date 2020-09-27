@@ -69,5 +69,6 @@
     "MEETING_DETAILS"   : "О собрании",
     "CANCEL"            : "Отмена",
     "VIRTUAL_LINK"      : "Виртуальная ссылка",
-    "PHONE_MEETING"     : "Телефонный звонок"
+    "PHONE_MEETING"     : "Телефонный звонок",
+    "TEMP_CLOSED"       : "Временно закрыто"
 }

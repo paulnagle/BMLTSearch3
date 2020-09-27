@@ -120,6 +120,8 @@ export class LocationSearchPage  {
       this.satCount = this.meetingListGrouped.filter(i => i.weekday_tinyint == 7).length;
 
       this.meetingListGrouped.filter(i => i.start_time_set = this.convertTo12Hr(i.start_time));
+      this.meetingListGrouped = this.meetingListGrouped.filter(meeting => meeting.isHybrid = this.isHybrid(meeting));
+      this.meetingListGrouped = this.meetingListGrouped.filter(meeting => meeting.isTempClosed = this.isTempClosed(meeting));
 
       this.meetingListGrouped.sort((a, b) => a.weekday_tinyint.localeCompare(b.weekday_tinyint));
       this.meetingListGrouped = this.groupMeetingList(this.meetingListGrouped, this.meetingsListGrouping);
@@ -228,6 +230,22 @@ export class LocationSearchPage  {
       return timeString;
     } else {
       return timeString.slice(0, -3);
+    }
+  }
+
+  isHybrid(meeting) {
+    if (meeting.formats.match(/HY/i)) {
+      return 'HYBRID';
+    } else {
+      return 'NOT-HYBRID';
+    }
+  }
+
+  isTempClosed(meeting) {
+    if (meeting.formats.match(/TC/i)) {
+      return 'TEMPCLOSED';
+    } else {
+      return 'NOT-TEMPCLOSED';
     }
   }
 

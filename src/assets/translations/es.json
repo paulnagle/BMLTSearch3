@@ -69,5 +69,6 @@
     "MEETING_DETAILS"   : "Detalles de la reunión",
     "CANCEL"            : "Cancel",
     "VIRTUAL_LINK"      : "Virtual Link",
-    "PHONE_MEETING"     : "Phone Meeting Dial-in"
+    "PHONE_MEETING"     : "Phone Meeting Dial-in",
+    "TEMP_CLOSED"       : "Temporalmente cerrado"
 }

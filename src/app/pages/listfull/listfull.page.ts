@@ -151,6 +151,9 @@ export class ListfullPage {
         this.friCount = this.meetingListArea.filter(i => i.weekday_tinyint == 6).length;
         this.satCount = this.meetingListArea.filter(i => i.weekday_tinyint == 7).length;
 
+        this.meetingListArea = this.meetingListArea.filter(meeting => meeting.isHybrid = this.isHybrid(meeting));
+        this.meetingListArea = this.meetingListArea.filter(meeting => meeting.isTempClosed = this.isTempClosed(meeting));
+
         this.meetingListArea.sort((a, b) => a.location_sub_province.localeCompare(b.location_sub_province));
         this.meetingListArea = this.groupMeetingList(this.meetingListArea, 'weekday_tinyint');
         for (let i = 0; i < this.meetingListArea.length; i++) {
@@ -235,6 +238,22 @@ export class ListfullPage {
       return timeString;
     } else {
       return timeString.slice(0, -3);
+    }
+  }
+
+  isHybrid(meeting) {
+    if (meeting.formats.match(/HY/i)) {
+      return 'HYBRID';
+    } else {
+      return 'NOT-HYBRID';
+    }
+  }
+
+  isTempClosed(meeting) {
+    if (meeting.formats.match(/TC/i)) {
+      return 'TEMPCLOSED';
+    } else {
+      return 'NOT-TEMPCLOSED';
     }
   }
 

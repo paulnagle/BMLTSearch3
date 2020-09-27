@@ -53,5 +53,20 @@ export class ModalPage implements OnInit {
     const browser = this.iab.create(telUrl, '_system');
   }
 
+  isHybrid(meeting) {
+    if (meeting.formats.match(/HY/i)) {
+      return 'HYBRID';
+    } else {
+      return 'NOT-HYBRID';
+    }
+  }
+
+  isTempClosed(meeting) {
+    if (meeting.formats.match(/TC/i)) {
+      return 'TEMPCLOSED';
+    } else {
+      return 'NOT-TEMPCLOSED';
+    }
+  }
 
 }
