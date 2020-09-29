@@ -25,13 +25,7 @@ export class ListfullPage {
   loader = null;
   meetingListArea: any = [];
   areaName: any = '';
-  sunCount = 0;
-  monCount = 0;
-  tueCount = 0;
-  wedCount = 0;
-  thuCount = 0;
-  friCount = 0;
-  satCount = 0;
+  isLoaded = false;
   timeDisplay = '';
 
   constructor(
@@ -139,53 +133,12 @@ export class ListfullPage {
         this.meetingListArea = JSON.parse('[]');
       } else {
         this.meetingListArea = data;
-        this.meetingListArea = this.meetingListArea.filter(meeting => meeting.latitude = parseFloat(meeting.latitude));
-        this.meetingListArea = this.meetingListArea.filter(meeting => meeting.longitude = parseFloat(meeting.longitude));
-        this.meetingListArea.filter(i => i.start_time_set = this.convertTo12Hr(i.start_time));
-
-        this.sunCount = this.meetingListArea.filter(i => i.weekday_tinyint == 1).length;
-        this.monCount = this.meetingListArea.filter(i => i.weekday_tinyint == 2).length;
-        this.tueCount = this.meetingListArea.filter(i => i.weekday_tinyint == 3).length;
-        this.wedCount = this.meetingListArea.filter(i => i.weekday_tinyint == 4).length;
-        this.thuCount = this.meetingListArea.filter(i => i.weekday_tinyint == 5).length;
-        this.friCount = this.meetingListArea.filter(i => i.weekday_tinyint == 6).length;
-        this.satCount = this.meetingListArea.filter(i => i.weekday_tinyint == 7).length;
-
-        this.meetingListArea = this.meetingListArea.filter(meeting => meeting.isHybrid = this.isHybrid(meeting));
-        this.meetingListArea = this.meetingListArea.filter(meeting => meeting.isTempClosed = this.isTempClosed(meeting));
-
-        this.meetingListArea.sort((a, b) => a.location_sub_province.localeCompare(b.location_sub_province));
-        this.meetingListArea = this.groupMeetingList(this.meetingListArea, 'weekday_tinyint');
-        for (let i = 0; i < this.meetingListArea.length; i++) {
-          this.meetingListArea[i].sort(
-            firstBy('weekday_tinyint')
-              .thenBy('start_time')
-          );
-        }
+        this.isLoaded = true;
       }
       this.dismissLoader();
     });
   }
 
-  groupMeetingList(meetingList, groupingOption) {
-    // A function to convert a flat json list to an javascript array
-    const groupJSONList = function(inputArray, key) {
-      return inputArray.reduce(function(ouputArray, currentValue) {
-        (ouputArray[currentValue[key]] = ouputArray[currentValue[key]] || []).push(currentValue);
-        return ouputArray;
-      }, {});
-    };
-    // Convert the flat json to an array grouped by and indexed by the meetingsListGroupingOne field,
-    const groupedByGroupingOne = groupJSONList(meetingList, groupingOption);
-
-    // Make the array a proper javascript array, index by number
-    const groupedByGroupingOneAsArray = Object.keys(groupedByGroupingOne).map(function(key) {
-      return groupedByGroupingOne[key];
-    });
-
-    meetingList = groupedByGroupingOneAsArray;
-    return meetingList;
-  }
 
   presentLoader(loaderText: any) {
     if (!this.loader) {
@@ -200,61 +153,13 @@ export class ListfullPage {
     }
   }
 
-  public openMapsLink(destLatitude, destLongitude) {
-    const browser = this.iab.create('https://www.google.com/maps/search/?api=1&query=' + destLatitude + ',' + destLongitude, '_system');
-  }
-
-  public openLink(url) {
-    const browser = this.iab.create(url, '_system');
-  }
-
-  public dialNum(url) {
-    const telUrl = 'tel:' + url;
-    const browser = this.iab.create(telUrl, '_system');
-  }
-
-  public isToday(dayOfWeek) {
-    const d = new Date();
-    const n = d.getDay();
-    if (dayOfWeek === (n + 1)) {
-      return true;
-    } else {
-      return false;
-    }
-  }
-
+  
   showServiceStructure() {
     this.HTMLGrouping = 'areas';
     this.areaName = '';
     this.shownDay = null;
   }
 
-  public convertTo12Hr(timeString) {
-    if (this.timeDisplay === '12hr') {
-      const H = +timeString.substr(0, 2);
-      const h = H % 12 || 12;
-      const ampm = (H < 12 || H === 24) ? ' AM' : ' PM';
-      timeString = h + timeString.substr(2, 3) + ampm;
-      return timeString;
-    } else {
-      return timeString.slice(0, -3);
-    }
-  }
 
-  isHybrid(meeting) {
-    if (meeting.formats.match(/HY/i)) {
-      return 'HYBRID';
-    } else {
-      return 'NOT-HYBRID';
-    }
-  }
-
-  isTempClosed(meeting) {
-    if (meeting.formats.match(/TC/i)) {
-      return 'TEMPCLOSED';
-    } else {
-      return 'NOT-TEMPCLOSED';
-    }
-  }
 
 }

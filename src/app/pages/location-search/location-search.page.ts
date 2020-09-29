@@ -4,7 +4,6 @@ import { Storage } from '@ionic/storage';
 import { MeetingListProvider } from '../../providers/meeting-list.service';
 import { GeolocateProvider } from '../../providers/geolocate.service';
 import { InAppBrowser } from '@ionic-native/in-app-browser/ngx';
-import { firstBy } from 'thenby';
 import { Geolocation } from '@ionic-native/geolocation/ngx';
 import { LoadingService } from '../../providers/loading.service';
 
@@ -15,26 +14,17 @@ import { LoadingService } from '../../providers/loading.service';
 })
 export class LocationSearchPage  {
 
-  addressData: any;
   addressMeetingList: any;
-  meetingListGrouped: any;
   meetingsListGrouping: string;
 
   shownGroup = null;
   loader = null;
-
+  isLoaded = false;
   currentAddress: any = '';
   addressLatitude: any = 0;
   addressLongitude: any = 0;
   radius: number;
   radiusMeters = 10000;
-  sunCount = 0;
-  monCount = 0;
-  tueCount = 0;
-  wedCount = 0;
-  thuCount = 0;
-  friCount = 0;
-  satCount = 0;
   timeDisplay = '';
 
   constructor(private MeetingListProvider: MeetingListProvider,
@@ -42,8 +32,7 @@ export class LocationSearchPage  {
               private storage: Storage,
               private translate: TranslateService,
               private GeolocateProvider: GeolocateProvider,
-              private geolocation: Geolocation,
-              private iab: InAppBrowser) {
+              private geolocation: Geolocation) {
     this.meetingsListGrouping = 'weekday_tinyint';
 
     this.storage.ready().then(() => {
@@ -57,28 +46,16 @@ export class LocationSearchPage  {
           }
         });
 
-      this.storage.get('timeDisplay')
-        .then(timeDisplay => {
-          if (timeDisplay) {
-            this.timeDisplay = timeDisplay;
-          } else {
-            this.timeDisplay = '24hr';
-          }
-
-          this.storage.get('savedAddressLat').then(value => {
+      this.storage.get('savedAddressLat').then(value => {
+        if (value) {
+          this.addressLatitude = value;
+          this.storage.get('savedAddressLng').then(value => {
             if (value) {
-              this.addressLatitude = value;
-              this.storage.get('savedAddressLng').then(value => {
+              this.addressLongitude = value;
+              this.storage.get('savedAddress').then(value => {
                 if (value) {
-                  this.addressLongitude = value;
-                  this.storage.get('savedAddress').then(value => {
-                    if (value) {
-                      this.currentAddress = value;
-                      this.getAllMeetings();
-                    } else {
-                      this.locatePhone();
-                    }
-                  });
+                  this.currentAddress = value;
+                  this.getAllMeetings();
                 } else {
                   this.locatePhone();
                 }
@@ -87,83 +64,22 @@ export class LocationSearchPage  {
               this.locatePhone();
             }
           });
-        });
+        } else {
+          this.locatePhone();
+        }
+      });
     });
 
-  }
-
-  public openMapsLink(destLatitude, destLongitude) {
-    const browser = this.iab.create('https://www.google.com/maps/search/?api=1&query=' + destLatitude + ',' + destLongitude, '_system');
-  }
-
-  public openLink(url) {
-    const browser = this.iab.create(url, '_system');
-  }
-
-  public dialNum(url) {
-    const telUrl = 'tel:' + url;
-    const browser = this.iab.create(telUrl, '_system');
   }
 
   getAllMeetings() {
-    this.translate.get('FINDING_MTGS').subscribe(value => { this.presentLoader(value); })
+    this.translate.get('FINDING_MTGS').subscribe(value => { this.presentLoader(value); });
     this.MeetingListProvider.getAddressMeetings(this.addressLatitude, this.addressLongitude, this.radius).subscribe((data) => {
       this.addressMeetingList = data;
-
-      this.meetingListGrouped = this.addressMeetingList.concat();
-      this.sunCount = this.meetingListGrouped.filter(i => i.weekday_tinyint == 1).length;
-      this.monCount = this.meetingListGrouped.filter(i => i.weekday_tinyint == 2).length;
-      this.tueCount = this.meetingListGrouped.filter(i => i.weekday_tinyint == 3).length;
-      this.wedCount = this.meetingListGrouped.filter(i => i.weekday_tinyint == 4).length;
-      this.thuCount = this.meetingListGrouped.filter(i => i.weekday_tinyint == 5).length;
-      this.friCount = this.meetingListGrouped.filter(i => i.weekday_tinyint == 6).length;
-      this.satCount = this.meetingListGrouped.filter(i => i.weekday_tinyint == 7).length;
-
-      this.meetingListGrouped.filter(i => i.start_time_set = this.convertTo12Hr(i.start_time));
-
-      this.meetingListGrouped.sort((a, b) => a.weekday_tinyint.localeCompare(b.weekday_tinyint));
-      this.meetingListGrouped = this.groupMeetingList(this.meetingListGrouped, this.meetingsListGrouping);
-      for (let i = 0; i < this.meetingListGrouped.length; i++) {
-        this.meetingListGrouped[i].sort(
-          firstBy("weekday_tinyint")
-            .thenBy("start_time")
-        );
-      }
+      this.isLoaded = true;
       this.dismissLoader();
     });
   }
-
-  groupMeetingList(meetingList, groupingOption) {
-    // A function to convert a flat json list to an javascript array
-    let groupJSONList = function(inputArray, key) {
-      return inputArray.reduce(function(ouputArray, currentValue) {
-        (ouputArray[currentValue[key]] = ouputArray[currentValue[key]] || []).push(currentValue);
-        return ouputArray;
-      }, {});
-    };
-    // Convert the flat json to an array grouped by and indexed by the meetingsListGroupingOne field,
-    let groupedByGroupingOne = groupJSONList(meetingList, groupingOption);
-
-    // Make the array a proper javascript array, index by number
-    let groupedByGroupingOneAsArray = Object.keys(groupedByGroupingOne).map(function(key) {
-      return groupedByGroupingOne[key];
-    });
-
-    meetingList = groupedByGroupingOneAsArray;
-    return meetingList;
-  }
-
-  toggleGroup(group) {
-    if (this.isGroupShown(group)) {
-      this.shownGroup = null;
-    } else {
-      this.shownGroup = group;
-    }
-  };
-
-  isGroupShown(group) {
-    return this.shownGroup === group;
-  };
 
   presentLoader(loaderText: any) {
     if (!this.loader) {
@@ -209,27 +125,6 @@ export class LocationSearchPage  {
     });
   }
 
-  public isToday(dayOfWeek) {
-    let d = new Date();
-    let n = d.getDay();
-    if (dayOfWeek == (n + 1)) {
-      return true;
-    } else {
-      return false;
-    }
-  }
-
-  public convertTo12Hr(timeString) {
-    if (this.timeDisplay === '12hr') {
-      let H = +timeString.substr(0, 2);
-      let h = H % 12 || 12;
-      let ampm = (H < 12 || H === 24) ? ' AM' : ' PM';
-      timeString = h + timeString.substr(2, 3) + ampm;
-      return timeString;
-    } else {
-      return timeString.slice(0, -3);
-    }
-  }
 
 
 }

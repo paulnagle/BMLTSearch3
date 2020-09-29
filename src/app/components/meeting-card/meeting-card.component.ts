@@ -50,4 +50,14 @@ export class MeetingCardComponent implements OnInit, AfterContentInit {
     }
   }
 
+  public isToday(dayOfWeek) {
+    const d = new Date();
+    const n = d.getDay();
+    if (dayOfWeek === (n + 1)) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
 }
