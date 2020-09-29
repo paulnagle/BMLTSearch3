@@ -9,6 +9,7 @@ import { InAppBrowser } from '@ionic-native/in-app-browser/ngx';
 import { MeetingListProvider } from 'src/app/providers/meeting-list.service';
 import { ServiceGroupsProvider } from 'src/app/providers/service-groups.service';
 import { PipesModule } from 'src/app/pipes/pipes.module';
+import { ComponentModule } from '../../components/component/component.module';
 
 @NgModule({
   imports: [
@@ -17,7 +18,8 @@ import { PipesModule } from 'src/app/pipes/pipes.module';
     IonicModule,
     TranslateModule,
     PipesModule,
-    ListfullPageRoutingModule
+    ListfullPageRoutingModule,
+    ComponentModule
   ],
   declarations: [
     ListfullPage
