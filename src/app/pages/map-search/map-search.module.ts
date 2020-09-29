@@ -10,7 +10,7 @@ import { ModalPage } from '../modal/modal.page';
 import { Routes } from '@angular/router';
 import { InAppBrowser } from '@ionic-native/in-app-browser/ngx';
 import { MeetingListProvider } from 'src/app/providers/meeting-list.service';
-
+import { ComponentModule } from '../../components/component/component.module';
 
 const routes: Routes = [
   {
@@ -25,7 +25,8 @@ const routes: Routes = [
     FormsModule,
     IonicModule,
     TranslateModule,
-    MapSearchPageRoutingModule
+    MapSearchPageRoutingModule,
+    ComponentModule
   ],
   declarations: [
     MapSearchPage,

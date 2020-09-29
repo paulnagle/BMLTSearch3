@@ -5,6 +5,7 @@ import { IonicModule } from '@ionic/angular';
 import { ModalPageRoutingModule } from './modal-routing.module';
 import { ModalPage } from './modal.page';
 import { TranslateModule } from '@ngx-translate/core';
+import { ComponentModule } from '../../components/component/component.module';
 
 @NgModule({
   imports: [
@@ -12,7 +13,8 @@ import { TranslateModule } from '@ngx-translate/core';
     FormsModule,
     IonicModule,
     ModalPageRoutingModule,
-    TranslateModule
+    TranslateModule,
+    ComponentModule
   ]
 })
 export class ModalPageModule {}

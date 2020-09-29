@@ -152,85 +152,9 @@
       </ion-item-divider>
       <div *ngIf="isDayShown(i)">
         <ion-list *ngFor="let group2 of group1; let j = index">
-          <ion-card text-wrap>
-            <ion-card-header>
-              <div ngSwitch="{{ group2.weekday_tinyint }}">
-                <div *ngSwitchCase="'1'" [ngClass]="'one'">
-                  <ion-badge color="sunday"><b>{{'SUNDAY' | translate}}   {{ group2.start_time_set  }} </b></ion-badge>
-                </div>
-                <div *ngSwitchCase="'2'" [ngClass]="'one'">
-                  <ion-badge color="monday"><b>{{'MONDAY' | translate}}   {{ group2.start_time_set }} </b></ion-badge>
-                </div>
-                <div *ngSwitchCase="'3'" [ngClass]="'one'">
-                  <ion-badge color="tuesday"><b>{{'TUESDAY' | translate}}   {{ group2.start_time_set }} </b></ion-badge>
-                </div>
-                <div *ngSwitchCase="'4'" [ngClass]="'one'">
-                  <ion-badge color="wednesday"><b>{{'WEDNESDAY' | translate}}   {{ group2.start_time_set }} </b></ion-badge>
-                </div>
-                <div *ngSwitchCase="'5'" [ngClass]="'one'">
-                  <ion-badge color="thursday"><b>{{'THURSDAY' | translate}}   {{ group2.start_time_set }} </b></ion-badge>
-                </div>
-                <div *ngSwitchCase="'6'" [ngClass]="'one'">
-                  <ion-badge color="friday"><b>{{'FRIDAY' | translate}}   {{ group2.start_time_set }} </b></ion-badge>
-                </div>
-                <div *ngSwitchCase="'7'" [ngClass]="'one'">
-                  <ion-badge color="saturday"><b>{{'SATURDAY' | translate}}   {{ group2.start_time_set  }} </b></ion-badge>
-                </div>
 
-                <div *ngSwitchDefault>Nothing Found.</div>
-              </div>
+          <app-meeting-card [data]="group2"></app-meeting-card>
 
-              <div *ngIf="group2.isTempClosed === 'TEMPCLOSED'">
-                <ion-chip color="danger" class="ion-text-wrap">
-                  <ion-label>{{'TEMP_CLOSED' | translate}}</ion-label>
-                </ion-chip>
-              </div>
-
-            </ion-card-header>
-            <ion-card-content>
-
-              <h1>{{group2.meeting_name}}</h1>
-              <div *ngIf="group2.location_text">{{group2.location_text}}<br></div>
-              <div *ngIf="group2.location_street">{{group2.location_street}}<br></div>
-              <div *ngIf="group2.location_city_subsection">{{group2.location_city_subsection}}<br></div>
-              <div *ngIf="group2.location_neighborhood">{{group2.location_neighborhood}}<br></div>
-              <div *ngIf="group2.location_municipality">{{group2.location_municipality}}<br></div>
-              <div *ngIf="group2.location_sub_province">{{group2.location_sub_province}}<br></div>
-              <div *ngIf="group2.location_province">{{group2.location_province}}<br></div>
-              <div *ngIf="group2.location_code_1">{{group2.location_code_1}}<br></div>
-              <div *ngIf="group2.location_info">{{group2.location_info}}<br></div>
-              <div *ngIf="group2.comments">{{group2.comments}}<br></div>
-              <div *ngIf="group2.virtual_meeting_additional_info">{{group2.virtual_meeting_additional_info}}<br></div>
-              <div *ngIf="group2.contact_phone_1">{{group2.contact_phone_1 | tidyDelimiter }}<br></div>
-              <div *ngIf="group2.contact_email_1">{{group2.contact_email_1 | tidyDelimiter }}<br></div>
-              <div *ngIf="group2.train_lines">{{'TRAIN' | translate}}: {{group2.train_lines | tidyDelimiter }}<br></div>
-              <div *ngIf="group2.bus_lines">{{'BUS' | translate}}: {{group2.bus_lines | tidyDelimiter }}<br></div>
-              <div *ngIf="group2.formats"><i>{{'FORMATS' | translate}}: {{group2.formats | tidyDelimiter }}</i><br></div>
-              <br>
-
-              <div *ngIf="!group2.virtual_meeting_link || group2.isHybrid === 'HYBRID'">
-                <ion-button expand="block" (click)="openMapsLink(group2.latitude , group2.longitude)">
-                  <ion-ripple-effect></ion-ripple-effect>
-                  <ion-icon name="map"> </ion-icon>&nbsp;{{'MAP' | translate}}
-                </ion-button>
-              </div>
-  
-              <div *ngIf="group2.virtual_meeting_link">
-                <ion-button expand="block" (click)="openLink(group2.virtual_meeting_link)" class="ion-text-wrap">
-                  <ion-ripple-effect></ion-ripple-effect>
-                  <ion-icon name="cloud"> </ion-icon>&nbsp;{{'VIRTUAL_LINK' | translate }}
-                </ion-button>
-              </div>
-
-              <div *ngIf="group2.virtual_meeting_link">
-                <ion-button expand="block" *ngIf="group2.phone_meeting_number" (click)="dialNum(group2.phone_meeting_number)">
-                  <ion-ripple-effect></ion-ripple-effect>
-                  <ion-icon name="call" > </ion-icon>&nbsp;{{'PHONE_MEETING' | translate }}
-                </ion-button> 
-              </div>
-
-            </ion-card-content>
-          </ion-card>
         </ion-list>
       </div>
     </div>
