@@ -11,11 +11,14 @@ import { TranslateService } from '@ngx-translate/core';
 export class MeetingListComponent implements OnInit, OnChanges {
 
   @Input() data;
+  @Input() meetingType;
+
   meetingList;
   meetingListGroupedByDay;
   shownDay = null;
   meetingsListGrouping = 'weekday_tinyint';
   timeDisplay;
+  localMeetingType;
 
   dayCount = [0, 0, 0, 0, 0, 0, 0];
 
@@ -44,6 +47,8 @@ export class MeetingListComponent implements OnInit, OnChanges {
 
   formatMeetingList() {
     this.meetingList = this.data;
+    this.localMeetingType = this.meetingType;
+    console.log('Meeting type = ', this.localMeetingType);
     for (let i = 0; i < 7; i++) {
       this.dayCount[i] = this.meetingList.filter(list => list.weekday_tinyint == i + 1).length;
     }

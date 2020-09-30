@@ -46,7 +46,6 @@
     <div *ngIf="meeting.location_province">{{meeting.location_province}}<br></div>
     <div *ngIf="meeting.location_code_1">{{meeting.location_code_1}}<br></div>
     <div *ngIf="meeting.location_info">{{meeting.location_info}}<br></div>
-    <div *ngIf="meeting.comments">{{meeting.comments}}<br></div>
     <div *ngIf="meeting.virtual_meeting_additional_info">{{meeting.virtual_meeting_additional_info}}<br></div>
     <div *ngIf="meeting.contact_phone_1">{{meeting.contact_phone_1 | tidyDelimiter }}<br></div>
     <div *ngIf="meeting.contact_email_1">{{meeting.contact_email_1 | tidyDelimiter }}<br></div>
@@ -55,10 +54,10 @@
     <div *ngIf="meeting.formats"><i>{{'FORMATS' | translate}}: {{meeting.formats | tidyDelimiter }}</i><br></div>
     <br>
 
-    <div *ngIf="!meeting.virtual_meeting_link || isHybrid(meeting) === 'HYBRID'">
-      <ion-button expand="block" (click)="openMapsLink(meeting.latitude , meeting.longitude)">
+    <div *ngIf="meeting.comments">
+      <ion-button expand="block" (click)="openLink(meeting.comments)">
         <ion-ripple-effect></ion-ripple-effect>
-        <ion-icon name="map"> </ion-icon>&nbsp;{{'MAP' | translate}}
+        <ion-icon name="cloud"> </ion-icon>&nbsp;{{'VIRTUAL_LINK' | translate}}
       </ion-button>
     </div>
 
@@ -69,12 +68,6 @@
       </ion-button>
     </div>
 
-    <div *ngIf="meeting.virtual_meeting_link">
-      <ion-button expand="block" *ngIf="meeting.phone_meeting_number" (click)="dialNum(meeting.phone_meeting_number)">
-        <ion-ripple-effect></ion-ripple-effect>
-        <ion-icon name="call" > </ion-icon>&nbsp;{{'PHONE_MEETING' | translate }}
-      </ion-button> 
-    </div>
   </ion-card-content>
 
 </ion-card>

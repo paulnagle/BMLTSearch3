@@ -1,3 +1,4 @@
+
 <ion-header>
   <ion-toolbar>
     <ion-buttons slot="start">
@@ -11,7 +12,7 @@
 
     <ng-template #BMLT_List>
     <ion-title>
-      {{'LISTFULL' | translate}}
+      {{'VIRTUAL_MEETINGS' | translate}}
     </ion-title>
   </ng-template>
 
@@ -30,7 +31,7 @@
         </ion-item-divider>
       </div>
       <ng-template #L1_no_children>
-        <ion-item-divider sticky="true" (click)="getMeetingsByArea(L1.id, L1.name)" color="primary">
+        <ion-item-divider sticky="true" (click)="getMeetingsByVirtArea(L1.id, L1.name)" color="primary">
           <h3>{{ L1.name }} </h3>
           <ion-icon size="large" color="secondary" slot="end" name="play"></ion-icon>
         </ion-item-divider>
@@ -46,7 +47,7 @@
             </ion-item-divider>
           </div>
           <ng-template #L2_no_children>
-            <ion-item-divider sticky="true" (click)="getMeetingsByArea(L2.id, L2.name)" [color]="isL2GroupShown(j) ? 'tertiary' : 'secondary'">
+            <ion-item-divider sticky="true" (click)="getMeetingsByVirtArea(L2.id, L2.name)" [color]="isL2GroupShown(j) ? 'tertiary' : 'secondary'">
               <ion-icon name="chevron-forward-outline" slot="start" size="large"></ion-icon>
               <h3>{{ L2.name }}</h3>
               <ion-icon size="large" [color]="isL2GroupShown(j) ? 'secondary' : 'tertiary'" slot="end" name="play"></ion-icon>
@@ -65,7 +66,7 @@
                 </ion-item-divider>
               </div>
               <ng-template #L3_no_children>
-                <ion-item-divider sticky="true" (click)="getMeetingsByArea(L3.id, L3.name)" [color]="isL3GroupShown(k) ? 'four' : 'tertiary'">
+                <ion-item-divider sticky="true" (click)="getMeetingsByVirtArea(L3.id, L3.name)" [color]="isL3GroupShown(k) ? 'four' : 'tertiary'">
                   <ion-icon name="chevron-forward-outline" slot="start" size="large"></ion-icon>
                   <ion-icon name="chevron-forward-outline" slot="start" size="large"></ion-icon>
                   <h3>{{ L3.name }}</h3>
@@ -86,7 +87,7 @@
                     </ion-item-divider>
                   </div>
                   <ng-template #L4_no_children>
-                    <ion-item-divider sticky="true" (click)="getMeetingsByArea(L4.id, L4.name)">
+                    <ion-item-divider sticky="true" (click)="getMeetingsByVirtArea(L4.id, L4.name)">
                       <ion-icon name="chevron-forward-outline" slot="start" size="large"></ion-icon>
                       <ion-icon name="chevron-forward-outline" slot="start" size="large"></ion-icon>
                       <ion-icon name="chevron-forward-outline" slot="start" size="large"></ion-icon>
@@ -108,7 +109,7 @@
                       </ion-item-divider>
                     </div>
                     <ng-template #L5_no_children>
-                      <ion-item-divider sticky="true" (click)="getMeetingsByArea(L5.id, L5.name)">
+                      <ion-item-divider sticky="true" (click)="getMeetingsByVirtArea(L5.id, L5.name)">
                         <ion-icon name="chevron-forward-outline" slot="start" size="large"></ion-icon>
                         <ion-icon name="chevron-forward-outline" slot="start" size="large"></ion-icon>
                         <ion-icon name="chevron-forward-outline" slot="start" size="large"></ion-icon>
@@ -130,9 +131,10 @@
 
   <div *ngIf="HTMLGrouping == 'meetings'">
 
-    <div *ngIf = "isLoaded">
-      <app-meeting-list [data]="meetingListArea" meetingType='regular'></app-meeting-list>
+    <div *ngIf="isLoaded">
+      <app-meeting-list [data]="meetingListArea" meetingType='virt'></app-meeting-list>
     </div>
     
   </div>
 </ion-content>
+

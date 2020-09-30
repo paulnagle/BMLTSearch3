@@ -1,13 +1,27 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { HTTP } from '@ionic-native/http/ngx';
 
 @Injectable()
 export class MeetingListProvider {
 
   tomatoBMLT = 'https://tomato.bmltenabled.org/main_server/client_interface/json/';
+  virtualBMLT = 'https://bmlt.virtual-na.org/main_server/client_interface/json/';
 
-  constructor(public http: HttpClient) {
+  constructor(
+    private http: HttpClient,
+    private httpCors: HTTP
+  ) {
   }
+
+  getApiUrlVirt = 'https://bmlt.virtual-na.org/main_server/client_interface/json/?switcher=GetSearchResults&sort_keys=weekday_tinyint,start_time';
+
+
+  async getVirtualMeetings() {
+    const data = await this.httpCors.get(this.getApiUrlVirt, {}, {});
+    return JSON.parse(data.data);
+  }
+
 
   getAutoRadiusMeetings(lat, long, radius) {
     const getAutoRadiusMeetingsURL: string = this.tomatoBMLT
@@ -68,6 +82,16 @@ export class MeetingListProvider {
       + '&sort_keys=weekday_tinyint,start_time&callingApp=bmlt_search_3_ionic';
     return this.http.get(getMeetingsByAreaURL);
 
+  }
+
+  async getMeetingsByVirtArea(areaID) {
+    const getMeetingsByVirtAreaURL: string = this.virtualBMLT
+      + '?switcher=GetSearchResults&services='
+      + areaID
+      + '&sort_keys=weekday_tinyint,start_time&callingApp=bmlt_search_3_ionic';
+
+    const data = await this.httpCors.get(getMeetingsByVirtAreaURL, {}, {});
+    return JSON.parse(data.data);
   }
 
   getSingleMeetingByID(id) {
