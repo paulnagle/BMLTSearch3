@@ -2,6 +2,7 @@ import { Component, OnInit, Input, AfterContentInit } from '@angular/core';
 import { InAppBrowser } from '@ionic-native/in-app-browser/ngx';
 import { TranslateService } from '@ngx-translate/core';
 
+
 @Component({
   selector: 'app-virt-meeting-card',
   templateUrl: './virt-meeting-card.component.html',
@@ -11,6 +12,7 @@ export class VirtMeetingCardComponent implements OnInit, AfterContentInit {
 
   @Input() data;
   meeting;
+  timeDisplay;
 
   constructor(
     private iab: InAppBrowser,
@@ -21,6 +23,7 @@ export class VirtMeetingCardComponent implements OnInit, AfterContentInit {
   ngAfterContentInit() {
     this.meeting = this.data;
   }
+
   public openMapsLink(destLatitude, destLongitude) {
     const browser = this.iab.create('https://www.google.com/maps/search/?api=1&query=' + destLatitude + ',' + destLongitude, '_system');
   }
@@ -47,16 +50,6 @@ export class VirtMeetingCardComponent implements OnInit, AfterContentInit {
       return 'TEMPCLOSED';
     } else {
       return 'NOT-TEMPCLOSED';
-    }
-  }
-
-  public isToday(dayOfWeek) {
-    const d = new Date();
-    const n = d.getDay();
-    if (dayOfWeek === (n + 1)) {
-      return true;
-    } else {
-      return false;
     }
   }
 

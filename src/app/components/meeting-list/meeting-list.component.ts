@@ -2,6 +2,9 @@ import { Component, OnInit, Input, OnChanges } from '@angular/core';
 import { firstBy } from 'thenby';
 import { Storage } from '@ionic/storage';
 import { TranslateService } from '@ngx-translate/core';
+import { VirtFormatsProvider } from '../../providers/virt-formats.service';
+import * as moment from 'moment';
+import 'moment-timezone';
 
 @Component({
   selector: 'app-meeting-list',
@@ -13,24 +16,31 @@ export class MeetingListComponent implements OnInit, OnChanges {
   @Input() data;
   @Input() meetingType;
 
-  meetingList;
+  meetingList = [];
   meetingListGroupedByDay;
   shownDay = null;
   meetingsListGrouping = 'weekday_tinyint';
   timeDisplay;
   localMeetingType;
-
   dayCount = [0, 0, 0, 0, 0, 0, 0];
+  formats;
 
-  constructor(private storage: Storage, private translate: TranslateService) {
-    this.meetingList = [];
-  }
+
+  constructor(
+    private storage: Storage,
+    private translate: TranslateService,
+    private virtFormatsProvider: VirtFormatsProvider) {}
+
 
   ngOnChanges() {
-    this.formatMeetingList();
+    console.log('In ngOnChanges');
+    this.ngOnInit();
   }
 
+
   ngOnInit() {
+    console.log('In ngOnInit');
+
     this.storage.ready().then(() => {
       this.storage.get('timeDisplay')
         .then(timeDisplay => {
@@ -40,33 +50,84 @@ export class MeetingListComponent implements OnInit, OnChanges {
             this.timeDisplay = '24hr';
           }
         });
-      });
-    this.formatMeetingList();
+    });
 
+    this.meetingList = this.data;
+    this.localMeetingType = this.meetingType;
+
+    if (this.localMeetingType === 'virt') {
+      // Get the formats
+      this.virtFormatsProvider.getAllVirtFormats().then((serviceGroupData) => {
+        console.log('Response from getAllVirtFormats');
+        this.formats = serviceGroupData;
+        this.formatMeetingList();
+      });
+    } else {
+      this.formatMeetingList();
+    }
   }
 
   formatMeetingList() {
-    this.meetingList = this.data;
-    this.localMeetingType = this.meetingType;
-    console.log('Meeting type = ', this.localMeetingType);
+    console.log('In formatMeetingList');
     for (let i = 0; i < 7; i++) {
-      this.dayCount[i] = this.meetingList.filter(list => list.weekday_tinyint == i + 1).length;
+      this.dayCount[i] = this.meetingList.filter(list => parseInt(list.weekday_tinyint, 10) === i + 1).length;
     }
-
     this.meetingListGroupedByDay = this.meetingList.concat();
-    this.meetingListGroupedByDay.filter(i => i.start_time_set = this.convertTo12Hr(i.start_time));
+
+    if (this.localMeetingType === 'virt') {
+      this.explodeFormats();
+    }
+    this.setRawStartTime();
 
     this.meetingListGroupedByDay.sort((a, b) => a.weekday_tinyint.localeCompare(b.weekday_tinyint));
     this.meetingListGroupedByDay = this.groupMeetingList(this.meetingListGroupedByDay, this.meetingsListGrouping);
-    for (let i = 0; i < this.meetingListGroupedByDay.length; i++) {
-      this.meetingListGroupedByDay[i].sort(
-        firstBy('weekday_tinyint')
-          .thenBy('start_time')
+    for (let i of this.meetingListGroupedByDay) {
+      i.sort(firstBy('weekday_tinyint').thenBy('start_time')
       );
     }
   }
 
+
+  setRawStartTime() {
+    for (let meeting of this.meetingListGroupedByDay) {
+      if (this.localMeetingType === 'virt') {
+        const startTimeRaw = this.getAdjustedDateTime(
+          parseInt(meeting.weekday_tinyint, 10) === 1 ? 7 : parseInt(meeting.weekday_tinyint, 10) - 1,
+          meeting.start_time,
+          meeting.time_zone
+        );
+
+        meeting.start_time_raw = startTimeRaw.format('h:mm a');
+
+        const timeZoneName = Intl.DateTimeFormat().resolvedOptions().timeZone;
+        meeting.start_time_raw = meeting.start_time_raw + ' (' + timeZoneName + ' )';
+      } else {
+        meeting.start_time_raw = this.convertTo12Hr(meeting.start_time);
+      }
+    }
+  }
+
+  explodeFormats() {
+    console.log('In explodeFormats');
+
+    for (let i of this.meetingListGroupedByDay) {
+      const splitFormats = i.formats.split(',');
+      i.formats_exploded = '';
+      for (let j of splitFormats) {
+        const longFormat = this.formats.filter(data => data.key_string === j);
+        if (longFormat[0]) {
+          i.formats_exploded += longFormat[0].name_string + ', ';
+        } else {
+          i.formats_exploded += j + ', ';
+        }
+      }
+    }
+  }
+
+
   groupMeetingList(meetingList, groupingOption) {
+    console.log('In groupMeetingList');
+
     // A function to convert a flat json list to an javascript array
     const groupJSONList = function(inputArray, key) {
       return inputArray.reduce(function(ouputArray, currentValue) {
@@ -101,27 +162,47 @@ export class MeetingListComponent implements OnInit, OnChanges {
   }
 
 
-  public convertTo12Hr(timeString) {
-    if (this.timeDisplay === '12hr') {
-      const H = +timeString.substr(0, 2);
-      const h = H % 12 || 12;
-      const ampm = (H < 12 || H === 24) ? ' AM' : ' PM';
-      timeString = h + timeString.substr(2, 3) + ampm;
-      return timeString;
-    } else {
-      return timeString.slice(0, -3);
-    }
-  }
-
-
   public isToday(dayOfWeek) {
     const d = new Date();
     const n = d.getDay();
-    if (dayOfWeek == (n + 1)) {
+    if (parseInt(dayOfWeek, 10) === (n + 1)) {
       return true;
     } else {
       return false;
     }
+  }
+
+  getAdjustedDateTime(meetingDay, meetingTime, meetingTimeZone) {
+    let meetingDateTimeObj;
+
+    if (!meetingTimeZone) {
+      meetingTimeZone = 'UTC';
+    }
+
+    // Get an object that represents the meeting in its time zone
+    meetingDateTimeObj = moment.tz(meetingTimeZone).set({
+        hour: meetingTime.split(':')[0],
+        minute: meetingTime.split(':')[1],
+        second: 0
+    }).isoWeekday(meetingDay);
+
+      // Convert meeting to target (local) time zone
+    meetingDateTimeObj = meetingDateTimeObj.clone().tz(moment.tz.guess());
+
+    const now = moment.tz(moment.tz.guess());
+    if (now > meetingDateTimeObj || now.isoWeekday() === meetingDateTimeObj.isoWeekday()) {
+      meetingDateTimeObj.add(1, 'weeks');
+    }
+
+    return meetingDateTimeObj;
+  }
+
+  public convertTo12Hr(timeString) {
+    const H = +timeString.substr(0, 2);
+    const h = H % 12 || 12;
+    const ampm = (H < 12 || H === 24) ? ' am' : ' pm';
+    timeString = h + timeString.substr(2, 3) + ampm;
+    return timeString;
   }
 
 }

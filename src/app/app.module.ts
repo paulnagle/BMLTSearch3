@@ -10,6 +10,7 @@ import { HttpClientModule, HttpClient } from '@angular/common/http';
 import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { IonicStorageModule } from '@ionic/storage';
+import { HTTP } from '@ionic-native/http/ngx';
 
 export function createTranslateLoader(http: HttpClient) {
   return new TranslateHttpLoader(http, 'assets/translations/', '.json');
@@ -36,6 +37,7 @@ export function createTranslateLoader(http: HttpClient) {
   ],
   providers: [
     StatusBar,
+    HTTP,
     SplashScreen,
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy }
   ],

@@ -4,7 +4,6 @@ import { MeetingCardComponent } from '../meeting-card/meeting-card.component';
 import { MeetingListComponent } from '../meeting-list/meeting-list.component';
 import { VirtMeetingCardComponent } from '../virt-meeting-card/virt-meeting-card.component';
 import { PipesModule } from 'src/app/pipes/pipes.module';
-
 import { TranslateModule } from '@ngx-translate/core';
 import { IonicModule } from '@ionic/angular';
 

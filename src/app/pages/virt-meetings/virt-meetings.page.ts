@@ -49,8 +49,6 @@ export class VirtMeetingsPage  {
       });
 
     this.serviceGroupsProvider.getAllVirtServiceGroups().then((serviceGroupData) => {
-      console.log('In return from getAllVirtServiceGroups');
-
       this.serviceGroups = serviceGroupData;
       this.serviceGroups.sort(firstBy('parent_id').thenBy('name').thenBy('id'));
       this.serviceGroupHierarchy = this.getServiceHierarchy(this.serviceGroups, 0);
@@ -61,8 +59,6 @@ export class VirtMeetingsPage  {
 
 
   getServiceHierarchy(flatServiceGroups, parent) {
-    console.log('In getServiceHierarchy');
-
     const serviceGroupHierarchy = [];
     for (const i in flatServiceGroups) {
       if (flatServiceGroups[i].parent_id == parent) {
@@ -129,8 +125,6 @@ export class VirtMeetingsPage  {
   isL4GroupShown(L4group) { return this.shownGroupL4 === L4group; }
 
   getMeetingsByVirtArea(areaID, areaName) {
-    console.log('In getMeetingsByVirtArea');
-
     this.translate.get('FINDING_MTGS').subscribe(value => { this.presentLoader(value); });
     this.HTMLGrouping = 'meetings';
     this.areaName = areaName;
@@ -163,7 +157,6 @@ export class VirtMeetingsPage  {
 
 
   showServiceStructure() {
-    console.log('In showServiceStructure');
 
     this.HTMLGrouping = 'areas';
     this.areaName = '';
