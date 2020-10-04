@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { NavParams, ModalController } from '@ionic/angular';
 import { InAppBrowser } from '@ionic-native/in-app-browser/ngx';
-import { Storage } from '@ionic/storage';
 
 @Component({
   selector: 'app-modal',
@@ -17,19 +16,10 @@ export class ModalPage implements OnInit {
 
   constructor(
     private translate: TranslateService,
-    private storage: Storage,
     private navParams: NavParams,
     private modalController: ModalController,
     private iab: InAppBrowser) {
-    console.log('mapModal constructor');
-    this.storage.get('timeDisplay')
-      .then(timeDisplay => {
-        if (timeDisplay) {
-          this.timeDisplay = timeDisplay;
-        } else {
-          this.timeDisplay = '24hr';
-        }
-      });
+
     this.meetingList = this.navParams.data.data;
   }
 

@@ -16,11 +16,12 @@ then
     ionic cordova plugin rm cordova-plugin-ionic-webview
     ionic cordova plugin rm cordova-plugin-inappbrowser
     ionic cordova plugin rm cordova-plugin-geolocation
+    ionic cordova plugin rm cordova-plugin-advanced-http
 
     rm -rf platform/*
 
     ionic cordova platform add ios@latest
-    ionic cordova platform add android@latest
+    # ionic cordova platform add android@latest
     # ionic cordova platform add browser@latest
 
     ionic cordova plugin add cordova-plugin-splashscreen
@@ -30,10 +31,11 @@ then
     ionic cordova plugin add cordova-plugin-ionic-webview@latest
     ionic cordova plugin add cordova-plugin-inappbrowser
     ionic cordova plugin add cordova-plugin-geolocation
+    ionic cordova plugin add cordova-plugin-advanced-http
 fi
 
 ionic cordova prepare ios --prod
-ionic cordova prepare android --prod
+# ionic cordova prepare android --prod
 # ionic cordova prepare browser --prod
 
 # ionic cordova resources ios

@@ -11,6 +11,7 @@ import { GeolocateProvider } from 'src/app/providers/geolocate.service';
 import { Geolocation } from '@ionic-native/geolocation/ngx';
 import { PipesModule } from 'src/app/pipes/pipes.module';
 import { ComponentModule } from '../../components/component/component.module';
+import { HTTP } from '@ionic-native/http/ngx';
 
 @NgModule({
   imports: [
@@ -29,7 +30,8 @@ import { ComponentModule } from '../../components/component/component.module';
     InAppBrowser,
     MeetingListProvider,
     GeolocateProvider,
-    Geolocation
+    Geolocation,
+    HTTP
   ]
 })
 export class LocationSearchPageModule {}

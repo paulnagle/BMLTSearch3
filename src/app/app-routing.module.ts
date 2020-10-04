@@ -38,6 +38,10 @@ const routes: Routes = [
   {
     path: 'settings',
     loadChildren: () => import('./pages/settings/settings.module').then( m => m.SettingsPageModule)
+  },
+  {
+    path: 'virt-meetings',
+    loadChildren: () => import('./pages/virt-meetings/virt-meetings.module').then( m => m.VirtMeetingsPageModule)
   }
 ];
 

@@ -40,6 +40,11 @@ export class AppComponent implements OnInit {
       icon: 'list'
     },
     {
+      title: 'VIRTUAL_MEETINGS',
+      url: 'virt-meetings',
+      icon: 'globe-outline'
+    },
+    {
       title: 'DOIHAVETHEBMLT',
       url: 'do-i-have-the-bmlt',
       icon: 'help'
