@@ -11,17 +11,19 @@
 
 <ion-content>
   <div ngSwitch="{{ currentAddress }}">
+
     <div *ngSwitchCase="''"></div>
+
     <div *ngSwitchCase="'Location not found'" [ngClass]="'one'">
       <ion-item text-wrap><b>{{'NO_LOCATION' | translate}}</b></ion-item>
     </div>
-    <div *ngSwitchDefault>
 
+    <div *ngSwitchDefault>
       <div *ngIf = "isLoaded">
         <app-meeting-list [data]="addressMeetingList" meetingType='regular'></app-meeting-list>
       </div>
-
     </div>
+    
   </div>
 </ion-content>
 

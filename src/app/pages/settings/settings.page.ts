@@ -12,7 +12,6 @@ export class SettingsPage implements OnInit {
   language: string;
   theme: string;
   searchRange: number;
-  timeDisplay: string;
 
   constructor(
     private storage: Storage,
@@ -39,15 +38,6 @@ export class SettingsPage implements OnInit {
           this.searchRange = 25;
         }
       });
-
-    this.storage.get('timeDisplay')
-      .then(timeDisplay => {
-        if (timeDisplay) {
-          this.timeDisplay = timeDisplay;
-        } else {
-          this.timeDisplay = "24hr";
-        }
-      });
   }
 
   selectLanguage() {
@@ -62,10 +52,6 @@ export class SettingsPage implements OnInit {
 
   selectSearchRange() {
     this.storage.set('searchRange', this.searchRange);
-  }
-
-  selectTimeDisplay() {
-    this.storage.set('timeDisplay', this.timeDisplay);
   }
 
 }

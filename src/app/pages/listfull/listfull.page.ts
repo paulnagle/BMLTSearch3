@@ -26,11 +26,10 @@ export class ListfullPage {
   meetingListArea: any = [];
   areaName: any = '';
   isLoaded = false;
-  timeDisplay = '';
 
   constructor(
-    private MeetingListProvider: MeetingListProvider,
-    private ServiceGroupsProvider: ServiceGroupsProvider,
+    private meetingListProvider: MeetingListProvider,
+    private serviceGroupsProvider: ServiceGroupsProvider,
     private loaderCtrl: LoadingService,
     private translate: TranslateService,
     private storage: Storage,
@@ -38,17 +37,7 @@ export class ListfullPage {
 
     this.translate.get('FINDING_MTGS').subscribe(value => { this.presentLoader(value); })
 
-    this.storage.get('timeDisplay')
-      .then(timeDisplay => {
-        if (timeDisplay) {
-          this.timeDisplay = timeDisplay;
-        } else {
-          this.timeDisplay = '24hr';
-        }
-      });
-
-
-    this.ServiceGroupsProvider.getAllServiceGroups().subscribe((serviceGroupData) => {
+    this.serviceGroupsProvider.getAllServiceGroups().subscribe((serviceGroupData) => {
       this.serviceGroups = serviceGroupData;
       this.serviceGroups.sort(firstBy('parent_id').thenBy('name').thenBy('id'));
       this.serviceGroupHierarchy = this.getServiceHierarchy(this.serviceGroups, 0);
@@ -127,7 +116,7 @@ export class ListfullPage {
     this.translate.get('FINDING_MTGS').subscribe(value => { this.presentLoader(value); });
     this.HTMLGrouping = 'meetings';
     this.areaName = areaName;
-    this.MeetingListProvider.getMeetingsByAreaProvider(areaID).subscribe((data) => {
+    this.meetingListProvider.getMeetingsByAreaProvider(areaID).subscribe((data) => {
 
       if (JSON.stringify(data) === '{}') {  // empty result set!
         this.meetingListArea = JSON.parse('[]');
@@ -146,6 +135,7 @@ export class ListfullPage {
     }
   }
 
+
   dismissLoader() {
     if (this.loader) {
       this.loader = this.loaderCtrl.dismiss();
@@ -153,13 +143,11 @@ export class ListfullPage {
     }
   }
 
-  
+
   showServiceStructure() {
     this.HTMLGrouping = 'areas';
     this.areaName = '';
     this.shownDay = null;
   }
-
-
 
 }

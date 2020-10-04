@@ -25,7 +25,6 @@ export class LocationSearchPage  {
   addressLongitude: any = 0;
   radius: number;
   radiusMeters = 10000;
-  timeDisplay = '';
 
   constructor(private MeetingListProvider: MeetingListProvider,
               private loaderCtrl: LoadingService,
