@@ -10,8 +10,11 @@ import { TranslateService } from '@ngx-translate/core';
 export class MeetingCardComponent implements OnInit, AfterContentInit {
 
   @Input() data;
-  meeting;
+  @Input() MeetingType;
 
+  meeting;
+  meetingType;
+  
   constructor(
     private iab: InAppBrowser,
     private translate: TranslateService) { }
@@ -20,6 +23,7 @@ export class MeetingCardComponent implements OnInit, AfterContentInit {
 
   ngAfterContentInit() {
     this.meeting = this.data;
+    this.meetingType = this.MeetingType;
   }
   public openMapsLink(destLatitude, destLongitude) {
     const browser = this.iab.create('https://www.google.com/maps/search/?api=1&query=' + destLatitude + ',' + destLongitude, '_system');
@@ -47,16 +51,6 @@ export class MeetingCardComponent implements OnInit, AfterContentInit {
       return 'TEMPCLOSED';
     } else {
       return 'NOT-TEMPCLOSED';
-    }
-  }
-
-  public isToday(dayOfWeek) {
-    const d = new Date();
-    const n = d.getDay();
-    if (dayOfWeek === (n + 1)) {
-      return true;
-    } else {
-      return false;
     }
   }
 

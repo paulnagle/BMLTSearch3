@@ -22,16 +22,7 @@
 
   <div *ngIf="isDayShown(i)">
     <ion-list *ngFor="let meeting of dailyList; let j = index">
-
-      <div ngSwitch="{{ localMeetingType }}">
-        <div *ngSwitchCase="'virt'">
-          <app-virt-meeting-card [data]="meeting"></app-virt-meeting-card>
-        </div>
-        <div *ngSwitchDefault>
-          <app-meeting-card [data]="meeting"></app-meeting-card>
-        </div>
-      </div>
-
+      <app-meeting-card [data]="meeting" MeetingType="{{ localMeetingType }}"></app-meeting-card>
     </ion-list>
   </div>
 </div>

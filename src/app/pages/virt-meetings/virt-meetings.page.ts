@@ -28,6 +28,8 @@ export class VirtMeetingsPage  {
   isLoaded = false;
   timeDisplay = '';
 
+  virtualNaLink = "https://virtual-na.org/"
+
   constructor(
     private meetingListProvider: MeetingListProvider,
     private serviceGroupsProvider: ServiceGroupsProvider,
@@ -35,7 +37,6 @@ export class VirtMeetingsPage  {
     private translate: TranslateService,
     private storage: Storage,
     private iab: InAppBrowser) {
-    console.log('In constructor');
 
     this.translate.get('FINDING_MTGS').subscribe(value => { this.presentLoader(value); });
 
@@ -161,6 +162,10 @@ export class VirtMeetingsPage  {
     this.HTMLGrouping = 'areas';
     this.areaName = '';
     this.shownDay = null;
+  }
+
+  public openLink(url) {
+    const browser = this.iab.create(url, '_system');
   }
 
 }

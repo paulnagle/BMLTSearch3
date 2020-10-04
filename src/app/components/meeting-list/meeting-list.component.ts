@@ -33,24 +33,11 @@ export class MeetingListComponent implements OnInit, OnChanges {
 
 
   ngOnChanges() {
-    console.log('In ngOnChanges');
     this.ngOnInit();
   }
 
 
   ngOnInit() {
-    console.log('In ngOnInit');
-
-    this.storage.ready().then(() => {
-      this.storage.get('timeDisplay')
-        .then(timeDisplay => {
-          if (timeDisplay) {
-            this.timeDisplay = timeDisplay;
-          } else {
-            this.timeDisplay = '24hr';
-          }
-        });
-    });
 
     this.meetingList = this.data;
     this.localMeetingType = this.meetingType;
@@ -58,7 +45,6 @@ export class MeetingListComponent implements OnInit, OnChanges {
     if (this.localMeetingType === 'virt') {
       // Get the formats
       this.virtFormatsProvider.getAllVirtFormats().then((serviceGroupData) => {
-        console.log('Response from getAllVirtFormats');
         this.formats = serviceGroupData;
         this.formatMeetingList();
       });
@@ -68,7 +54,6 @@ export class MeetingListComponent implements OnInit, OnChanges {
   }
 
   formatMeetingList() {
-    console.log('In formatMeetingList');
     for (let i = 0; i < 7; i++) {
       this.dayCount[i] = this.meetingList.filter(list => parseInt(list.weekday_tinyint, 10) === i + 1).length;
     }
@@ -108,7 +93,6 @@ export class MeetingListComponent implements OnInit, OnChanges {
   }
 
   explodeFormats() {
-    console.log('In explodeFormats');
 
     for (let i of this.meetingListGroupedByDay) {
       const splitFormats = i.formats.split(',');
@@ -126,7 +110,6 @@ export class MeetingListComponent implements OnInit, OnChanges {
 
 
   groupMeetingList(meetingList, groupingOption) {
-    console.log('In groupMeetingList');
 
     // A function to convert a flat json list to an javascript array
     const groupJSONList = function(inputArray, key) {
