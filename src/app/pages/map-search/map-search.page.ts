@@ -18,7 +18,6 @@ declare const google: any;
 })
 export class MapSearchPage implements OnInit {
 
-  timeDisplay = '';
   meetingList: any = [];
   loader = null;
   zoom = 8;
@@ -70,7 +69,7 @@ export class MapSearchPage implements OnInit {
   searchMarker: Marker;
 
   constructor(
-    private MeetingListProvider: MeetingListProvider,
+    private meetingListProvider: MeetingListProvider,
     public loadingCtrl: LoadingService,
     private storage: Storage,
     private platform: Platform,
@@ -130,14 +129,7 @@ export class MapSearchPage implements OnInit {
     this.GoogleAutocomplete = new google.maps.places.AutocompleteService();
     this.autocomplete = { input: '' };
     this.autocompleteItems = [];
-    this.storage.get('timeDisplay')
-      .then(timeDisplay => {
-        if (timeDisplay) {
-          this.timeDisplay = timeDisplay;
-        } else {
-          this.timeDisplay = '24hr';
-        }
-      });
+
     await this.platform.ready();
     await this.loadMap();
 
@@ -344,7 +336,7 @@ export class MapSearchPage implements OnInit {
     // Eagerly load 10% around screen area
     this.autoRadius = this.autoRadius * 1.1;
 
-    this.MeetingListProvider.getRadiusMeetings(this.mapLatitude, this.mapLongitude, this.autoRadius).subscribe((data) => {
+    this.meetingListProvider.getRadiusMeetings(this.mapLatitude, this.mapLongitude, this.autoRadius).subscribe((data) => {
       if (JSON.stringify(data) === '{}') {  // empty result set!
         this.meetingList = JSON.parse('[]');
       } else {
@@ -540,37 +532,17 @@ export class MapSearchPage implements OnInit {
   }
 
 
-  public convertTo12Hr(timeString: string) {
-    if (this.timeDisplay === '12hr') {
-      const H = +timeString.substr(0, 2);
-      const h = H % 12 || 12;
-      const ampm = (H < 12 || H === 24) ? ' AM' : ' PM';
-      timeString = h + timeString.substr(2, 3) + ampm;
-      return timeString;
-    } else {
-      return timeString.slice(0, -3);
-    }
-  }
-
-
   openMeetingModal(meetingID) {
     console.log('openMeetingModal()');
-    this.MeetingListProvider.getSingleMeetingByID(meetingID).subscribe((meeting) => {
+    this.meetingListProvider.getSingleMeetingByID(meetingID).subscribe((meeting) => {
       this.meeting = meeting;
-      this.meeting.filter((i: { start_time_set: any; start_time: any; }) => i.start_time_set = this.convertTo12Hr(i.start_time));
+      this.meeting.filter((i) => i.start_time_raw = this.convertTo12Hr(i.start_time));
 
       this.openModal(this.meeting);
     });
   }
 
   async openModal(meeting) {
-
-    // const myModalOptions: ModalOptions = {
-    //   //   enableBackdropDismiss: true,
-    //   showBackdrop: true,
-    //   cssClass: 'mymodal'
-    // };
-
     const modal = await this.modalCtrl.create({
       component: ModalPage,
       componentProps: {
@@ -586,6 +558,14 @@ export class MapSearchPage implements OnInit {
 
   public openMapsLink(destLatitude: string, destLongitude: string) {
     window.open('https://www.google.com/maps/search/?api=1&query=' + destLatitude + '%2C' + destLongitude + ')', '_system');
+  }
+
+  public convertTo12Hr(timeString) {
+    const H = +timeString.substr(0, 2);
+    const h = H % 12 || 12;
+    const ampm = (H < 12 || H === 24) ? ' am' : ' pm';
+    timeString = h + timeString.substr(2, 3) + ampm;
+    return timeString;
   }
 
 }

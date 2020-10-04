@@ -9,7 +9,6 @@ import { InAppBrowser } from '@ionic-native/in-app-browser/ngx';
   styleUrls: ['./modal.page.scss'],
 })
 export class ModalPage implements OnInit {
-  timeDisplay: any;
   text: string;
   title: string;
   meetingList: any;

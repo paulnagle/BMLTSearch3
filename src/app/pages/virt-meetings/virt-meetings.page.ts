@@ -26,9 +26,8 @@ export class VirtMeetingsPage  {
   meetingListArea: any = [];
   areaName: any = '';
   isLoaded = false;
-  timeDisplay = '';
 
-  virtualNaLink = "https://virtual-na.org/"
+  virtualNaLink = 'https://virtual-na.org/';
 
   constructor(
     private meetingListProvider: MeetingListProvider,
@@ -39,15 +38,6 @@ export class VirtMeetingsPage  {
     private iab: InAppBrowser) {
 
     this.translate.get('FINDING_MTGS').subscribe(value => { this.presentLoader(value); });
-
-    this.storage.get('timeDisplay')
-      .then(timeDisplay => {
-        if (timeDisplay) {
-          this.timeDisplay = timeDisplay;
-        } else {
-          this.timeDisplay = '24hr';
-        }
-      });
 
     this.serviceGroupsProvider.getAllVirtServiceGroups().then((serviceGroupData) => {
       this.serviceGroups = serviceGroupData;
