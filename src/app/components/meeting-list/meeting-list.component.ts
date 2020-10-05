@@ -3,6 +3,8 @@ import { firstBy } from 'thenby';
 import { Storage } from '@ionic/storage';
 import { TranslateService } from '@ngx-translate/core';
 import { VirtFormatsProvider } from '../../providers/virt-formats.service';
+import { TomatoFormatsService } from '../../providers/tomato-formats.service';
+
 import * as moment from 'moment';
 import 'moment-timezone';
 
@@ -24,12 +26,14 @@ export class MeetingListComponent implements OnInit, OnChanges {
   localMeetingType;
   dayCount = [0, 0, 0, 0, 0, 0, 0];
   formats;
+  formatLanguage = 'en';
 
 
   constructor(
     private storage: Storage,
     private translate: TranslateService,
-    private virtFormatsProvider: VirtFormatsProvider) {}
+    private virtFormatsProvider: VirtFormatsProvider,
+    private tomatoFormatsService: TomatoFormatsService) { }
 
 
   ngOnChanges() {
@@ -38,6 +42,11 @@ export class MeetingListComponent implements OnInit, OnChanges {
 
 
   ngOnInit() {
+    this.storage.get('language').then((value) => {
+      if (value) {
+        this.formatLanguage = value;
+      }
+    });
 
     this.meetingList = this.data;
     this.localMeetingType = this.meetingType;
@@ -59,12 +68,12 @@ export class MeetingListComponent implements OnInit, OnChanges {
     }
     this.meetingListGroupedByDay = this.meetingList.concat();
 
-    if (this.localMeetingType === 'virt') {
-      this.explodeFormats();
-    }
+    this.explodeFormats();
+
     this.setRawStartTime();
 
     this.meetingListGroupedByDay.sort((a, b) => a.weekday_tinyint.localeCompare(b.weekday_tinyint));
+
     this.meetingListGroupedByDay = this.groupMeetingList(this.meetingListGroupedByDay, this.meetingsListGrouping);
     for (let i of this.meetingListGroupedByDay) {
       i.sort(firstBy('weekday_tinyint').thenBy('start_time')
@@ -93,23 +102,38 @@ export class MeetingListComponent implements OnInit, OnChanges {
   }
 
   explodeFormats() {
+    if (this.localMeetingType === 'virt') {
 
-    for (let i of this.meetingListGroupedByDay) {
-      const splitFormats = i.formats.split(',');
-      i.formats_exploded = '';
-      for (let j of splitFormats) {
-        const longFormat = this.formats.filter(data => data.key_string === j);
-        if (longFormat[0]) {
-          i.formats_exploded += longFormat[0].name_string + ', ';
-        } else {
-          i.formats_exploded += j + ', ';
+      for (let i of this.meetingListGroupedByDay) {
+        const splitFormats = i.formats.split(',');
+        i.formats_exploded = '';
+        for (let j of splitFormats) {
+          const longFormat = this.formats.filter(data => data.key_string === j);
+          if (longFormat[0]) {
+            i.formats_exploded += longFormat[0].name_string + ', ';
+          } else {
+            i.formats_exploded += j + ', ';
+          }
+        }
+      }
+    } else {
+      if (this.localMeetingType === 'regular') {
+        for (let meeting of this.meetingListGroupedByDay) {
+          this.tomatoFormatsService.getFormatByID(meeting.format_shared_id_list, this.formatLanguage).then((formatData) => {
+            meeting.formats_exploded = formatData;
+          });
         }
       }
     }
   }
 
 
-  groupMeetingList(meetingList, groupingOption) {
+  private explodeTomatoFormats(listOfFormatIDs) {
+
+  }
+
+
+  private groupMeetingList(meetingList, groupingOption) {
 
     // A function to convert a flat json list to an javascript array
     const groupJSONList = function(inputArray, key) {
