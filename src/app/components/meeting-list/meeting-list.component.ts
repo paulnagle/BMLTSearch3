@@ -76,7 +76,7 @@ export class MeetingListComponent implements OnInit, OnChanges {
 
     this.meetingListGroupedByDay = this.groupMeetingList(this.meetingListGroupedByDay, this.meetingsListGrouping);
     for (let i of this.meetingListGroupedByDay) {
-      i.sort(firstBy('weekday_tinyint').thenBy('start_time')
+      i.sort(firstBy('weekday_tinyint').thenBy('start_time_raw')
       );
     }
   }
@@ -106,11 +106,6 @@ export class MeetingListComponent implements OnInit, OnChanges {
         }
       }
     }
-  }
-
-
-  private explodeTomatoFormats(listOfFormatIDs) {
-
   }
 
 
@@ -170,16 +165,18 @@ export class MeetingListComponent implements OnInit, OnChanges {
           meeting.time_zone
         );
 
-        meeting.start_time_raw = startTimeRaw.format('h:mm a');
+        meeting.start_time_raw = startTimeRaw.format('HH:mm (hh:mm a)');
 
-        const timeZoneName = Intl.DateTimeFormat().resolvedOptions().timeZone;
-        meeting.start_time_raw = meeting.start_time_raw + ' (' + timeZoneName + ' )';
+        // meeting.start_time_raw += ' (' + startTimeRaw.format('h:mm a') + ')';
+
+        const timeZoneName = moment.tz.guess();
+        meeting.start_time_raw += ' (' + timeZoneName + ' )';
       } else {
         meeting.start_time_raw = this.convertTo12Hr(meeting.start_time);
       }
     }
   }
-  
+
 
   getAdjustedDateTime(meetingDay, meetingTime, meetingTimeZone) {
     let meetingDateTimeObj;
