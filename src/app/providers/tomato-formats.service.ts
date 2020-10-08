@@ -24,7 +24,7 @@ export class TomatoFormatsService {
       if (formatName[0].name === null) {
         formatName = jsonData.translatedformats.filter(i => i.language === 'en');
       }
-      responseString += formatName[0].name + ', ';
+      responseString += formatName[0].name + '. ';
     }
     return responseString;
   }

@@ -14,7 +14,7 @@ export class MeetingCardComponent implements OnInit, AfterContentInit {
 
   meeting;
   meetingType;
-  
+
   constructor(
     private iab: InAppBrowser,
     private translate: TranslateService) { }

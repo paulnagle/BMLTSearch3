@@ -56,6 +56,7 @@
     "@types/node": "^12.11.1",
     "codelyzer": "^5.1.2",
     "com-badrit-base64": "^0.2.0",
+    "cordova-android": "^9.0.0",
     "cordova-ios": "^6.1.1",
     "cordova-plugin-advanced-http": "^3.0.1",
     "cordova-plugin-device": "^2.0.2",
@@ -99,7 +100,8 @@
       "cordova-plugin-advanced-http": {}
     },
     "platforms": [
-      "ios"
+      "ios",
+      "android"
     ]
   }
 }
