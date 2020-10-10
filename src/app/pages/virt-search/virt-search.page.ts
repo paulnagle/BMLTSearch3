@@ -9,11 +9,17 @@ import { TranslateService } from '@ngx-translate/core';
 export class VirtSearchPage implements OnInit {
 
   radius = 10;
+  language = 'english';
+
   constructor(    private translate: TranslateService) { }
 
   ngOnInit() {
   }
   public getNextMeetings() {
+
+  }
+
+  public selectLanguage() {
 
   }
 }

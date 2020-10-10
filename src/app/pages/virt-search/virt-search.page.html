@@ -1,22 +1,25 @@
+
 <ion-header>
   <ion-toolbar>
-    <ion-title>virtual-na.org search</ion-title>
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+
+    <ion-title>
+      Search virtual-na.org 
+    </ion-title>
+
   </ion-toolbar>
 </ion-header>
 
 <ion-content>
-<p>Next {{ radius }} meetings in your language (or english if no language available</p>
+<p>Next {{ radius }} meetings in {{ language }} (or english if no language available</p>
 </ion-content>
 
 <ion-footer no-padding>
 
     <ion-list>
-      <ion-item>
-        <ion-range no-padding id="RadiusRange" min="5" max="50" [(ngModel)]="radius" (ionChange)="getNextMeetings()" color="danger" pin="true" debounce="500">
-        <ion-label slot="start">5 {{'MEETINGS' | translate}}</ion-label>
-        <ion-label slot="end">50 {{'MEETINGS' | translate}}</ion-label>
-        </ion-range>
-      </ion-item>
+
       <ion-item>
         <ion-label>{{'LANGUAGE' | translate}}</ion-label>
         <ion-select [(ngModel)]="language" (ionChange)=selectLanguage() cancelText="{{'CANCEL' | translate}}">
@@ -29,6 +32,14 @@
           <ion-select-option value="ru">{{'RUSSIAN' | translate}}</ion-select-option>
         </ion-select>
       </ion-item>
+
+      <ion-item>
+        <ion-range no-padding id="RadiusRange" min="5" max="50" [(ngModel)]="radius" (ionChange)="getNextMeetings()" color="danger" pin="true" debounce="500">
+        <ion-label slot="start">5 {{'MEETINGS' | translate}}</ion-label>
+        <ion-label slot="end">50 {{'MEETINGS' | translate}}</ion-label>
+        </ion-range>
+      </ion-item>
+
     </ion-list>
 
 </ion-footer>
