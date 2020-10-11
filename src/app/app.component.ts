@@ -41,7 +41,7 @@ export class AppComponent implements OnInit {
     },
     {
       title: 'VIRTUAL_MEETINGS',
-      url: 'virt-meetings',
+      url: 'virt-tabs',
       icon: 'globe-outline'
     },
     {

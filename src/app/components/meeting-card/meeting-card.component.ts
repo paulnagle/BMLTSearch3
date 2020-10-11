@@ -14,7 +14,7 @@ export class MeetingCardComponent implements OnInit, AfterContentInit {
 
   meeting;
   meetingType;
-  
+
   constructor(
     private iab: InAppBrowser,
     private translate: TranslateService) { }
@@ -47,7 +47,7 @@ export class MeetingCardComponent implements OnInit, AfterContentInit {
   }
 
   isTempClosed(meeting) {
-    if (meeting.formats.match(/TC/i)) {
+    if (meeting.formats.match(/TC/i)  && ( !(meeting.virtual_meeting_link || meeting.virtual_meeting_link))  ) {
       return 'TEMPCLOSED';
     } else {
       return 'NOT-TEMPCLOSED';

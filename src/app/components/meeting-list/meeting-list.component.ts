@@ -76,30 +76,11 @@ export class MeetingListComponent implements OnInit, OnChanges {
 
     this.meetingListGroupedByDay = this.groupMeetingList(this.meetingListGroupedByDay, this.meetingsListGrouping);
     for (let i of this.meetingListGroupedByDay) {
-      i.sort(firstBy('weekday_tinyint').thenBy('start_time')
+      i.sort(firstBy('weekday_tinyint').thenBy('start_time_raw')
       );
     }
   }
 
-
-  setRawStartTime() {
-    for (let meeting of this.meetingListGroupedByDay) {
-      if (this.localMeetingType === 'virt') {
-        const startTimeRaw = this.getAdjustedDateTime(
-          parseInt(meeting.weekday_tinyint, 10) === 1 ? 7 : parseInt(meeting.weekday_tinyint, 10) - 1,
-          meeting.start_time,
-          meeting.time_zone
-        );
-
-        meeting.start_time_raw = startTimeRaw.format('h:mm a');
-
-        const timeZoneName = Intl.DateTimeFormat().resolvedOptions().timeZone;
-        meeting.start_time_raw = meeting.start_time_raw + ' (' + timeZoneName + ' )';
-      } else {
-        meeting.start_time_raw = this.convertTo12Hr(meeting.start_time);
-      }
-    }
-  }
 
   explodeFormats() {
     if (this.localMeetingType === 'virt') {
@@ -110,9 +91,9 @@ export class MeetingListComponent implements OnInit, OnChanges {
         for (let j of splitFormats) {
           const longFormat = this.formats.filter(data => data.key_string === j);
           if (longFormat[0]) {
-            i.formats_exploded += longFormat[0].name_string + ', ';
+            i.formats_exploded += longFormat[0].name_string + '. ';
           } else {
-            i.formats_exploded += j + ', ';
+            i.formats_exploded += j + '. ';
           }
         }
       }
@@ -125,11 +106,6 @@ export class MeetingListComponent implements OnInit, OnChanges {
         }
       }
     }
-  }
-
-
-  private explodeTomatoFormats(listOfFormatIDs) {
-
   }
 
 
@@ -178,6 +154,29 @@ export class MeetingListComponent implements OnInit, OnChanges {
       return false;
     }
   }
+
+
+  setRawStartTime() {
+    for (let meeting of this.meetingListGroupedByDay) {
+      if (this.localMeetingType === 'virt') {
+        const startTimeRaw = this.getAdjustedDateTime(
+          parseInt(meeting.weekday_tinyint, 10) === 1 ? 7 : parseInt(meeting.weekday_tinyint, 10) - 1,
+          meeting.start_time,
+          meeting.time_zone
+        );
+
+        meeting.start_time_raw = startTimeRaw.format('HH:mm (hh:mm a)');
+
+        // meeting.start_time_raw += ' (' + startTimeRaw.format('h:mm a') + ')';
+
+        const timeZoneName = moment.tz.guess();
+        meeting.start_time_raw += ' (' + timeZoneName + ' )';
+      } else {
+        meeting.start_time_raw = this.convertTo12Hr(meeting.start_time);
+      }
+    }
+  }
+
 
   getAdjustedDateTime(meetingDay, meetingTime, meetingTimeZone) {
     let meetingDateTimeObj;
