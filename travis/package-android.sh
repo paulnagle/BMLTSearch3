@@ -10,4 +10,5 @@ then
 fi
 
 mkdir -p output
+
 cp  platforms/android/app/build/outputs/apk/release/app-release-unsigned.apk output/bmlt-search-travis-release-unsigned.apk
