@@ -68,6 +68,8 @@ export class MapSearchPage implements OnInit {
   filePathMarkerZero: string;
   searchMarker: Marker;
 
+  formatLanguage = 'en';
+
   constructor(
     private meetingListProvider: MeetingListProvider,
     public loadingCtrl: LoadingService,
@@ -76,14 +78,12 @@ export class MapSearchPage implements OnInit {
     private translate: TranslateService,
     private zone: NgZone,
     public modalCtrl: ModalController,
-    private base64: Base64
+    private base64: Base64,
   ) {
     console.log('Map page constructor');
-
   }
 
   async ngOnInit() {
-    console.log('ngOnInit');
 
     this.filePathMarkerRed = './assets/markercluster/MarkerRed.png';
     this.base64.encodeFile(this.filePathMarkerRed).then((base64imageR: string) => {
@@ -537,10 +537,10 @@ export class MapSearchPage implements OnInit {
     this.meetingListProvider.getSingleMeetingByID(meetingID).subscribe((meeting) => {
       this.meeting = meeting;
       this.meeting.filter((i) => i.start_time_raw = this.convertTo12Hr(i.start_time));
-
       this.openModal(this.meeting);
     });
   }
+
 
   async openModal(meeting) {
     const modal = await this.modalCtrl.create({
