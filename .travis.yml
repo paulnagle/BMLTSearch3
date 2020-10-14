@@ -74,3 +74,4 @@ deploy:
   overwrite: true
   on:
     branch: master
+    tags: true
