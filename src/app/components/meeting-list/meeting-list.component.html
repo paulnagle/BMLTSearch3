@@ -1,3 +1,31 @@
+<div>
+  <ion-list>
+    <ion-item sticky="true">
+      <ion-text>
+        <p>Meetings {{ selectedDay }} from {{ hourRangeValues.lower }}:00 - {{ hourRangeValues.upper }}:59 </p>
+      </ion-text>
+    </ion-item>
+    <ion-item sticky="true">
+      <ion-select [(ngModel)]="selectedDay" (ionChange)=setDay() interface="popover" cancelText="{{'CANCEL' | translate}}">
+        <ion-select-option  *ngFor="let selectedDay of days" [value]="selectedDay" >{{ selectedDay }}</ion-select-option>
+      </ion-select>
+      <ion-range 
+        [(ngModel)]="hourRangeValues" 
+        (ionChange)=setHourRangeValues() 
+        dualKnobs="true" 
+        min="00" 
+        max="23" 
+        step="1" 
+        snaps="true" 
+        pin="true" 
+        debounce="350">
+        <ion-icon slot="start" name="time-outline"></ion-icon>
+        <ion-icon slot="end" name="time-outline"></ion-icon>
+      </ion-range>
+    </ion-item>
+  </ion-list>
+</div>
+
 <div *ngFor="let dailyList of meetingListGroupedByDay; let i = index" (click)="toggleDay(i)" [ngClass]="{active: isDayShown(i)}">
   <ion-item-divider sticky="true" [color]="isToday(dailyList[0].weekday_tinyint) ? 'secondary' : 'primary'">
     <div ngSwitch="{{ dailyList[0].weekday_tinyint }}">
@@ -17,7 +45,8 @@
         <h3>{{'SATURDAY' | translate}} ({{dayCount[6]}})</h3></div>
       <div *ngSwitchDefault>Nothing Found.</div>
     </div>
-    <ion-icon color="white" item-left [name]="isDayShown(i) ? 'close-circle' : 'add-circle'"></ion-icon>
+    <ion-icon size="large" slot="end" [name]="isDayShown(i) ? 'close-circle' : 'add-circle'"></ion-icon>
+
   </ion-item-divider>
 
   <div *ngIf="isDayShown(i)">
