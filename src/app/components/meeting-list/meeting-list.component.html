@@ -1,13 +1,13 @@
 <div>
   <ion-list>
-    <ion-item sticky="true">
+    <ion-item>
       <ion-text>
-        <p>Meetings {{ selectedDay }} from {{ hourRangeValues.lower }}:00 - {{ hourRangeValues.upper }}:59 </p>
+        <p class="ion-1x">&nbsp; {{ selectedDay | translate }} : {{ displayLower }} - {{ displayUpper }} </p>
       </ion-text>
     </ion-item>
-    <ion-item sticky="true">
+    <ion-item class="ion-1x">
       <ion-select [(ngModel)]="selectedDay" (ionChange)=setDay() interface="popover" cancelText="{{'CANCEL' | translate}}">
-        <ion-select-option  *ngFor="let selectedDay of days" [value]="selectedDay" >{{ selectedDay }}</ion-select-option>
+        <ion-select-option *ngFor="let selectedDay of days" [value]="selectedDay" >{{ selectedDay | translate }}</ion-select-option>
       </ion-select>
       <ion-range 
         [(ngModel)]="hourRangeValues" 

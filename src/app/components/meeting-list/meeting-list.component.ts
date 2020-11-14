@@ -30,16 +30,18 @@ export class MeetingListComponent implements OnInit, OnChanges {
   formats;
   formatLanguage = 'en';
   language = 'english';
-  selectedDay = 'All Days';
+  selectedDay = 'WEEKDAYS';
   loader = null;
   isLoaded = false;
 
-  days = ['All Days', 'Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+  days = ['WEEKDAYS', 'SUNDAY', 'MONDAY', 'TUESDAY', 'WEDNESDAY', 'THURSDAY', 'FRIDAY', 'SATURDAY'];
   hourRangeValues = {
     upper: 23,
     lower: 0
   };
 
+  displayUpper = '00:00 (12:00 am)';
+  displayLower = '23:59 (11:59 pm)';
 
   constructor(
     private storage: Storage,
@@ -75,6 +77,7 @@ export class MeetingListComponent implements OnInit, OnChanges {
     } else {
       this.formatMeetingList();
     }
+
   }
 
 
@@ -178,7 +181,7 @@ export class MeetingListComponent implements OnInit, OnChanges {
         );
 
         meeting.start_time_moment = startTimeRaw;
-        meeting.start_time_raw = startTimeRaw.format('HH:mm (hh:mm a)');
+        meeting.start_time_raw = startTimeRaw.format('HH:mm (h:mm a)');
 
         const timeZoneName = moment.tz.guess();
         meeting.start_time_raw += ' (' + timeZoneName + ' )';
@@ -236,6 +239,21 @@ export class MeetingListComponent implements OnInit, OnChanges {
 
 
   public setHourRangeValues() {
+
+    const upperMoment = moment({
+      hour: this.hourRangeValues.upper,
+      minute: 59,
+      second: 0
+    });
+    this.displayUpper = upperMoment.format('HH:mm (h:mm a)');
+
+    const lowerMoment = moment({
+      hour: this.hourRangeValues.lower,
+      minute: 0,
+      second: 0
+    });
+    this.displayLower = lowerMoment.format('HH:mm (h:mm a)');
+
     this.filterMeetings();
   }
 
