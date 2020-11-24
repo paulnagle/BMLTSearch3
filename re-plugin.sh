@@ -3,7 +3,7 @@
 if [ -z "$1" ]
 then
 
-    rm -rf www
+    # rm -rf www
 
     ionic cordova platform rm ios
     ionic cordova platform rm android
@@ -26,7 +26,7 @@ then
 
     ionic cordova plugin add cordova-plugin-splashscreen
     ionic cordova plugin add cordova-plugin-statusbar
-    ionic cordova plugin add https://github.com/mapsplugin/cordova-plugin-googlemaps.git#multiple_maps
+    ionic cordova plugin add cordova-plugin-googlemaps
     ionic cordova plugin add com-badrit-base64
     ionic cordova plugin add cordova-plugin-ionic-webview@latest
     ionic cordova plugin add cordova-plugin-inappbrowser
