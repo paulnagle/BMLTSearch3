@@ -20,7 +20,7 @@ then
 
     rm -rf platform/*
 
-    ionic cordova platform add ios@latest
+    # ionic cordova platform add ios@latest
     ionic cordova platform add android@latest
     # ionic cordova platform add browser@latest
 
@@ -34,7 +34,7 @@ then
     ionic cordova plugin add cordova-plugin-advanced-http
 fi
 
-ionic cordova prepare ios --prod
+# ionic cordova prepare ios --prod
 ionic cordova prepare android --prod
 # ionic cordova prepare browser --prod
 

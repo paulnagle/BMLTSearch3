@@ -26,7 +26,7 @@ $ npm install
 ```
 Install Cordova/PhoneGap plugins (Cordova Plugins package.json branch dependencies)
 ```
-$ ionic state restore
+$ ionic cordova prepare
 ```
 Test your app on multiple screen sizes and platform types by starting a local development server
 ```

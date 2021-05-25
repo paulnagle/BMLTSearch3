@@ -11,8 +11,10 @@
 
 <ion-content>
   <ion-card>
+    <ion-card-header>
+      <ion-card-title>{{'SRC_CODE' | translate}}</ion-card-title>
+    </ion-card-header>
     <ion-card-content>
-        <ion-card-title>{{'SRC_CODE' | translate}}</ion-card-title>
         <ion-item text-wrap>
           <ion-icon name="globe" item-left></ion-icon>
           <ion-button (click)='openLink(sourceCodeLink)'>https://github.com</ion-button>
@@ -21,8 +23,10 @@
   </ion-card>
 
   <ion-card>
+    <ion-card-header>
+      <ion-card-title>{{'BUG_REPORT' | translate}}</ion-card-title>
+    </ion-card-header>
     <ion-card-content>
-        <ion-card-title>{{'BUG_REPORT' | translate}}</ion-card-title>
         <ion-item text-wrap>
           <ion-icon name="globe" item-left></ion-icon>
           <ion-button (click)='openLink(sourceBugs)'>https://github.com</ion-button>
@@ -31,8 +35,10 @@
   </ion-card>
 
   <ion-card>
-    <ion-card-content>
+    <ion-card-header>
       <ion-card-title>{{'FIND_OUT_MORE' | translate}}</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
       <ion-list>
         <ion-item text-wrap>
           <ion-icon name="logo-facebook" item-left></ion-icon>

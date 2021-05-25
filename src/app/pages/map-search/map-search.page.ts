@@ -90,12 +90,12 @@ export class MapSearchPage implements OnInit {
       this.Base64MarkerRed = base64imageR;
     });
 
-    this.filePathMarkerBlue = '/assets/markercluster//MarkerBlue.png';
+    this.filePathMarkerBlue = './assets/markercluster/MarkerBlue.png';
     this.base64.encodeFile(this.filePathMarkerBlue).then((base64imageB: string) => {
       this.Base64MarkerBlue = base64imageB;
     });
 
-    this.filePathMarkerZero = '/assets/markercluster/FFFFFF-0.png';
+    this.filePathMarkerZero = './assets/markercluster/FFFFFF-0.png';
     this.base64.encodeFile(this.filePathMarkerZero).then((base64imageZ: string) => {
       this.Base64MarkerZero = base64imageZ;
     });
