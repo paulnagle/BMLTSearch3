@@ -34,11 +34,7 @@ export class ModalPage implements OnInit {
       }
     });
 
-    for (let meeting of this.meetingList) {
-      this.tomatoFormatsService.getFormatByID(meeting.format_shared_id_list, this.formatLanguage).then((formatData) => {
-        meeting.formats_exploded = formatData;
-      });
-    }
+    this.tomatoFormatsService.setExplodedFormatsOnMeetingList(this.meetingList, this.formatLanguage);
   }
 
   async dismiss() {
@@ -76,9 +72,6 @@ export class ModalPage implements OnInit {
 
   explodeFormats(meeting) {
     console.log("exploding formats")
-    this.tomatoFormatsService.getFormatByID(meeting.format_shared_id_list, this.formatLanguage).then((formatData) => {
-      meeting.formats_exploded = formatData;
-    });
+    this.tomatoFormatsService.setExplodedFormatsOnMeetingList([meeting], this.formatLanguage);
   }
-
 }
