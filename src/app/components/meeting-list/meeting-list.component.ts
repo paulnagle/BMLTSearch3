@@ -115,11 +115,7 @@ export class MeetingListComponent implements OnInit, OnChanges {
       }
     } else {
       if (this.localMeetingType === 'regular') {
-        for (let meeting of this.meetingListGroupedByDay) {
-          this.tomatoFormatsService.getFormatByID(meeting.format_shared_id_list, this.formatLanguage).then((formatData) => {
-            meeting.formats_exploded = formatData;
-          });
-        }
+        this.tomatoFormatsService.setExplodedFormatsOnMeetingList(this.meetingListGroupedByDay, this.formatLanguage);
       }
     }
   }
