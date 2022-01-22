@@ -10,9 +10,9 @@ https://play.google.com/store/apps/details?id=ie.nasouth.bmltsearch&hl=en
 
 ## Build it yourself (on a mac)
 
-Download the master.zip file...
+Download the version_4.zip file...
 
-https://github.com/bmlt-enabled/BMLTSearch3/archive/master.zip
+https://github.com/bmlt-enabled/BMLTSearch3/archive/refs/heads/version_4.zip
 
 Unzip the zip file and cd into the directory that is created
 
@@ -32,3 +32,9 @@ Test your app on multiple screen sizes and platform types by starting a local de
 ```
 $ ionic cordova run -l
 ```
+
+## Branches
+The default branch is called version_4 
+This corresponds to the 4.xx.xx releases for Apple and Android.
+
+The version_3 branch holds the source code for the old version 3.xx.xx releases
