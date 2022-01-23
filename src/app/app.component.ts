@@ -64,22 +64,25 @@ export class AppComponent implements OnInit {
     private storage: StorageService
   ) {
     this.initializeApp();
-    this.translate.setDefaultLang('en');
-    storage.get('language').then((value) => {
-      if (value) {
-        this.translate.use(value);
-      } else {
-        this.translate.use('en');
-        storage.set('language', 'en');
-      }
-    });
+
   }
 
-  initializeApp() {
+  async initializeApp() {
     this.platform.ready().then(() => {
       this.statusBar.styleDefault();
       this.splashScreen.hide();
     });
+
+    this.translate.setDefaultLang('en');
+
+    const langValue = await this.storage.get('language');
+    if (langValue) {
+      this.translate.use(langValue);
+    } else {
+      this.translate.use('en');
+      this.storage.set('language', 'en');
+    }
+  
   }
 
   ngOnInit() {

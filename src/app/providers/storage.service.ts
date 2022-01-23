@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-
 import { Storage } from '@ionic/storage-angular';
 
 @Injectable({
@@ -14,16 +13,16 @@ export class StorageService {
 
   async init() {
     const storage = await this.storage.create();
+    console.log("[StorageService] Creating storage");
     this._storage = storage;
   }
 
-  // Create and expose methods that users of this service can
-  // call, for example:
   public set(key: string, value: any) {
     this._storage?.set(key, value);
   }
 
-  public get = (key: string) => {
-    return Promise.resolve(this._storage?.get(key));
+  public get(key: string) : Promise<any> {
+    return this.storage.get(key);
   }
+
 }

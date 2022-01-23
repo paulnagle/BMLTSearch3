@@ -12,7 +12,7 @@ import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { IonicStorageModule } from '@ionic/storage-angular';
 import { HTTP } from '@awesome-cordova-plugins/http/ngx';
 import { StorageService } from './providers/storage.service';
-import { Drivers, Storage } from '@ionic/storage';
+import { Drivers } from '@ionic/storage';
 
 export function createTranslateLoader(http: HttpClient) {
   return new TranslateHttpLoader(http, 'assets/translations/', '.json');
@@ -29,7 +29,7 @@ export function createTranslateLoader(http: HttpClient) {
     HttpClientModule,
     IonicStorageModule.forRoot({     
       name: '__bmltsearchdb',
-      driverOrder: [Drivers.IndexedDB, Drivers.LocalStorage]
+      driverOrder: [ Drivers.LocalStorage]
     }),
     TranslateModule.forRoot({
       loader: {
