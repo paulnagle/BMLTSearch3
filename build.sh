@@ -1,6 +1,7 @@
 #!/bin/bash
 
 npm install --save \
+    @ionic/cli native-run cordova-res \
     @ionic-native/google-maps \
     @ionic-native/base64 \
     @awesome-cordova-plugins/in-app-browser \

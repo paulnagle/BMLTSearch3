@@ -1,5 +1,7 @@
 # BMLT Meeting Search
 
+This app is built for Andoid and Apple devices using the Ionic Framework (For more details see https://ionicframework.com/)
+
 ## Apple iphone/ipad app link
 
 https://itunes.apple.com/us/app/bmlt-search/id1370165741?mt=8
@@ -16,17 +18,13 @@ https://github.com/bmlt-enabled/BMLTSearch3/archive/refs/heads/version_4.zip
 
 Unzip the zip file and cd into the directory that is created
 
-Install Ionic Framework (For more details see https://ionicframework.com/)
-```
-$ npm install -g ionic@latest
-```
 Install package.json dependencies
 ```
 $ npm install
 ```
-To build for app store distribution, and install all plugin dependencies, use the re-plugin.sh script.
+To build for app store distribution, and install all plugin dependencies, use the build.sh script.
 ```
-./re-plugin.sh
+./build.sh
 ```
 Test your app on multiple screen sizes and platform types by starting a local development server
 ```
