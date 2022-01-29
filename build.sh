@@ -1,7 +1,9 @@
 #!/bin/bash
+echo "** Installing ionic cli"
+npm install -g --save @ionic/cli native-run cordova-res cordova
 
+echo "** Installing other npm dependencies"
 npm install --save \
-    @ionic/cli native-run cordova-res \
     @ionic-native/google-maps \
     @ionic-native/base64 \
     @awesome-cordova-plugins/in-app-browser \
@@ -20,7 +22,7 @@ npm install --save \
 if [ -z "$1" ]
 then
 
-    # rm -rf www
+    rm -rf www
 
     ionic cordova platform rm ios
     ionic cordova platform rm android
@@ -34,23 +36,27 @@ then
     ionic cordova plugin rm cordova-plugin-inappbrowser
     ionic cordova plugin rm cordova-plugin-geolocation
     ionic cordova plugin rm cordova-plugin-advanced-http
-
+    ionic cordova plugin rm cordova-plugin-androidx-adapter
     rm -rf platform/*
-
-    ionic cordova platform add ios@latest
-    ionic cordova platform add android@latest
-    # ionic cordova platform add browser@latest
-
-    ionic cordova plugin add cordova-plugin-splashscreen
-    ionic cordova plugin add cordova-plugin-statusbar
-    ionic cordova plugin add cordova-plugin-googlemaps
-    ionic cordova plugin add com-badrit-base64
-    ionic cordova plugin add cordova-plugin-ionic-webview
-    ionic cordova plugin add cordova-plugin-inappbrowser
-    ionic cordova plugin add cordova-plugin-geolocation
-    ionic cordova plugin add cordova-plugin-advanced-http
 fi
 
+echo "** Adding ios and android platforms"
+ionic cordova platform add ios@latest
+ionic cordova platform add android@latest
+# ionic cordova platform add browser@latest
+
+echo "** Adding cordova plugins"
+ionic cordova plugin add cordova-plugin-splashscreen
+ionic cordova plugin add cordova-plugin-statusbar
+ionic cordova plugin add cordova-plugin-googlemaps
+ionic cordova plugin add com-badrit-base64
+ionic cordova plugin add cordova-plugin-ionic-webview
+ionic cordova plugin add cordova-plugin-inappbrowser
+ionic cordova plugin add cordova-plugin-geolocation
+ionic cordova plugin add cordova-plugin-advanced-http
+ionic cordova plugin add cordova-plugin-androidx-adapter
+
+echo "** Building for ios and android"
 ionic cordova prepare ios --prod
 ionic cordova prepare android --prod
 # ionic cordova prepare browser --prod
@@ -58,4 +64,5 @@ ionic cordova prepare android --prod
 # ionic cordova resources ios
 # ionic cordova resources android
 
+echo "** Prod build"
 ionic build --prod  --minifyjs   --minifycss  --optimizejs

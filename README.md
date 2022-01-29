@@ -1,5 +1,7 @@
 # BMLT Meeting Search
 
+[![GitHub Actions Demo](https://github.com/bmlt-enabled/BMLTSearch3/actions/workflows/github-action-build.yaml/badge.svg)](https://github.com/bmlt-enabled/BMLTSearch3/actions/workflows/github-action-build.yaml)
+
 This app is built for Andoid and Apple devices using the Ionic Framework (For more details see https://ionicframework.com/)
 
 ## Apple iphone/ipad app link
