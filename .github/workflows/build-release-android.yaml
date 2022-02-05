@@ -22,8 +22,8 @@ jobs:
         with:
           node-version: 16.x
 
-      - name: Build Script
-        run: ./build.sh ci
+      - name: Build Script for android
+        run: ./build.sh -a
 
       - name: Build Android release AAB
         run: ionic cordova build android --release --prod

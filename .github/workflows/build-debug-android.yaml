@@ -20,11 +20,8 @@ jobs:
         with:
           node-version: 16.x
 
-      - name: Build Script
-        run: ./build.sh ci
-
-      - name: Build Android debug APK
-        run: ionic cordova build android
+      - name: Build for android
+        run: ./build.sh -a
 
       - name: Upload dev APK
         uses: actions/upload-artifact@v1

@@ -47,11 +47,14 @@ export class MeetingCardComponent implements OnInit, AfterContentInit {
   }
 
   isTempClosed(meeting) {
-    if (meeting.formats.match(/TC/i)  && ( !(meeting.virtual_meeting_link || meeting.virtual_meeting_link))  ) {
+    if (meeting.formats.match(/TC/i) && meeting.formats.match(/VM/i)) {
+      return 'TEMPREPLACE';
+    } else
+    if ( meeting.formats.match(/TC/i) ) {
       return 'TEMPCLOSED';
     } else {
       return 'NOT-TEMPCLOSED';
     }
   }
-
+  
 }

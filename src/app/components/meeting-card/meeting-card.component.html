@@ -37,7 +37,7 @@
 
   <ion-card-content>
     <h1>{{meeting.meeting_name}}</h1>
-    <div *ngIf="meetingType === 'regular' || isHybrid(meeting) === 'HYBRID'">
+    <div *ngIf="(meetingType === 'regular' || isHybrid(meeting) === 'HYBRID') ">
       <div *ngIf="meeting.location_text">{{meeting.location_text}}<br></div>
       <div *ngIf="meeting.location_street">{{meeting.location_street}}<br></div>
       <div *ngIf="meeting.location_city_subsection">{{meeting.location_city_subsection}}<br></div>
