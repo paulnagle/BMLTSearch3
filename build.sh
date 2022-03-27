@@ -1,27 +1,49 @@
 #!/bin/bash
-echo "** Installing ionic cli"
-npm install -g --save @ionic/cli native-run cordova-res cordova
 
-echo "** Installing other npm dependencies"
-npm install --save \
-    @ionic-native/google-maps \
-    @ionic-native/base64 \
-    @awesome-cordova-plugins/in-app-browser \
-    @awesome-cordova-plugins/geolocation  \
-    @awesome-cordova-plugins/http  \
-    @awesome-cordova-plugins/splash-screen \
-    @awesome-cordova-plugins/http \
-    @awesome-cordova-plugins/status-bar \
-    @ngx-translate/core \
-    @ngx-translate/http-loader \
-    @ionic/storage-angular \
-    thenby \
-    moment \
-    moment-timezone
+usage(){
+	echo "Usage: -b (Build for browser)"
+    echo "       -i (Build for ios)"
+    echo "       -a (Build for android)"
+    echo "       -c (Clean old build files)"
+	exit 1
+}
 
-if [ -z "$1" ]
-then
+add_plugins() {
+    echo "** Adding cordova plugins"
+    ionic cordova plugin add cordova-plugin-splashscreen
+    ionic cordova plugin add cordova-plugin-statusbar
+    ionic cordova plugin add cordova-plugin-googlemaps
+    ionic cordova plugin add com-badrit-base64
+    ionic cordova plugin add cordova-plugin-ionic-webview
+    ionic cordova plugin add cordova-plugin-inappbrowser
+    ionic cordova plugin add cordova-plugin-geolocation
+    ionic cordova plugin add cordova-plugin-advanced-http
+    ionic cordova plugin add cordova-plugin-androidx-adapter
+}
 
+install_deps() {
+    echo "** Installing ionic cli"
+    npm install -g --save @ionic/cli native-run cordova-res cordova
+
+    echo "** Installing other npm dependencies"
+    npm install --save \
+        @ionic-native/google-maps \
+        @ionic-native/base64 \
+        @awesome-cordova-plugins/in-app-browser \
+        @awesome-cordova-plugins/geolocation  \
+        @awesome-cordova-plugins/http  \
+        @awesome-cordova-plugins/splash-screen \
+        @awesome-cordova-plugins/http \
+        @awesome-cordova-plugins/status-bar \
+        @ngx-translate/core \
+        @ngx-translate/http-loader \
+        @ionic/storage-angular \
+        thenby \
+        moment \
+        moment-timezone
+}
+
+clean_old_build() {
     rm -rf www
 
     ionic cordova platform rm ios
@@ -38,31 +60,36 @@ then
     ionic cordova plugin rm cordova-plugin-advanced-http
     ionic cordova plugin rm cordova-plugin-androidx-adapter
     rm -rf platform/*
-fi
+}
 
-echo "** Adding ios and android platforms"
-ionic cordova platform add ios@latest
-ionic cordova platform add android@latest
-# ionic cordova platform add browser@latest
+build_for() {
+    PLATFORM=$1
 
-echo "** Adding cordova plugins"
-ionic cordova plugin add cordova-plugin-splashscreen
-ionic cordova plugin add cordova-plugin-statusbar
-ionic cordova plugin add cordova-plugin-googlemaps
-ionic cordova plugin add com-badrit-base64
-ionic cordova plugin add cordova-plugin-ionic-webview
-ionic cordova plugin add cordova-plugin-inappbrowser
-ionic cordova plugin add cordova-plugin-geolocation
-ionic cordova plugin add cordova-plugin-advanced-http
-ionic cordova plugin add cordova-plugin-androidx-adapter
+    echo "Building for ${PLATFORM}"
+    install_deps
+    ionic cordova platform add "${PLATFORM}" --confirm --no-interactive
+    add_plugins
+    if [[ "${PLATFORM}" != "browser" ]]; then 
+        ionic cordova resources "${PLATFORM}"
+    fi 
+    ionic cordova prepare "${PLATFORM}" 
+    ionic cordova build "${PLATFORM}" 
+}
 
-echo "** Building for ios and android"
-ionic cordova prepare ios --prod
-ionic cordova prepare android --prod
-# ionic cordova prepare browser --prod
-
-# ionic cordova resources ios
-# ionic cordova resources android
-
-echo "** Prod build"
-ionic build --prod  --minifyjs   --minifycss  --optimizejs
+[[ $# -eq 0 ]] && usage
+while getopts "abci" option; do
+   case $option in
+      c) # Clean old build files
+         clean_old_build
+         ;;
+      a) # Build for android
+         build_for android
+         ;;
+      i) # Build for ios
+         build_for ios
+         ;;
+      b) # Build for browser
+         build_for browser
+         ;;
+   esac
+done

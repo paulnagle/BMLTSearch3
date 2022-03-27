@@ -47,10 +47,31 @@ export class MeetingCardComponent implements OnInit, AfterContentInit {
   }
 
   isTempClosed(meeting) {
-    if (meeting.formats.match(/TC/i)  && ( !(meeting.virtual_meeting_link || meeting.virtual_meeting_link))  ) {
+    if (meeting.formats.match(/TC/i) && meeting.formats.match(/VM/i)) {
+      return 'TEMPREPLACE';
+    } else
+    if ( meeting.formats.match(/TC/i) ) {
       return 'TEMPCLOSED';
     } else {
       return 'NOT-TEMPCLOSED';
+    }
+  }
+  
+  getMeetingType(meeting) {
+    if ( meeting.formats === "" ) {
+      return "INPERSON";
+    } else if ( !meeting.formats.includes("VM") && !meeting.formats.includes("TC") && !meeting.formats.includes("HY") ) {
+      return "INPERSON";
+    } else if ( meeting.formats.includes("VM") && !meeting.formats.includes("TC") && !meeting.formats.includes("HY") ) {
+      return "VIRTUAL";
+    } else if ( meeting.formats.includes("VM") && meeting.formats.includes("TC") && !meeting.formats.includes("HY") ) {
+      return 'TEMPREPLACE';
+    } else if ( !meeting.formats.includes("VM") && !meeting.formats.includes("TC") && meeting.formats.includes("HY") ) {
+      return "HYBRID";
+    } else if ( meeting.formats.includes("VM") && !meeting.formats.includes("TC") && meeting.formats.includes("HY") ) {
+      return "HYBRID";
+    } else if ( !meeting.formats.includes("VM") && meeting.formats.includes("TC") && !meeting.formats.includes("HY")) {
+      return "TEMPCLOSED"
     }
   }
 

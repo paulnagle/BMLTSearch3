@@ -29,10 +29,19 @@ $ npm install
 To build for app store distribution, and install all plugin dependencies, use the build.sh script.
 ```
 ./build.sh
+
+Usage: -b (Build for browser)
+       -i (Build for ios)
+       -a (Build for android)
+       -c (Clean old build files)
 ```
 Test your app on multiple screen sizes and platform types by starting a local development server
 ```
 $ ionic cordova run -l
+```
+or
+```
+$ ionic cordova serve
 ```
 
 ## Branches
