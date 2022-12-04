@@ -22,10 +22,6 @@ https://github.com/bmlt-enabled/BMLTSearch3/archive/refs/heads/version_4.zip
 
 Unzip the zip file and cd into the directory that is created
 
-Install package.json dependencies
-```
-$ npm install
-```
 To build for app store distribution, and install all plugin dependencies, use the build.sh script.
 ```
 ./build.sh
@@ -35,14 +31,10 @@ Usage: -b (Build for browser)
        -a (Build for android)
        -c (Clean old build files)
 ```
-Test your app on multiple screen sizes and platform types by starting a local development server
-```
-$ ionic cordova run -l
-```
-or
-```
-$ ionic cordova serve
-```
+After building for ios, you can then open the project in XCode to run, test and release the app to the Apple AppStore.
+
+After building for Android, you can then open the project in Android Studio to run, test and build the app for release. You then need to upload the app to the Google Play Developer Console and create a new release from there.
+
 
 ## Branches
 The default branch is called version_4 
