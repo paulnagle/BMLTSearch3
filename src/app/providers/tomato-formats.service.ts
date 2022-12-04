@@ -6,30 +6,25 @@ import { HTTP } from '@awesome-cordova-plugins/http/ngx';
 })
 export class TomatoFormatsService {
 
-  tomatoBMLT = 'https://tomato.bmltenabled.org/main_server/client_interface/json/';
-  tomatoREST = 'https://tomato.bmltenabled.org/rest/v1/formats/?id__in=';
+  tomatoBMLT = 'https://tomato.bmltenabled.org/main_server/client_interface/json/?switcher=GetFormats&show_all=1&format_ids=';
 
   constructor(private httpCors: HTTP) {}
 
   async getFormatNamesByID(uniqueIDs: Set<string>, language) {
     const formatNamesByID = {};
-    
-    const formatsApi = this.tomatoREST + Array.from(uniqueIDs).join(",");
-    const data = await this.httpCors.get(formatsApi, {}, {});
-    const jsonData = JSON.parse(data.data);
+    const formatsApi = this.tomatoBMLT + Array.from(uniqueIDs).join(",");
 
-    for (const format of jsonData.results) {
-      const urlPieces = format.url.split("/");
-      const formatID = urlPieces[urlPieces.length - 2];
+    let data = await this.httpCors.get(formatsApi + '&lang_enum=en', {}, {});
+    let jsonData = JSON.parse(data.data);
+    for (const format of jsonData) {
+      formatNamesByID[format.id] = format.name_string;
+    }
 
-      let formatName = format.translatedformats.filter(i => i.language === language);
-      if (formatName.length) {
-        if (formatName[0].name === undefined) {
-          formatName = format.translatedformats.filter(i => i.language === 'en');
-        }
-        if (formatName.length && formatName[0].name) {
-          formatNamesByID[formatID] = formatName[0].name;
-        }
+    if (language !== 'en') {
+      data = await this.httpCors.get(formatsApi + '&lang_enum=' + language, {}, {});
+      jsonData = JSON.parse(data.data);
+      for (const format of jsonData) {
+        formatNamesByID[format.id] = format.name_string;
       }
     }
 
