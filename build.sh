@@ -119,6 +119,7 @@ build_for() {
 
     red_text ">>>> Building for ${PLATFORM}"
     install_npm_deps
+    
     red_text ">>>> ionic cordova platform add ${PLATFORM} --confirm --no-interactive"
     if [[ "${PLATFORM}" == "android" ]]; then
         ionic cordova platform add android --confirm --no-interactive 
