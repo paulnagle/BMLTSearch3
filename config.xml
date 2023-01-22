@@ -22,6 +22,10 @@
     <preference name="GOOGLE_MAPS_IOS_API_KEY" value="AIzaSyCeHYVhVc8bf3siRXIyU5dOaUfctEjzGlA" />
     <preference name="android-targetSdkVersion" value="32" />
     <preference name="android-compileSdkVersion" value="32" />
+    <platform name="browser">
+        <preference name="AutoHideSplashScreen" value="true" />
+        <preference name="ShowSplashScreen" value="false" />
+    </platform>
     <platform name="android">
         <preference name="Scheme" value="http" />
         <edit-config file="app/src/main/AndroidManifest.xml" mode="merge" target="/manifest/application" xmlns:android="http://schemas.android.com/apk/res/android">
