@@ -128,10 +128,10 @@ build_for() {
     fi
     red_text ">>>> add_plugins"
     add_plugins
-    # if [[ "${PLATFORM}" != "browser" ]]; then 
-    #     echo ">>>> ionic cordova resources ${PLATFORM}"
-    #     ionic cordova resources "${PLATFORM}"
-    # fi 
+    if [[ "${PLATFORM}" != "browser" ]]; then 
+        echo ">>>> ionic cordova resources ${PLATFORM}"
+        ionic cordova resources "${PLATFORM}"
+    fi 
     red_text ">>>> ionic cordova prepare ${PLATFORM}"
     ionic cordova prepare "${PLATFORM}" 
     red_text ">>>> ionic cordova build ${PLATFORM}" 
