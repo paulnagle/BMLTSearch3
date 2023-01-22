@@ -20,7 +20,7 @@ export class MapSearchPage implements OnInit {
 
   meetingList: any = [];
   loader = null;
-  zoom = 8;
+  zoom = 14;
   mapLatitude: any = 34.2359855;
   mapLongitude: any = -118.5656689;
 
@@ -28,10 +28,10 @@ export class MapSearchPage implements OnInit {
   eagerMapLng: number;
 
   origLocation = { lat: 51.899, lng: -8.474 };
-  origZoom = 10;
+  origZoom = 14;
 
   targLocation = { lat: 51.899, lng: -8.474 };
-  targZoom = 10;
+  targZoom = 14;
 
   formattedAddress = '';
 
@@ -188,7 +188,7 @@ export class MapSearchPage implements OnInit {
           lat: this.mapLatitude,
           lng: this.mapLongitude
         },
-        zoom: 8
+        zoom: 14
       }
     };
 
@@ -275,6 +275,7 @@ export class MapSearchPage implements OnInit {
       italic: false
     };
     let markerClusterIconOptions: MarkerClusterIcon[];
+    console.log(this.platform.platforms());
     if (this.platform.is('ios')) {
       markerClusterIconOptions = [
         { min: 3, max: 10, url: this.Base64ClusterMarkerM1, anchor: { x: 16, y: 16 }, label: markerLabelOptions },
@@ -283,6 +284,8 @@ export class MapSearchPage implements OnInit {
         { min: 101, max: 500, url: this.Base64ClusterMarkerM4, anchor: { x: 24, y: 24 }, label: markerLabelOptions },
         { min: 501, url: this.Base64ClusterMarkerM5, anchor: { x: 32, y: 32 }, label: markerLabelOptions }
       ];
+    } else if (this.platform.is('desktop') || this.platform.is('mobileweb')) {
+      markerClusterIconOptions = [];
     } else {
       markerClusterIconOptions = [
         { min: 3, max: 10, url: './assets/markercluster/m1.png', anchor: { x: 16, y: 16 }, label: markerLabelOptions },
@@ -496,7 +499,7 @@ export class MapSearchPage implements OnInit {
       // Move to the position
       this.map.moveCamera({
         target: results[0].position,
-        zoom: 10
+        zoom: 14
       }).then(() => {
         this.searchMarker.showInfoWindow();
       });
