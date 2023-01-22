@@ -5,8 +5,9 @@
     </ion-buttons>
 
     <div *ngIf="areaName != '' ; else BMLT_List">
-      <ion-title>{{ areaName }}</ion-title>
-      <ion-button color="primary" slot="end" size="small" (click)="showServiceStructure()">Back</ion-button>
+      <ion-buttons slot="end">
+        <ion-button color="primary" size="small" (click)="showServiceStructure()">Back</ion-button>
+      </ion-buttons>
     </div>
 
     <ng-template #BMLT_List>
@@ -136,3 +137,11 @@
     
   </div>
 </ion-content>
+
+<ion-footer>
+  <ion-toolbar>
+    <div *ngIf="areaName != ''">
+      <ion-title>{{ areaName }}</ion-title>
+    </div>
+  </ion-toolbar>
+</ion-footer>
