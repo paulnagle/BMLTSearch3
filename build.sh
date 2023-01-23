@@ -24,7 +24,8 @@ add_plugins() {
     fi
     ionic cordova plugin add cordova-plugin-statusbar
     # ionic cordova plugin add cordova-plugin-googlemaps
-    ionic cordova plugin add https://github.com/mapsplugin/cordova-plugin-googlemaps.git#0b8ea76ad34fb2a202a9de1b9d0e051a82ad9443
+    # ionic cordova plugin add https://github.com/mapsplugin/cordova-plugin-googlemaps.git#0b8ea76ad34fb2a202a9de1b9d0e051a82ad9443
+    ionic cordova plugin add https://github.com/paulnagle/cordova-plugin-googlemaps.git#c8dfd7faeaa518699fba42d779e94102ffd5998b
     ionic cordova plugin add com-badrit-base64
     ionic cordova plugin add cordova-plugin-ionic-webview
     ionic cordova plugin add cordova-plugin-inappbrowser
@@ -134,6 +135,7 @@ build_for() {
     fi 
     red_text ">>>> ionic cordova prepare ${PLATFORM}"
     ionic cordova prepare "${PLATFORM}" 
+
     red_text ">>>> ionic cordova build ${PLATFORM}" 
     if [[ "${ANDROID_RELEASE}" == "true" ]]; then
         ionic cordova build android --release --prod
