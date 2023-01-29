@@ -188,7 +188,13 @@ export class MapSearchPage implements OnInit {
           lat: this.mapLatitude,
           lng: this.mapLongitude
         },
-        zoom: 14
+        zoom: 12
+      },
+      preferences: {
+        zoom: {
+            minZoom: 12,
+            maxZoom: 22
+        }
       }
     };
 
@@ -284,9 +290,7 @@ export class MapSearchPage implements OnInit {
         { min: 101, max: 500, url: this.Base64ClusterMarkerM4, anchor: { x: 24, y: 24 }, label: markerLabelOptions },
         { min: 501, url: this.Base64ClusterMarkerM5, anchor: { x: 32, y: 32 }, label: markerLabelOptions }
       ];
-    } else if (this.platform.is('desktop') || this.platform.is('mobileweb')) {
-      markerClusterIconOptions = [];
-    } else {
+    } else if (this.platform.is('android')) {
       markerClusterIconOptions = [
         { min: 3, max: 10, url: './assets/markercluster/m1.png', anchor: { x: 16, y: 16 }, label: markerLabelOptions },
         { min: 11, max: 50, url: './assets/markercluster/m2.png', anchor: { x: 16, y: 16 }, label: markerLabelOptions },
@@ -294,6 +298,8 @@ export class MapSearchPage implements OnInit {
         { min: 101, max: 500, url: './assets/markercluster/m4.png', anchor: { x: 24, y: 24 }, label: markerLabelOptions },
         { min: 501, url: './assets/markercluster/m5.png', anchor: { x: 32, y: 32 }, label: markerLabelOptions }
       ];
+    } else {
+      markerClusterIconOptions = [];
     }
 
     const markerClusterOptions: MarkerClusterOptions = {
