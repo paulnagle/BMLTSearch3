@@ -12,7 +12,7 @@ usage(){
     echo "       -i (Build for ios)"
     echo "       -a (Build for android)"
     echo "       -c (Clean old build files)"
-    echo "       -r (Release build for android when passed with -a)"
+    echo "       -r (Release build for android)"
 	exit 1
 }
 
@@ -162,7 +162,9 @@ while getopts "abcir" option; do
          build_for android
          ;;
       r) # Android release build
+         red_text "RELEASE BUILD"
          ANDROID_RELEASE=true
+         build_for android
          ;;
       i) # Build for ios
          build_for ios
