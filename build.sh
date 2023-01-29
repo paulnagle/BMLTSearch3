@@ -45,11 +45,11 @@ setup_node_npm() {
     export NVM_DIR=$HOME/.nvm;
     source $NVM_DIR/nvm.sh;
 
-    NVM_VERSION_REQUIRED="v16.18.1"
+    NVM_VERSION_REQUIRED="v19.5.0"
     NVM_VERSION_CURRENT=$(nvm version)
     if [[ "${NVM_VERSION_CURRENT}" != "${NVM_VERSION_REQUIRED}" ]]; then
-        nvm install v16.18.1
-        nvm use v16.18.1
+        nvm install "${NVM_VERSION_REQUIRED}"
+        nvm use "${NVM_VERSION_REQUIRED}"
     else
         red_text "node version: ${NVM_VERSION_CURRENT}"
     fi
