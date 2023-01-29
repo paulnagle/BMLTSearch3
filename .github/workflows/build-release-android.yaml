@@ -6,7 +6,7 @@ on:
 
 jobs:
   build:
-    name: Build Relase AAB
+    name: Build Release AAB
     runs-on: ubuntu-latest
     steps:
       - name: Checkout source
@@ -21,10 +21,10 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: 16.x
+          node-version: 19.x
 
       - name: Build Script for android
-        run: ./build.sh -a -r
+        run: ./build.sh -r
       
       - uses: r0adkll/sign-android-release@v1
         name: Sign Android app AAB
