@@ -19,20 +19,14 @@ usage(){
 add_plugins() {
     red_text "** Adding cordova plugins"
 
-    if [[ "${PLATFORM}" != "android" ]]; then
-        ionic cordova plugin add cordova-plugin-splashscreen
-    fi
+    ionic cordova plugin add cordova-plugin-splashscreen
     ionic cordova plugin add cordova-plugin-statusbar
-    # ionic cordova plugin add cordova-plugin-googlemaps
-    # ionic cordova plugin add https://github.com/mapsplugin/cordova-plugin-googlemaps.git#0b8ea76ad34fb2a202a9de1b9d0e051a82ad9443
-    # ionic cordova plugin add https://github.com/paulnagle/cordova-plugin-googlemaps.git#c8dfd7faeaa518699fba42d779e94102ffd5998b
     ionic cordova plugin add https://github.com/paulnagle/cordova-plugin-googlemaps.git
     ionic cordova plugin add com-badrit-base64
     ionic cordova plugin add cordova-plugin-ionic-webview
     ionic cordova plugin add cordova-plugin-inappbrowser
     ionic cordova plugin add cordova-plugin-geolocation
     ionic cordova plugin add cordova-plugin-advanced-http
-    # ionic cordova plugin add cordova-plugin-androidx-adapter
 }
 
 setup_node_npm() {
@@ -75,16 +69,13 @@ install_npm_deps() {
         @awesome-cordova-plugins/http  \
         @awesome-cordova-plugins/http \
         @awesome-cordova-plugins/status-bar \
+        @awesome-cordova-plugins/splash-screen \
         @ngx-translate/core \
         @ngx-translate/http-loader \
         @ionic/storage-angular \
         thenby \
         moment \
         moment-timezone
-
-    if [[ "${PLATFORM}" != "android" ]]; then
-        npm install --save @awesome-cordova-plugins/splash-screen 
-    fi
 
     red_text "** Running npm audit fix"
     npm audit fix
@@ -105,7 +96,7 @@ clean_old_build() {
     ionic cordova plugin rm cordova-plugin-inappbrowser
     ionic cordova plugin rm cordova-plugin-geolocation
     ionic cordova plugin rm cordova-plugin-advanced-http
-    # ionic cordova plugin rm cordova-plugin-androidx-adapter
+
     red_text "!! Deleting platform folder"
     rm -rf platform
     red_text "!! Deleting node_module folder"
@@ -128,14 +119,17 @@ build_for() {
     else
         ionic cordova platform add "${PLATFORM}" --confirm --no-interactive
     fi
+
     red_text ">>>> add_plugins"
     add_plugins
+
     if [[ "${PLATFORM}" != "browser" ]]; then 
         echo ">>>> ionic cordova resources ${PLATFORM}"
         ionic cordova resources "${PLATFORM}"
     fi 
-    red_text ">>>> ionic cordova prepare ${PLATFORM}"
-    ionic cordova prepare "${PLATFORM}" 
+
+    # red_text ">>>> ionic cordova prepare ${PLATFORM}"
+    # ionic cordova prepare "${PLATFORM}" 
 
     red_text ">>>> ionic cordova build ${PLATFORM}" 
     if [[ "${ANDROID_RELEASE}" == "true" ]]; then
