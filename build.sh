@@ -114,11 +114,7 @@ build_for() {
     install_npm_deps
     
     red_text ">>>> ionic cordova platform add ${PLATFORM} --confirm --no-interactive"
-    if [[ "${PLATFORM}" == "android" ]]; then
-        ionic cordova platform add android --confirm --no-interactive 
-    else
-        ionic cordova platform add "${PLATFORM}" --confirm --no-interactive
-    fi
+    ionic cordova platform add "${PLATFORM}" --confirm --no-interactive
 
     red_text ">>>> add_plugins"
     add_plugins
@@ -128,11 +124,10 @@ build_for() {
         ionic cordova resources "${PLATFORM}"
     fi 
 
-    # red_text ">>>> ionic cordova prepare ${PLATFORM}"
-    # ionic cordova prepare "${PLATFORM}" 
-
     red_text ">>>> ionic cordova build ${PLATFORM}" 
     if [[ "${ANDROID_RELEASE}" == "true" ]]; then
+        red_text ">>>> ionic cordova prepare ${PLATFORM}"
+        ionic cordova prepare android
         ionic cordova build android --release --prod
     else
         ionic cordova build "${PLATFORM}"

@@ -42,7 +42,7 @@ export class AppComponent implements OnInit {
     {
       title: 'VIRTUAL_MEETINGS',
       url: 'virt-tabs',
-      icon: 'globe-outline'
+      icon: 'globe'
     },
     {
       title: 'DOIHAVETHEBMLT',
@@ -64,12 +64,13 @@ export class AppComponent implements OnInit {
     private storage: StorageService
   ) {
     this.initializeApp();
-
   }
 
   async initializeApp() {
     this.platform.ready().then(() => {
-      this.statusBar.backgroundColorByHexString("#dddddd");
+      this.statusBar.overlaysWebView(false);
+      this.statusBar.backgroundColorByHexString("#f5f5f5");
+      this.statusBar.styleDefault();
       this.splashScreen.hide();
     });
 
@@ -82,7 +83,6 @@ export class AppComponent implements OnInit {
       this.translate.use('en');
       this.storage.set('language', 'en');
     }
-  
   }
 
   ngOnInit() {
