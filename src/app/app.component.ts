@@ -68,9 +68,10 @@ export class AppComponent implements OnInit {
 
   async initializeApp() {
     this.platform.ready().then(() => {
-      this.statusBar.overlaysWebView(false);
-      this.statusBar.backgroundColorByHexString("#f5f5f5");
       this.statusBar.styleDefault();
+      if (this.platform.is('android')) {
+        this.statusBar.backgroundColorByHexString("#d5d5d5");
+      }
       this.splashScreen.hide();
     });
 
