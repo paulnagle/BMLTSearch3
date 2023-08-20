@@ -33,9 +33,9 @@ const routes: Routes = [
     MapSearchPage,
     ModalPage
   ],
-  entryComponents: [
-    ModalPage
-  ],
+  // entryComponents: [
+  //   ModalPage
+  // ],
   providers: [
     Base64,
     InAppBrowser,

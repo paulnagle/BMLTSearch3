@@ -23,9 +23,9 @@ import { FormsModule } from '@angular/forms';
     MeetingCardComponent,
     MeetingListComponent
   ],
-  entryComponents: [
-    MeetingCardComponent,
-    MeetingListComponent
-  ]
+  // entryComponents: [
+  //   MeetingCardComponent,
+  //   MeetingListComponent
+  // ]
 })
 export class ComponentModule { }

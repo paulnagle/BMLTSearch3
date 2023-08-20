@@ -18,6 +18,7 @@ export class MeetingListComponent implements OnInit, OnChanges {
 
   @Input() data;
   @Input() meetingType;
+  @Input() expandAll;
 
   meetingList = [];
   savedList = [];
@@ -26,6 +27,7 @@ export class MeetingListComponent implements OnInit, OnChanges {
   meetingsListGrouping = 'weekday_tinyint';
   timeDisplay;
   localMeetingType;
+  localExpandAll;
   dayCount = [0, 0, 0, 0, 0, 0, 0];
   formats;
   formatLanguage = 'en';
@@ -67,6 +69,8 @@ export class MeetingListComponent implements OnInit, OnChanges {
 
     this.meetingList = this.data;
     this.localMeetingType = this.meetingType;
+    this.localExpandAll = this.expandAll;
+    console.log("[ngOnInit] Expandall = " + this.localExpandAll)
 
     if (this.localMeetingType === 'virt') {
       // Get the formats
@@ -152,7 +156,19 @@ export class MeetingListComponent implements OnInit, OnChanges {
 
 
   isDayShown(dayGrouping) {
-    return this.shownDay === dayGrouping;
+      return this.shownDay === dayGrouping || this.isExpandAll();
+  }
+
+  isExpandAll() {
+    console.log("[isExpandAll] Expandall = " + this.localExpandAll)
+
+    if (this.localExpandAll == "true") {
+      console.log("[isExpandAll] Returning TRUE")
+      return true;
+    } else {
+      console.log("[isExpandAll] Returning FALSE")
+      return false;
+    }
   }
 
 
