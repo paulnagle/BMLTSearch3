@@ -11,7 +11,5 @@
 </ion-header>
 
 <ion-content>
-  <ion-list *ngFor="let meeting of meetingList; let j = index">
-    <app-meeting-card [data]="meeting" MeetingType='regular'></app-meeting-card>
-  </ion-list>
+  <app-meeting-list [data]="meetingList" meetingType='regular' expandAll='true'></app-meeting-list>
 </ion-content>

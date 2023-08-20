@@ -22,7 +22,7 @@ export function createTranslateLoader(http: HttpClient) {
   declarations: [
     AppComponent
   ],
-  entryComponents: [],
+  // entryComponents: [],
   imports: [
     BrowserModule,
     IonicModule.forRoot(),

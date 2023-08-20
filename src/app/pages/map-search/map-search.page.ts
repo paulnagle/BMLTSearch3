@@ -534,7 +534,6 @@ export class MapSearchPage implements OnInit {
 
   dismissLoader() {
     if (this.loader) {
-      console.log('Dismissing loader..');
       this.loader = this.loadingCtrl.dismiss();
       this.loader = null;
     }
@@ -542,7 +541,6 @@ export class MapSearchPage implements OnInit {
 
 
   openMeetingModal(meetingID) {
-    console.log('openMeetingModal()');
     this.meetingListProvider.getSingleMeetingByID(meetingID).subscribe((meeting) => {
       this.meeting = meeting;
       this.meeting.filter((i) => i.start_time_raw = this.convertTo12Hr(i.start_time));
