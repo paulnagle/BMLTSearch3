@@ -71,7 +71,6 @@ export class ModalPage implements OnInit {
   }
 
   explodeFormats(meeting) {
-    console.log("exploding formats")
     this.tomatoFormatsService.setExplodedFormatsOnMeetingList([meeting], this.formatLanguage);
   }
 }

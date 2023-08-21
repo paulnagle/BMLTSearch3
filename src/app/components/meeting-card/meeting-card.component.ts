@@ -24,6 +24,7 @@ export class MeetingCardComponent implements OnInit, AfterContentInit {
   ngAfterContentInit() {
     this.meeting = this.data;
     this.meetingType = this.MeetingType;
+    this.setMeetingEnd();
   }
   public openMapsLink(destLatitude, destLongitude) {
     const browser = this.iab.create('https://www.google.com/maps/search/?api=1&query=' + destLatitude + ',' + destLongitude, '_system');
@@ -73,6 +74,11 @@ export class MeetingCardComponent implements OnInit, AfterContentInit {
     } else if ( !meeting.formats.includes("VM") && meeting.formats.includes("TC") && !meeting.formats.includes("HY")) {
       return "TEMPCLOSED"
     }
+  }
+
+  setMeetingEnd() {
+    var duration = this.meeting.duration_time.split(":");
+    this.meeting.end_time_formatted = this.meeting.start_time_moment.clone().add(duration[0], 'hours').add(duration[1], 'minutes').format("h:mm a");
   }
 
 }

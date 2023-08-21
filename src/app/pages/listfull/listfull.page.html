@@ -96,7 +96,6 @@
                     </ion-item-divider>
                   </ng-template>
 
-
                   <div *ngFor="let L5 of L4.childServiceGroup; let m = index">
                     <div *ngIf="L5.childServiceGroup;else L5_no_children">
                       <ion-item-divider sticky="true">
@@ -132,7 +131,7 @@
   <div *ngIf="HTMLGrouping == 'meetings'">
 
     <div *ngIf = "isLoaded">
-      <app-meeting-list [data]="meetingListArea" meetingType='regular'></app-meeting-list>
+      <app-meeting-list [data]="meetingListArea" meetingType='regular' expandAll='false'></app-meeting-list>
     </div>
     
   </div>
