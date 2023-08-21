@@ -19,7 +19,18 @@ usage(){
 add_plugins() {
     red_text "** Adding cordova plugins"
 
-    ionic cordova plugin add cordova-plugin-splashscreen
+    ionic cordova plugin add cordova-plugin-statusbar
+    ionic cordova plugin add https://github.com/paulnagle/cordova-plugin-googlemaps.git
+    ionic cordova plugin add com-badrit-base64
+    ionic cordova plugin add cordova-plugin-ionic-webview
+    ionic cordova plugin add cordova-plugin-inappbrowser
+    ionic cordova plugin add cordova-plugin-geolocation
+    ionic cordova plugin add cordova-plugin-advanced-http
+}
+
+add_plugins_android() {
+    red_text "** Adding cordova plugins"
+
     ionic cordova plugin add cordova-plugin-statusbar
     ionic cordova plugin add https://github.com/paulnagle/cordova-plugin-googlemaps.git
     ionic cordova plugin add com-badrit-base64
@@ -117,9 +128,14 @@ build_for() {
     ionic cordova platform add "${PLATFORM}" --confirm --no-interactive
 
     red_text ">>>> add_plugins"
-    add_plugins
 
-    if [[ "${PLATFORM}" != "browser" ]]; then 
+    if [[ "${PLATFORM}" == "android" ]]; then 
+        add_plugins_android
+    else
+        add_plugins
+    fi
+
+    if [[ "${PLATFORM}" == "ios" ]]; then 
         echo ">>>> ionic cordova resources ${PLATFORM}"
         ionic cordova resources "${PLATFORM}"
     fi 
