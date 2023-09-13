@@ -11,7 +11,7 @@ import { HTTP } from '@awesome-cordova-plugins/http/ngx';
 @Injectable()
 export class ServiceGroupsProvider {
 
-  getApiUrlServiceGroups = 'https://tomato.bmltenabled.org/main_server/client_interface/json/?switcher=GetServiceBodies&callingApp=bmlt_search_3_ionic';
+  getApiUrlServiceGroups = 'https://aggregator.bmltenabled.org/main_server/client_interface/json/?switcher=GetServiceBodies&callingApp=bmlt_search_3_ionic';
   getApiUrlVirtServiceGroups = 'https://bmlt.virtual-na.org/main_server/client_interface/json/?switcher=GetServiceBodies&callingApp=bmlt_search_3_ionic';
 
   constructor(

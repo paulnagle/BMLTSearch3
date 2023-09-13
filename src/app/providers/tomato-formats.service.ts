@@ -6,7 +6,7 @@ import { HTTP } from '@awesome-cordova-plugins/http/ngx';
 })
 export class TomatoFormatsService {
 
-  tomatoBMLT = 'https://tomato.bmltenabled.org/main_server/client_interface/json/?switcher=GetFormats&show_all=1&format_ids=';
+  tomatoBMLT = 'https://aggregator.bmltenabled.org/main_server/client_interface/json/?switcher=GetFormats&show_all=1&format_ids=';
 
   constructor(private httpCors: HTTP) {}
 
