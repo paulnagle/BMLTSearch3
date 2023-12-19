@@ -1,0 +1,7 @@
+{
+  "name": "BMLTSearch",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular"
+}
