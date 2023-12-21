@@ -1,0 +1,44 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-title>
+      {{'SETTINGS' | translate}}
+    </ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-list>
+
+    <ion-item>
+      <ion-select label="{{'LANGUAGE' | translate}}" aria-label="Language" [(ngModel)]="language" (ionChange)=selectLanguage() cancelText="{{'CANCEL' | translate}}">
+        <ion-select-option aria-label="English" value="en">{{'ENGLISH' | translate}}</ion-select-option>
+        <ion-select-option aria-label="Italian" value="it">{{'ITALIAN' | translate}}</ion-select-option>
+        <ion-select-option aria-label="Spanish" value="es">{{'SPANISH' | translate}}</ion-select-option>
+        <ion-select-option aria-label="Danish" value="da">{{'DANISH' | translate}}</ion-select-option>
+        <ion-select-option aria-label="Polish" value="pl">{{'POLISH' | translate}}</ion-select-option>
+        <ion-select-option aria-label="Portuguese" value="pt">{{'PORTUGUESE' | translate}}</ion-select-option>
+        <ion-select-option aria-label="Russian" value="ru">{{'RUSSIAN' | translate}}</ion-select-option>
+      </ion-select>
+    </ion-item>
+
+    <ion-item>
+      <div class="ion-text-wrap">
+      <ion-label>{{'SEARCHRANGESETTING' | translate}} = {{searchRange}} {{'MEETINGS' | translate }}</ion-label>
+    </div>
+      <ion-range 
+        aria-label="Search Range" 
+        id="RadiusRange" 
+        min="5" 
+        max="50" 
+        [(ngModel)]="searchRange" 
+        (ionBlur)="selectSearchRange()" 
+        color="danger" 
+        pin="true">
+      </ion-range>
+    </ion-item>
+
+  </ion-list>
+</ion-content>

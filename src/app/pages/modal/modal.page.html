@@ -1,0 +1,15 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>
+      {{'MEETING_DETAILS' | translate}}
+    </ion-title>
+
+    <ion-buttons slot="end">
+      <ion-button color="primary" (click)="dismiss()">Close</ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <app-meeting-list [data]="meetingList" meetingType='regular' expandAll='true'></app-meeting-list>
+</ion-content>

@@ -1,11 +1,16 @@
 import { CapacitorConfig } from '@capacitor/cli';
 
 const config: CapacitorConfig = {
-  appId: 'io.ionic.starter',
+  appId: 'ie.nasouth.bmltsearch',
   appName: 'BMLTSearch',
   webDir: 'www',
   server: {
     androidScheme: 'https'
+  },
+  plugins: {
+    CapacitorHttp: {
+      enabled: true,
+    },
   }
 };
 

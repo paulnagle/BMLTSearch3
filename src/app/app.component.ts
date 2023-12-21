@@ -1,4 +1,9 @@
 import { Component } from '@angular/core';
+
+import { Platform } from '@ionic/angular';
+import { TranslateService } from '@ngx-translate/core';
+import { StorageService } from './services/storage.service'
+
 @Component({
   selector: 'app-root',
   templateUrl: 'app.component.html',
@@ -6,13 +11,65 @@ import { Component } from '@angular/core';
 })
 export class AppComponent {
   public appPages = [
-    { title: 'Inbox', url: '/folder/inbox', icon: 'mail' },
-    { title: 'Outbox', url: '/folder/outbox', icon: 'paper-plane' },
-    { title: 'Favorites', url: '/folder/favorites', icon: 'heart' },
-    { title: 'Archived', url: '/folder/archived', icon: 'archive' },
-    { title: 'Trash', url: '/folder/trash', icon: 'trash' },
-    { title: 'Spam', url: '/folder/spam', icon: 'warning' },
+    {
+      title: 'HOME',
+      url: 'home',
+      icon: 'home'
+    },
+    {
+      title: 'SETTINGS',
+      url: 'settings',
+      icon: 'settings'
+    },
+    {
+      title: 'MAP_SEARCH',
+      url: 'map-search',
+      icon: 'map'
+    },
+    {
+      title: 'LOCATIONSEARCH',
+      url: 'location-search',
+      icon: 'search'
+    },
+    {
+      title: 'LISTFULL',
+      url: 'listfull',
+      icon: 'list'
+    },
+    {
+      title: 'VIRTUAL_MEETINGS',
+      url: 'virt-tabs',
+      icon: 'globe'
+    },
+    {
+      title: 'DOIHAVETHEBMLT',
+      url: 'do-i-have-the-bmlt',
+      icon: 'help'
+    },
+    {
+      title: 'CONTACT',
+      url: 'contact',
+      icon: 'person'
+    }
   ];
-  public labels = ['Family', 'Friends', 'Notes', 'Work', 'Travel', 'Reminders'];
-  constructor() {}
+
+  constructor(
+    private platform: Platform,
+    private translate: TranslateService,
+    private storage: StorageService
+  ) {
+    this.initializeApp();
+  }
+
+  async initializeApp() {
+    this.translate.setDefaultLang('en');
+
+    const langValue = await this.storage.get('language');
+    if (langValue) {
+      this.translate.use(langValue);
+    } else {
+      this.translate.use('en');
+      this.storage.set('language', 'en');
+    }
+  }
 }
