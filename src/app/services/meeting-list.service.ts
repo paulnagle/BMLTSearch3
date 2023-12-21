@@ -13,13 +13,13 @@ export class MeetingListService {
 
 
   async getVirtualMeetings() {
-    const data = await CapacitorHttp.get({url: this.getApiUrlVirt});
-    return JSON.parse(data.data);
+    const response: HttpResponse = await CapacitorHttp.get({url: this.getApiUrlVirt});
+    return response.data;
   }
 
   async getAllVirtualMeetings() {
-    const data = await CapacitorHttp.get({url: this.getAllVirtMtgs});
-    return JSON.parse(data.data);
+    const response: HttpResponse = await CapacitorHttp.get({url: this.getAllVirtMtgs});
+    return response.data;
   }
 
   async getAutoRadiusMeetings(lat: any, long: any, radius: any) {
@@ -33,8 +33,8 @@ export class MeetingListService {
       + lat
       + '&sort_keys=longitude,latitude&callingApp=bmlt_search_3_ionic';
 
-    const data = await CapacitorHttp.get({url: getAutoRadiusMeetingsURL});
-    return data;
+    const response = await CapacitorHttp.get({url: getAutoRadiusMeetingsURL});
+    return response;
   }
 
   async getRadiusMeetings(lat: any, long: any, radius: any) {
@@ -49,8 +49,8 @@ export class MeetingListService {
       + lat
       + '&sort_keys=longitude,latitude&callingApp=bmlt_search_3_ionic';
 
-    const data = await CapacitorHttp.get({url: getRadiusMeetingsURL});
-    return data;
+    const response = await CapacitorHttp.get({url: getRadiusMeetingsURL});
+    return response;
   }
 
   async getAddressMeetings(lat: any, long: any, radius: any) {
@@ -64,8 +64,8 @@ export class MeetingListService {
       + lat
       + '&sort_keys=longitude,latitude&callingApp=bmlt_search_3_ionic';
       
-    const data: HttpResponse = await CapacitorHttp.get({url: getAddressMeetingsURL});
-    return data;
+    const response: HttpResponse = await CapacitorHttp.get({url: getAddressMeetingsURL});
+    return response;
   }
 
   async getNearestMeeting(lat: any, long: any) {
@@ -78,8 +78,8 @@ export class MeetingListService {
       + lat
       + '&sort_keys=longitude,latitude&callingApp=bmlt_search_3_ionic';
 
-    const data: HttpResponse = await CapacitorHttp.get({url: getAddressMeetingsURL});
-    return data;
+    const response: HttpResponse = await CapacitorHttp.get({url: getAddressMeetingsURL});
+    return response;
   }
 
   async getMeetingsByArea(areaID: any) {
@@ -88,8 +88,8 @@ export class MeetingListService {
       + areaID
       + '&sort_keys=weekday_tinyint,start_time&callingApp=bmlt_search_3_ionic';
 
-    const data: HttpResponse = await CapacitorHttp.get({url: getMeetingsByAreaURL});
-    return data;
+    const response: HttpResponse = await CapacitorHttp.get({url: getMeetingsByAreaURL});
+    return response;
   }
 
   async getMeetingsByVirtArea(areaID: any) {
@@ -98,8 +98,8 @@ export class MeetingListService {
       + areaID
       + '&sort_keys=weekday_tinyint,start_time&callingApp=bmlt_search_3_ionic';
 
-    const data = await CapacitorHttp.get({url: getMeetingsByVirtAreaURL});
-    return JSON.parse(data.data);
+    const response: HttpResponse = await CapacitorHttp.get({url: getMeetingsByVirtAreaURL});
+    return response.data;
   }
 
   async getSingleMeetingByID(id: any) {
@@ -107,8 +107,8 @@ export class MeetingListService {
       + '?switcher=GetSearchResults&meeting_ids[]='
       + id;
 
-    const data = await CapacitorHttp.get({url: getSingleMeetingByIDURL});
-    return data;
+    const response: HttpResponse = await CapacitorHttp.get({url: getSingleMeetingByIDURL});
+    return response;
   }
 
 }

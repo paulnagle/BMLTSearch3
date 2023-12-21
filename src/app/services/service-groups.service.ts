@@ -16,8 +16,8 @@ export class ServiceGroupsService {
   }
 
   async getAllVirtServiceGroups() {
-    const data: HttpResponse = await CapacitorHttp.get({url: this.getApiUrlVirtServiceGroups});
-    return JSON.parse(data.data);
+    const response: HttpResponse = await CapacitorHttp.get({url: this.getApiUrlVirtServiceGroups});
+    return response.data;
   }
 
 }
