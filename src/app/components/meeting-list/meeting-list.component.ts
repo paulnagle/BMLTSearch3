@@ -8,6 +8,7 @@ import { MeetingListService } from '../../services/meeting-list.service';
 import { LoadingService } from 'src/app/services/loading.service';
 import * as moment from 'moment';
 import 'moment-timezone';
+import { RangeCustomEvent } from '@ionic/angular';
 
 @Component({
   selector: 'app-meeting-list',
@@ -37,7 +38,7 @@ export class MeetingListComponent implements OnInit, OnChanges {
   isLoaded = false;
 
   days = ['WEEKDAYS', 'SUNDAY', 'MONDAY', 'TUESDAY', 'WEDNESDAY', 'THURSDAY', 'FRIDAY', 'SATURDAY'];
-  hourRangeValues = {
+  hourRangeValues: any = {
     upper: 23,
     lower: 0
   };
@@ -246,7 +247,9 @@ export class MeetingListComponent implements OnInit, OnChanges {
   }
 
 
-  public setHourRangeValues() {
+  public setHourRangeValues(ev: Event) {
+
+    this.hourRangeValues = (ev as RangeCustomEvent).detail.value
 
     const upperMoment = moment({
       hour: this.hourRangeValues.upper,

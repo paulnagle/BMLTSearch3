@@ -126,10 +126,9 @@ export class LocationSearchPage  {
   }
 
   getAllMeetings(ev: Event) {
-    console.log('ionKnobMoveEnd:', (ev as RangeCustomEvent).detail.value);
     this.radius = (ev as RangeCustomEvent).detail.value
     this.presentLoader("")
-    this.MeetingListService.getAddressMeetings(this.addressLatitude, this.addressLongitude, (ev as RangeCustomEvent).detail.value).then((response) => {
+    this.MeetingListService.getAddressMeetings(this.addressLatitude, this.addressLongitude, this.radius).then((response) => {
       this.addressMeetingList = response.data;
       this.isLoaded = true;
       this.dismissLoader();

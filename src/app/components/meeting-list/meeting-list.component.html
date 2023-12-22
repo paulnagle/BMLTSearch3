@@ -11,7 +11,7 @@
       </ion-select>
       <ion-range 
         [(ngModel)]="hourRangeValues" 
-        (ionChange)=setHourRangeValues() 
+        (ionKnobMoveEnd)=setHourRangeValues($event) 
         dualKnobs="true" 
         min="00" 
         max="23" 
