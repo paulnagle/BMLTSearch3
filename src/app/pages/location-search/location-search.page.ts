@@ -4,6 +4,7 @@ import { StorageService } from '../../services/storage.service';
 import { MeetingListService } from '../../services/meeting-list.service';
 import { GeocodeService } from '../../services/geocode.service';
 import { LoadingService } from '../../services/loading.service';
+import { RangeCustomEvent } from '@ionic/angular';
 
 import { Geolocation } from '@capacitor/geolocation';
 
@@ -23,7 +24,7 @@ export class LocationSearchPage  {
   currentAddress: any = '';
   addressLatitude: any = 0;
   addressLongitude: any = 0;
-  radius!: number;
+  radius!: any;
   radiusMeters = 10000;
 
   constructor(private MeetingListService: MeetingListService,
@@ -53,7 +54,7 @@ export class LocationSearchPage  {
               this.storage.get('savedAddress').then(value => {
                 if (value) {
                   this.currentAddress = value;
-                  this.getAllMeetings();
+                  this.getAllMeetingsAfterLocate();
                 } else {
                   this.locatePhone();
                 }
@@ -70,11 +71,10 @@ export class LocationSearchPage  {
 
   }
 
-  getAllMeetings() {
+  getAllMeetingsAfterLocate() {
+    console.log("Calling getAllMeetingsAfterLocate")
     this.MeetingListService.getAddressMeetings(this.addressLatitude, this.addressLongitude, this.radius).then((response) => {
-      console.log("Got meetings")
       this.addressMeetingList = response.data;
-      console.log(this.addressMeetingList)
       this.isLoaded = true;
       this.dismissLoader();
     });
@@ -110,7 +110,7 @@ export class LocationSearchPage  {
           this.storage.set('savedAddress', this.currentAddress);
 
           this.dismissLoader();
-          this.getAllMeetings();
+          this.getAllMeetingsAfterLocate();
         } else {
           this.dismissLoader();
           this.currentAddress = 'Location not found';
@@ -125,7 +125,16 @@ export class LocationSearchPage  {
     });
   }
 
-
+  getAllMeetings(ev: Event) {
+    console.log('ionKnobMoveEnd:', (ev as RangeCustomEvent).detail.value);
+    this.radius = (ev as RangeCustomEvent).detail.value
+    this.presentLoader("")
+    this.MeetingListService.getAddressMeetings(this.addressLatitude, this.addressLongitude, (ev as RangeCustomEvent).detail.value).then((response) => {
+      this.addressMeetingList = response.data;
+      this.isLoaded = true;
+      this.dismissLoader();
+    });
+  }
 
 }
 

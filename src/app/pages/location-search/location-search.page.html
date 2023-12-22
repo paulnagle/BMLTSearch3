@@ -39,7 +39,7 @@
       </ion-button>
     </ion-item>
 
-    <ion-range id="RadiusRange" min="5" max="50" [(ngModel)]="radius" (ionChange)="getAllMeetings()" color="danger" pin="true" debounce="500">
+    <ion-range id="RadiusRange" min="5" max="50" (ionKnobMoveEnd)="getAllMeetings($event)" color="danger" pin="true" debounce="500">
       <ion-label slot="start">5 {{'MEETINGS' | translate}}</ion-label>
       <ion-label slot="end">50 {{'MEETINGS' | translate}}</ion-label>
     </ion-range>
