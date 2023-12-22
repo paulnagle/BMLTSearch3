@@ -1,18 +1,13 @@
 <ion-app>
   <ion-split-pane contentId="main-content">
     <!--  the side menu  -->
-    <ion-menu contentId="main-content">
-      <ion-header>
-        <ion-toolbar color="primary">
-          <ion-title>{{'MENU' | translate }}</ion-title>
-        </ion-toolbar>
-      </ion-header>
-      <ion-content class="ion-padding">
-        <ion-list class="no-padding">
-
+    <ion-menu contentId="main-content" type="overlay">
+      <ion-content>
+        <ion-list>
+          <ion-list-header>{{'MENU' | translate }}</ion-list-header>
           <ion-menu-toggle auto-hide="false" *ngFor="let p of appPages; let i = index">
             <ion-item routerDirection="root" [routerLink]="[p.url]" lines="none" detail="false" routerLinkActive="selected">
-              <ion-icon slot="start" [ios]="p.icon + '-outline'" [md]="p.icon + '-sharp'"></ion-icon>
+              <ion-icon aria-hidden="true" slot="start" [ios]="p.icon + '-outline'" [md]="p.icon + '-sharp'"></ion-icon>
               <ion-label>{{ p.title | translate }}</ion-label>
             </ion-item>
           </ion-menu-toggle>

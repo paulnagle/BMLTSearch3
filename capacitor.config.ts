@@ -2,7 +2,7 @@ import { CapacitorConfig } from '@capacitor/cli';
 
 const config: CapacitorConfig = {
   appId: 'ie.nasouth.bmltsearch',
-  appName: 'BMLTSearch',
+  appName: 'BMLT Search',
   webDir: 'www',
   server: {
     androidScheme: 'https'
