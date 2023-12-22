@@ -1,4 +1,4 @@
-<!-- <ion-header>
+<ion-header>
   <ion-toolbar>
     <ion-buttons slot="start">
       <ion-menu-button></ion-menu-button>
@@ -7,22 +7,18 @@
       {{'MAP_SEARCH' | translate}}
     </ion-title>
   </ion-toolbar>
-  <ion-searchbar no-padding [(ngModel)]="autocomplete.input" (ionInput)="updateSearchResults()" placeholder="search">
-  </ion-searchbar>
+  <!-- <ion-searchbar no-padding [(ngModel)]="autocomplete.input" (ionInput)="updateSearchResults()" placeholder="search">
+  </ion-searchbar> -->
 </ion-header>
 
 <ion-content>
 
-  <ion-list [hidden]="autocompleteItems.length == 0">
+  <!-- <ion-list [hidden]="autocompleteItems.length == 0">
     <ion-item *ngFor="let item of autocompleteItems" tappable (click)="selectSearchResult(item)">
       {{ item.description }}
     </ion-item>
-  </ion-list>
+  </ion-list> -->
 
-  <div id="map_canvas"></div>
+  <capacitor-google-map id='map'></capacitor-google-map>
 
-</ion-content> -->
-
-<ion-content>
-  <div id="map_canvas"></div>
 </ion-content>

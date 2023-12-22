@@ -10,7 +10,6 @@
         <ion-select-option *ngFor="let selectedDay of days" [value]="selectedDay" >{{ selectedDay | translate }}</ion-select-option>
       </ion-select>
       <ion-range 
-        [(ngModel)]="hourRangeValues" 
         (ionKnobMoveEnd)=setHourRangeValues($event) 
         dualKnobs="true" 
         min="00" 

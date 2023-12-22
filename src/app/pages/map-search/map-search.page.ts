@@ -1,14 +1,12 @@
-import { Component, NgZone, OnInit } from '@angular/core';
+import { Component, ElementRef, NgZone, OnInit, ViewChild } from '@angular/core';
 import { StorageService } from '../../services/storage.service';
 import { Platform, ModalController } from '@ionic/angular';
 import { MeetingListService } from '../../services/meeting-list.service';
 import { LoadingService } from '../../services/loading.service';
 import { TranslateService } from '@ngx-translate/core';
-// import { GoogleMaps, GoogleMap, GoogleMapOptions, GoogleMapsEvent, MarkerCluster, Marker, MarkerLabel, MarkerOptions,
-//          MarkerClusterIcon, MarkerClusterOptions, ILatLng, LatLng, VisibleRegion, CameraPosition, Spherical, Environment,
-//          LocationService, MyLocation, Geocoder, GeocoderResult } from '@ionic-native/google-maps/ngx';
+import { GoogleMap } from '@capacitor/google-maps';
 import { ModalPage } from '../modal/modal.page';
-
+import { Geolocation } from '@capacitor/geolocation';
 
 declare const google: any;
 @Component({
@@ -18,7 +16,89 @@ declare const google: any;
 })
 export class MapSearchPage implements OnInit {
 
-  async ngOnInit() {}
+  public map!: GoogleMap;
+  addressLatitude: any;
+  addressLongitude: any;
+  loader!: Promise<void> | Promise<boolean> | null;
+  isLoaded = false;
+
+  constructor(
+    private translate: TranslateService, 
+    private storage: StorageService, 
+    private loaderCtrl: LoadingService) {
+
+      this.storage.get('savedAddressLat').then(value => {
+        if (value) {
+          this.addressLatitude = value;
+          this.storage.get('savedAddressLng').then(value => {
+            if (value) {
+              this.addressLongitude = value;
+            } else {
+              this.locatePhone();
+            }
+          });
+        } else {
+          this.locatePhone();
+        }
+      });
+    }
+                
+  locatePhone() {
+    this.translate.get('LOCATING').subscribe(value => { this.presentLoader(value); });
+    Geolocation.getCurrentPosition().then((resp) => {
+      this.addressLatitude = resp.coords.latitude;
+      this.addressLongitude = resp.coords.longitude;
+
+      this.storage.set('savedAddressLat', this.addressLatitude);
+      this.storage.set('savedAddressLng', this.addressLongitude);
+      this.dismissLoader()
+
+    }).catch((error) => {
+      console.log('Error getting location', error);
+
+      this.dismissLoader();
+    });
+    this.dismissLoader()
+  }
+
+  private async createMap(): Promise<void> {
+    const mapRef: HTMLElement = document.getElementById('map')!;
+
+    this.map = await GoogleMap.create({
+      id: 'google-map',
+      element: mapRef,
+      apiKey: 'AIzaSyAtwUjsIB14f0aHgdLk_JYnUrI0jvczMXw',
+      forceCreate: true,
+      config: {
+        center: {
+          lat: this.addressLatitude,
+          lng: this.addressLongitude
+        },
+        zoom: 5
+      }
+    });
+}
+
+  async ngOnInit() {
+    this.locatePhone();
+    setTimeout(async () => {
+      await this.createMap();
+    }, 500);
+  }
+
+
+  presentLoader(loaderText: any) {
+    if (!this.loader) {
+      this.loader = this.loaderCtrl.present(loaderText);
+    }
+  }
+
+  dismissLoader() {
+    if (this.loader) {
+      this.loader = this.loaderCtrl.dismiss();
+      this.loader = null;
+    }
+  }
 }
 
   // meetingList: any = [];

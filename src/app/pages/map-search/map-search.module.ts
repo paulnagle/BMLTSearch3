@@ -11,6 +11,8 @@ import { Routes } from '@angular/router';
 import { MeetingListService } from 'src/app/services/meeting-list.service';
 import { StorageService } from 'src/app/services/storage.service';
 
+import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+
 @NgModule({
   imports: [
     CommonModule,
@@ -25,6 +27,7 @@ import { StorageService } from 'src/app/services/storage.service';
   providers: [
     MeetingListService,
     StorageService
-  ]
+  ],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class MapSearchPageModule {}
