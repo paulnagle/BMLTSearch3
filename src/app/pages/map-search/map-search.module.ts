@@ -10,6 +10,7 @@ import { ModalPage } from '../modal/modal.page';
 import { Routes } from '@angular/router';
 import { MeetingListService } from 'src/app/services/meeting-list.service';
 import { StorageService } from 'src/app/services/storage.service';
+import { GeocodeService } from 'src/app/services/geocode.service';
 
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 
@@ -26,7 +27,8 @@ import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
   ],
   providers: [
     MeetingListService,
-    StorageService
+    StorageService,
+    GeocodeService
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })

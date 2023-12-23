@@ -7,6 +7,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { GoogleMap } from '@capacitor/google-maps';
 import { ModalPage } from '../modal/modal.page';
 import { Geolocation } from '@capacitor/geolocation';
+import { GeocodeService } from '../../services/geocode.service';
 
 declare const google: any;
 @Component({
@@ -22,10 +23,26 @@ export class MapSearchPage implements OnInit {
   loader!: Promise<void> | Promise<boolean> | null;
   isLoaded = false;
 
+  GoogleAutocomplete!: { getPlacePredictions: (arg0: { input: any; }, arg1: (predictions: any, status: any) => void) => void; };
+  autocompleteItems: any[] = [];
+  autocomplete: { input: any; } = {input: ''};
+  language!: string;
+
   constructor(
     private translate: TranslateService, 
     private storage: StorageService, 
-    private loaderCtrl: LoadingService) {
+    private loaderCtrl: LoadingService, 
+    private GeocodeService: GeocodeService,
+    private zone: NgZone) {
+
+      this.storage.get('language')
+      .then(langValue => {
+        if (langValue) {
+          this.language = langValue;
+        } else {
+          this.language = 'en';
+        }
+      });
 
       this.storage.get('savedAddressLat').then(value => {
         if (value) {
@@ -69,6 +86,7 @@ export class MapSearchPage implements OnInit {
       element: mapRef,
       apiKey: 'AIzaSyAtwUjsIB14f0aHgdLk_JYnUrI0jvczMXw',
       forceCreate: true,
+      language: this.language,
       config: {
         center: {
           lat: this.addressLatitude,
@@ -84,6 +102,62 @@ export class MapSearchPage implements OnInit {
     setTimeout(async () => {
       await this.createMap();
     }, 500);
+    this.GoogleAutocomplete = new google.maps.places.AutocompleteService();
+  }
+
+
+  selectSearchResult(item: { description: string }) {
+    this.autocompleteItems = [];
+    this.autocomplete.input = item.description;
+
+    this.GeocodeService.convertAddress(item.description).subscribe((geocode_reponse: any) => {
+      if (geocode_reponse.results[0]) {
+        this.addressLatitude = geocode_reponse.results[0].geometry.location.lat;
+        this.addressLongitude = geocode_reponse.results[0].geometry.location.lng;
+
+        this.dismissLoader();
+        this.map.setCamera({
+          coordinate: {
+            lat: this.addressLatitude ,
+            lng: this.addressLongitude,
+          },
+          zoom: 10
+        });
+      } else {
+        this.dismissLoader();
+      }
+    });
+
+
+  }
+
+  updateSearchResults(event: any) {
+    console.log("updateSearchResults")
+    console.log(event.detail.value)
+
+    this.autocomplete.input = event.detail.value;
+    if (this.autocomplete.input === '') {
+      this.autocompleteItems = [];
+      return;
+    }
+
+    let config = {
+      types: ['geocode'], // other types available in the API: 'establishment', 'regions', and 'cities'
+      input: event.detail.value,
+      language: this.language,
+      //, 
+      //componentRestrictions: { country: 'FR,ES,BE' } 
+    }
+
+
+    this.GoogleAutocomplete.getPlacePredictions(config, (predictions, status) => {
+        this.autocompleteItems = [];
+        this.zone.run(() => {
+          predictions.forEach((prediction: any) => {
+            this.autocompleteItems.push(prediction);
+          });
+        });
+      });
   }
 
 
