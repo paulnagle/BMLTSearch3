@@ -4,10 +4,11 @@ import { Platform, ModalController } from '@ionic/angular';
 import { MeetingListService } from '../../services/meeting-list.service';
 import { LoadingService } from '../../services/loading.service';
 import { TranslateService } from '@ngx-translate/core';
-import { GoogleMap } from '@capacitor/google-maps';
+import { GoogleMap, Marker , Circle, LatLngBounds, } from '@capacitor/google-maps';
 import { ModalPage } from '../modal/modal.page';
 import { Geolocation } from '@capacitor/geolocation';
 import { GeocodeService } from '../../services/geocode.service';
+import { LatLng } from '@capacitor/google-maps/dist/typings/definitions';
 
 declare const google: any;
 @Component({
@@ -28,81 +29,174 @@ export class MapSearchPage implements OnInit {
   autocomplete: { input: any; } = {input: ''};
   language!: string;
 
+  draggableMarker!: Marker;
+  draggableMarkerLatLng!: LatLng;
+  draggableMarkerID: any = 0;
+
+  draggableMarkerCircleRadius: number = 50000;
+  draggableMarkerCircle!: Circle;
+  draggableMarkerCircleID: any = 0;
+
   constructor(
     private translate: TranslateService, 
     private storage: StorageService, 
     private loaderCtrl: LoadingService, 
     private GeocodeService: GeocodeService,
-    private zone: NgZone) {
+    private zone: NgZone) {}
+                
+    async ngOnInit() {
 
+      this.GoogleAutocomplete = new google.maps.places.AutocompleteService();
+  
       this.storage.get('language')
       .then(langValue => {
         if (langValue) {
           this.language = langValue;
+          this.storage.get('savedAddressLat').then(value => {
+            if (value) {
+              this.addressLatitude = value;
+              this.storage.get('savedAddressLng').then(value => {
+                if (value) {
+                  this.addressLongitude = value;
+                  setTimeout(async () => {
+                    await this.createMap();
+                  }, 500);
+                } else {
+                  console.log('No saved location values found')
+                }
+              });
+            } else {
+              this.locatePhone();
+              setTimeout(async () => {
+                await this.createMap();
+              }, 500);
+            }
+          });
         } else {
           this.language = 'en';
         }
       });
+  
+    }
 
-      this.storage.get('savedAddressLat').then(value => {
-        if (value) {
-          this.addressLatitude = value;
-          this.storage.get('savedAddressLng').then(value => {
-            if (value) {
-              this.addressLongitude = value;
-            } else {
-              this.locatePhone();
-            }
-          });
-        } else {
-          this.locatePhone();
+    locatePhone() {
+      this.translate.get('LOCATING').subscribe(value => { this.presentLoader(value); });
+      Geolocation.getCurrentPosition().then((resp) => {
+        this.addressLatitude = resp.coords.latitude;
+        this.addressLongitude = resp.coords.longitude;
+  
+        this.storage.set('savedAddressLat', this.addressLatitude);
+        this.storage.set('savedAddressLng', this.addressLongitude);
+        this.dismissLoader()
+  
+      }).catch((error) => {
+        console.log('Error getting location', error);
+  
+        this.dismissLoader();
+      });
+      this.dismissLoader()
+    }
+
+    async createMap(): Promise<void> {
+      const mapRef: HTMLElement = document.getElementById('map')!;
+  
+      let currentLatLng: LatLng = {
+        lat: this.addressLatitude,
+        lng: this.addressLongitude
+      }
+
+      const mapArgs = {
+        id: 'google-map',
+        element: mapRef,
+        apiKey: 'AIzaSyAtwUjsIB14f0aHgdLk_JYnUrI0jvczMXw',
+        forceCreate: true,
+        language: this.language,
+        config: {
+          center: currentLatLng,
+          zoom: 5
         }
+      }
+
+      await GoogleMap.create(mapArgs).then(map => 
+        {
+          this.map = map;
+
+          this.drawDraggableCircle(currentLatLng, this.draggableMarkerCircleRadius).then(circleID => {
+            // Circle is created
+            console.log("CircleID = " + circleID)
+
+            this.draggableMarkerLatLng = {lat: this.addressLatitude, lng: this.addressLongitude}
+            this.draggableMarker = {
+              coordinate: this.draggableMarkerLatLng,
+              title: "You are here",
+              draggable: true
+            }
+
+            this.map.addMarker(this.draggableMarker).then(markerID => {
+              // Marker is Created
+              this.draggableMarkerID = markerID;
+              console.log("New draggable Marker ID is " + this.draggableMarkerID)
+
+              this.map.setOnMarkerDragEndListener((event) => {
+                console.log("Marker drag end. Circle ID id " + this.draggableMarkerCircleID);
+                this.draggableMarkerLatLng = {lat: event.latitude, lng: event.longitude}
+                map.removeCircles([this.draggableMarkerCircleID]).then(circleRemoved => {
+                  console.log("setOnMarkerDragEndListener: Old circle removed" + circleRemoved);
+                  this.drawDraggableCircle(this.draggableMarkerLatLng, this.draggableMarkerCircleRadius).then(circleID => {
+                    console.log("New Circle created, id is " + circleID)
+                  })
+                });
+              });
+            });
+
+          });
+        });
+    }
+
+    async drawDraggableCircle(latlng: LatLng, radius: number) {
+      this.addressLatitude = latlng.lat
+      this.addressLongitude = latlng.lng
+      this.draggableMarkerLatLng = {lat: latlng.lat, lng: latlng.lng}
+      this.draggableMarkerCircle = {
+        center: this.draggableMarkerLatLng, 
+        radius: this.draggableMarkerCircleRadius,
+        strokeColor: "#FF0000",
+        strokeOpacity: 0.8,
+        strokeWeight: 2,
+        fillColor: "#FF0000",
+        fillOpacity: 0.2
+      }
+
+      this.map.addCircles([this.draggableMarkerCircle]).then(circleID => {
+        this.draggableMarkerCircleID = circleID;
+        return circleID;
       });
     }
-                
-  locatePhone() {
-    this.translate.get('LOCATING').subscribe(value => { this.presentLoader(value); });
-    Geolocation.getCurrentPosition().then((resp) => {
-      this.addressLatitude = resp.coords.latitude;
-      this.addressLongitude = resp.coords.longitude;
 
-      this.storage.set('savedAddressLat', this.addressLatitude);
-      this.storage.set('savedAddressLng', this.addressLongitude);
-      this.dismissLoader()
 
-    }).catch((error) => {
-      console.log('Error getting location', error);
+  async addDraggableCircle() {
 
-      this.dismissLoader();
+
+    this.draggableMarkerCircle = {
+      center: this.draggableMarkerLatLng, 
+      radius: this.draggableMarkerCircleRadius,
+      strokeColor: "#FF0000",
+      strokeOpacity: 0.8,
+      strokeWeight: 2,
+      fillColor: "#FF0000",
+      fillOpacity: 0.35
+    }
+
+    await this.map.addCircles([this.draggableMarkerCircle]).then(returned_id => {
+      this.draggableMarkerCircleID = returned_id[0];
+      console.log("New Circle ID is " + this.draggableMarkerCircleID)
     });
-    this.dismissLoader()
   }
 
-  private async createMap(): Promise<void> {
-    const mapRef: HTMLElement = document.getElementById('map')!;
 
-    this.map = await GoogleMap.create({
-      id: 'google-map',
-      element: mapRef,
-      apiKey: 'AIzaSyAtwUjsIB14f0aHgdLk_JYnUrI0jvczMXw',
-      forceCreate: true,
-      language: this.language,
-      config: {
-        center: {
-          lat: this.addressLatitude,
-          lng: this.addressLongitude
-        },
-        zoom: 5
-      }
-    });
-}
 
-  async ngOnInit() {
-    this.locatePhone();
-    setTimeout(async () => {
-      await this.createMap();
-    }, 500);
-    this.GoogleAutocomplete = new google.maps.places.AutocompleteService();
+  changeCircleRadius(ev: Event){
+    console.log("Rdius changed")
   }
 
 
@@ -132,9 +226,6 @@ export class MapSearchPage implements OnInit {
   }
 
   updateSearchResults(event: any) {
-    console.log("updateSearchResults")
-    console.log(event.detail.value)
-
     this.autocomplete.input = event.detail.value;
     if (this.autocomplete.input === '') {
       this.autocompleteItems = [];
@@ -142,13 +233,10 @@ export class MapSearchPage implements OnInit {
     }
 
     let config = {
-      types: ['geocode'], // other types available in the API: 'establishment', 'regions', and 'cities'
+      types: ['geocode'],
       input: event.detail.value,
-      language: this.language,
-      //, 
-      //componentRestrictions: { country: 'FR,ES,BE' } 
+      language: this.language
     }
-
 
     this.GoogleAutocomplete.getPlacePredictions(config, (predictions, status) => {
         this.autocompleteItems = [];
