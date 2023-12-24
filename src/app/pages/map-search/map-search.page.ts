@@ -4,7 +4,7 @@ import { Platform, ModalController } from '@ionic/angular';
 import { MeetingListService } from '../../services/meeting-list.service';
 import { LoadingService } from '../../services/loading.service';
 import { TranslateService } from '@ngx-translate/core';
-import { GoogleMap, Marker , Circle, LatLngBounds, } from '@capacitor/google-maps';
+import { GoogleMap, Marker , Circle } from '@capacitor/google-maps';
 import { ModalPage } from '../modal/modal.page';
 import { Geolocation } from '@capacitor/geolocation';
 import { GeocodeService } from '../../services/geocode.service';
@@ -121,77 +121,65 @@ export class MapSearchPage implements OnInit {
         {
           this.map = map;
 
-          this.drawDraggableCircle(currentLatLng, this.draggableMarkerCircleRadius).then(circleID => {
-            // Circle is created
-            console.log("CircleID = " + circleID)
-
-            this.draggableMarkerLatLng = {lat: this.addressLatitude, lng: this.addressLongitude}
-            this.draggableMarker = {
-              coordinate: this.draggableMarkerLatLng,
-              title: "You are here",
-              draggable: true
-            }
-
-            this.map.addMarker(this.draggableMarker).then(markerID => {
-              // Marker is Created
-              this.draggableMarkerID = markerID;
-              console.log("New draggable Marker ID is " + this.draggableMarkerID)
-
-              this.map.setOnMarkerDragEndListener((event) => {
-                console.log("Marker drag end. Circle ID id " + this.draggableMarkerCircleID);
-                this.draggableMarkerLatLng = {lat: event.latitude, lng: event.longitude}
-                map.removeCircles([this.draggableMarkerCircleID]).then(circleRemoved => {
-                  console.log("setOnMarkerDragEndListener: Old circle removed" + circleRemoved);
-                  this.drawDraggableCircle(this.draggableMarkerLatLng, this.draggableMarkerCircleRadius).then(circleID => {
-                    console.log("New Circle created, id is " + circleID)
-                  })
-                });
-              });
-            });
-
+          this.draggableMarkerLatLng = {lat: this.addressLatitude, lng: this.addressLongitude}
+          this.draggableMarkerCircle = {
+            center: this.draggableMarkerLatLng, 
+            radius: this.draggableMarkerCircleRadius,
+            strokeColor: "#FF0000",
+            strokeOpacity: 0.8,
+            strokeWeight: 2,
+            fillColor: "#FF0000",
+            fillOpacity: 0.2
+          }
+    
+          this.map.setOnMarkerDragStartListener((event) => {
+            console.log("setOnMarkerDragStartListener : ")
           });
-        });
+
+          this.map.setOnMarkerDragListener((event) => {
+            console.log("setOnMarkerDragListener : ")
+          });
+
+          this.map.setOnMarkerDragEndListener((event) => {
+            console.log("setOnMarkerDragEndListener : ")
+
+            this.draggableMarkerLatLng = {lat: event.latitude, lng: event.longitude}
+            this.map.removeCircles([this.draggableMarkerCircleID]).then(circleRemoved => {
+              this.draggableMarkerLatLng = {lat: event.latitude, lng: event.longitude}
+              this.draggableMarkerCircle = {
+                center: this.draggableMarkerLatLng, 
+                radius: this.draggableMarkerCircleRadius,
+                strokeColor: "#FF0000",
+                strokeOpacity: 0.8,
+                strokeWeight: 2,
+                fillColor: "#FF0000",
+                fillOpacity: 0.2
+              }
+        
+              this.map.addCircles([this.draggableMarkerCircle]).then(circleID => {
+                this.draggableMarkerCircleID = circleID;
+              }).catch(error => console.log("Error in addCircles :" + error))
+            }).catch(error => console.log("Error in remooveCircles : " + error));
+          });
+
+          this.draggableMarkerLatLng = {lat: this.addressLatitude, lng: this.addressLongitude}
+          this.draggableMarker = {
+            coordinate: this.draggableMarkerLatLng,
+            title: "You are here",
+            draggable: true
+          }
+
+          this.map.addMarker(this.draggableMarker).then(markerID => {
+            this.draggableMarkerID = markerID;
+          }).catch(error => console.log("Error in addMarker : " + error));
+
+          this.map.addCircles([this.draggableMarkerCircle]).then(circleID => {
+            this.draggableMarkerCircleID = circleID;
+          }).catch(error => console.log("Error in AddCircles : " + error));
+
+        }); // create map
     }
 
-    async drawDraggableCircle(latlng: LatLng, radius: number) {
-      this.addressLatitude = latlng.lat
-      this.addressLongitude = latlng.lng
-      this.draggableMarkerLatLng = {lat: latlng.lat, lng: latlng.lng}
-      this.draggableMarkerCircle = {
-        center: this.draggableMarkerLatLng, 
-        radius: this.draggableMarkerCircleRadius,
-        strokeColor: "#FF0000",
-        strokeOpacity: 0.8,
-        strokeWeight: 2,
-        fillColor: "#FF0000",
-        fillOpacity: 0.2
-      }
-
-      this.map.addCircles([this.draggableMarkerCircle]).then(circleID => {
-        this.draggableMarkerCircleID = circleID;
-        return circleID;
-      });
-    }
-
-
-  async addDraggableCircle() {
-
-
-    this.draggableMarkerCircle = {
-      center: this.draggableMarkerLatLng, 
-      radius: this.draggableMarkerCircleRadius,
-      strokeColor: "#FF0000",
-      strokeOpacity: 0.8,
-      strokeWeight: 2,
-      fillColor: "#FF0000",
-      fillOpacity: 0.35
-    }
-
-    await this.map.addCircles([this.draggableMarkerCircle]).then(returned_id => {
-      this.draggableMarkerCircleID = returned_id[0];
-      console.log("New Circle ID is " + this.draggableMarkerCircleID)
-    });
-  }
 
 
 
