@@ -22,14 +22,3 @@
   <capacitor-google-map id='map'></capacitor-google-map>
 
 </ion-content>
-
-<ion-footer no-padding>
-  <ion-toolbar no-padding>
-
-    <ion-range id="RadiusRange" min="100" max="100000" (ionKnobMoveEnd)="changeCircleRadius($event)" color="danger" debounce="500">
-      <ion-label slot="start"><ion-icon name="logo-ionic" size="small"></ion-icon></ion-label>
-      <ion-label slot="end"><ion-icon name="logo-ionic" size="large"></ion-icon></ion-label>
-    </ion-range>
-
-  </ion-toolbar>
-</ion-footer>

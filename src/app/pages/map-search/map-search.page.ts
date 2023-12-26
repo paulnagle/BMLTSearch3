@@ -1,14 +1,15 @@
 import { Component, ElementRef, NgZone, OnInit, ViewChild } from '@angular/core';
 import { StorageService } from '../../services/storage.service';
-import { Platform, ModalController } from '@ionic/angular';
+import { Platform, ModalController, RangeCustomEvent } from '@ionic/angular';
 import { MeetingListService } from '../../services/meeting-list.service';
 import { LoadingService } from '../../services/loading.service';
 import { TranslateService } from '@ngx-translate/core';
 import { GoogleMap, Marker , Circle } from '@capacitor/google-maps';
 import { ModalPage } from '../modal/modal.page';
 import { Geolocation } from '@capacitor/geolocation';
-import { GeocodeService } from '../../services/geocode.service';
-import { LatLng } from '@capacitor/google-maps/dist/typings/definitions';
+import { GeocodeService } from '../../services/geocode.service'
+import { CameraConfig, LatLng, Point, Size } from '@capacitor/google-maps/dist/typings/definitions';
+import * as geometry from 'spherical-geometry-js';
 
 declare const google: any;
 @Component({
@@ -29,19 +30,17 @@ export class MapSearchPage implements OnInit {
   autocomplete: { input: any; } = {input: ''};
   language!: string;
 
-  draggableMarker!: Marker;
-  draggableMarkerLatLng!: LatLng;
-  draggableMarkerID: any = 0;
-
-  draggableMarkerCircleRadius: number = 50000;
-  draggableMarkerCircle!: Circle;
-  draggableMarkerCircleID: any = 0;
+  mapRadius!: Number;
+  currentMeetings!: [];
+  currentMarkerList!: Marker[];
+  currentMarkerIDs: string[] = [];
 
   constructor(
     private translate: TranslateService, 
     private storage: StorageService, 
     private loaderCtrl: LoadingService, 
     private GeocodeService: GeocodeService,
+    private meetingListService: MeetingListService,
     private zone: NgZone) {}
                 
     async ngOnInit() {
@@ -121,71 +120,59 @@ export class MapSearchPage implements OnInit {
         {
           this.map = map;
 
-          this.draggableMarkerLatLng = {lat: this.addressLatitude, lng: this.addressLongitude}
-          this.draggableMarkerCircle = {
-            center: this.draggableMarkerLatLng, 
-            radius: this.draggableMarkerCircleRadius,
-            strokeColor: "#FF0000",
-            strokeOpacity: 0.8,
-            strokeWeight: 2,
-            fillColor: "#FF0000",
-            fillOpacity: 0.2
-          }
-    
-          this.map.setOnMarkerDragStartListener((event) => {
-            console.log("setOnMarkerDragStartListener : ")
+
+          this.map.setOnCameraIdleListener((event) => {
+            if (event.zoom <=7) {
+              let cameraConfig: CameraConfig = {zoom: 8}
+              this.map.setCamera(cameraConfig)
+            }
+
+            this.mapRadius = Math.ceil(Number(google.maps.geometry.spherical.computeDistanceBetween(event.bounds.center,event.bounds.southwest))/1000)
+            console.log("Radius of map = " + this.mapRadius)
+
+            this.meetingListService.getRadiusMeetings(event.bounds.center.lat, event.bounds.center.lng, this.mapRadius).then(meetingList => {
+              this.currentMeetings = meetingList.data
+              this.currentMarkerList = []
+              this.map.disableClustering().then(clusteringDisabled => {
+                console.log('Clustering disabled')
+
+                this.currentMeetings.forEach( (meeting) => {
+                  let markerLatLng: LatLng = {lat: Number(meeting['latitude']), lng: Number(meeting['longitude'])}
+                  let addMarker: Marker = {
+                    coordinate: markerLatLng, 
+                    snippet: meeting['id_bigint'], 
+                    iconUrl: '../../../assets/markercluster/MarkerBlue.png',
+                    iconAnchor: {
+                      x: 29,
+                      y: 100,
+                    }
+                  }
+                  this.currentMarkerList.push(addMarker)
+                });
+                if (this.currentMarkerIDs.length > 0) {
+                  this.map.removeMarkers(this.currentMarkerIDs).then(result => {
+                    this.map.addMarkers(this.currentMarkerList).then(markerIDs => {
+                      this.currentMarkerIDs = markerIDs;
+                      this.map.enableClustering(2).then(clusteringEnabled => {
+                        console.log("Clustering enabled")
+                      })
+                    });
+                  })
+                } else {
+                  this.map.addMarkers(this.currentMarkerList).then(markerIDs => {
+                    this.currentMarkerIDs = markerIDs;
+                    this.map.enableClustering(2).then(clusteringEnabled => {
+                      console.log("Clustering enabled")
+                    })
+                  });
+                }
+              })
+            })
           });
-
-          this.map.setOnMarkerDragListener((event) => {
-            console.log("setOnMarkerDragListener : ")
-          });
-
-          this.map.setOnMarkerDragEndListener((event) => {
-            console.log("setOnMarkerDragEndListener : ")
-
-            this.draggableMarkerLatLng = {lat: event.latitude, lng: event.longitude}
-            this.map.removeCircles([this.draggableMarkerCircleID]).then(circleRemoved => {
-              this.draggableMarkerLatLng = {lat: event.latitude, lng: event.longitude}
-              this.draggableMarkerCircle = {
-                center: this.draggableMarkerLatLng, 
-                radius: this.draggableMarkerCircleRadius,
-                strokeColor: "#FF0000",
-                strokeOpacity: 0.8,
-                strokeWeight: 2,
-                fillColor: "#FF0000",
-                fillOpacity: 0.2
-              }
-        
-              this.map.addCircles([this.draggableMarkerCircle]).then(circleID => {
-                this.draggableMarkerCircleID = circleID;
-              }).catch(error => console.log("Error in addCircles :" + error))
-            }).catch(error => console.log("Error in remooveCircles : " + error));
-          });
-
-          this.draggableMarkerLatLng = {lat: this.addressLatitude, lng: this.addressLongitude}
-          this.draggableMarker = {
-            coordinate: this.draggableMarkerLatLng,
-            title: "You are here",
-            draggable: true
-          }
-
-          this.map.addMarker(this.draggableMarker).then(markerID => {
-            this.draggableMarkerID = markerID;
-          }).catch(error => console.log("Error in addMarker : " + error));
-
-          this.map.addCircles([this.draggableMarkerCircle]).then(circleID => {
-            this.draggableMarkerCircleID = circleID;
-          }).catch(error => console.log("Error in AddCircles : " + error));
 
         }); // create map
     }
 
-
-
-
-  changeCircleRadius(ev: Event){
-    console.log("Rdius changed")
-  }
 
 
   selectSearchResult(item: { description: string }) {
@@ -196,7 +183,6 @@ export class MapSearchPage implements OnInit {
       if (geocode_reponse.results[0]) {
         this.addressLatitude = geocode_reponse.results[0].geometry.location.lat;
         this.addressLongitude = geocode_reponse.results[0].geometry.location.lng;
-
         this.dismissLoader();
         this.map.setCamera({
           coordinate: {
@@ -247,9 +233,41 @@ export class MapSearchPage implements OnInit {
     if (this.loader) {
       this.loader = this.loaderCtrl.dismiss();
       this.loader = null;
+      }
     }
-  }
+
+    // getMeetings(params: any[] | { farLeft: ILatLng; }[]) {
+    //   this.mapLatitude = params[0].target.lat;
+    //   this.eagerMapLat = this.mapLatitude;
+
+    //   this.mapLongitude = params[0].target.lng;
+    //   this.eagerMapLng = this.mapLongitude;
+
+    //   this.origZoom = params[0].zoom;
+
+    //   this.autoRadius = Spherical.computeDistanceBetween(params[0].target, params[0].farLeft) / 1000;
+    //   // Eagerly load 10% around screen area
+    //   this.autoRadius = this.autoRadius * 1.1;
+
+    //   this.meetingListService.getRadiusMeetings(this.mapLatitude, this.mapLongitude, this.autoRadius).subscribe((data) => {
+    //     if (JSON.stringify(data) === '{}') {  // empty result set!
+    //       this.meetingList = JSON.parse('[]');
+    //     } else {
+    //       this.meetingList = data;
+    //       this.meetingList = this.meetingList.filter((meeting: { latitude }) => meeting.latitude = parseFloat(meeting.latitude));
+    //       this.meetingList = this.meetingList.filter((meeting: { longitude }) => meeting.longitude = parseFloat(meeting.longitude));
+    //     }
+    //     this.populateMarkers();
+    //     this.addCluster();
+    //   });
+    // }
+
+
 }
+
+
+
+
 
   // meetingList: any = [];
   // loader!: Promise<void> | Promise<boolean> | null;
