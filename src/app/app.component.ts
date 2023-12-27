@@ -3,6 +3,7 @@ import { Component } from '@angular/core';
 import { Platform } from '@ionic/angular';
 import { TranslateService } from '@ngx-translate/core';
 import { StorageService } from './services/storage.service'
+import { SplashScreen } from '@capacitor/splash-screen';
 
 @Component({
   selector: 'app-root',
@@ -63,6 +64,8 @@ export class AppComponent {
 
   async initializeApp() {
     this.translate.setDefaultLang('en');
+
+    await SplashScreen.hide();
 
     const langValue = await this.storage.get('language');
     if (langValue) {
