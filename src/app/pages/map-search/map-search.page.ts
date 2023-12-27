@@ -173,11 +173,10 @@ export class MapSearchPage implements OnInit {
       meetingList.data = meetingList.data.filter((meeting: { longitude: any }) => meeting.longitude = parseFloat(meeting.longitude));
       this.currentMeetings = meetingList.data
 
-      // this.currentMeetings.forEach( (meeting, index: number) => {
       for (let i = 0; i < this.currentMeetings.length; i++) {
         let meeting: any = this.currentMeetings[i];
         if (i === this.currentMeetings.length - 1) {
-          this.pushStandaloneMeeting(meeting);
+          this.pushStandaloneMeetingMarker(meeting);
           this.dismissLoader()
         } else {
 
@@ -191,7 +190,7 @@ export class MapSearchPage implements OnInit {
           }
 
           if (!this.meetingsAreCoLocated(currentMeetingLatLng, nextMeetingLatlng)) {
-            this.pushStandaloneMeeting(meeting)
+            this.pushStandaloneMeetingMarker(meeting)
           } else {
             // We have the start of some co-located meetings on the list
             this.ids = this.currentMeetings[i]['id_bigint'];
@@ -204,15 +203,33 @@ export class MapSearchPage implements OnInit {
                 iconUrl: './assets/markercluster/MarkerRed.png',
                 iconAnchor: { x: 29, y: 100 }
               };
-              this.currentMarkerList.push(this.data);
-
+              
               i++;
-              // Is this the end of the list?
+
               if (i === (this.currentMeetings.length - 1)) {
-                break;
+                break
               }
-            } while (this.meetingsAreCoLocated(this.currentMeetings[i], this.currentMeetings[i + 1]));
-         }
+              let currentMeetingLatLng: LatLng = {
+                lat:this.currentMeetings[i]['latitude'],
+                lng:this.currentMeetings[i]['longitude'],
+              }
+              let nextNextMeetingLatlng: LatLng = {
+                lat:this.currentMeetings[i + 1]['latitude'],
+                lng:this.currentMeetings[i + 1]['longitude'],
+              }
+
+            } while (this.meetingsAreCoLocated({
+              lat:this.currentMeetings[i]['latitude'],
+              lng:this.currentMeetings[i]['longitude']
+            }, {
+              lat:this.currentMeetings[i+1]['latitude'],
+              lng:this.currentMeetings[i+1]['longitude']
+            }));
+
+            console.log("Pushing RED marker")
+            console.log(this.data)  
+            this.currentMarkerList.push(this.data);
+          }
         }
       }
       this.addMarkers();
@@ -233,22 +250,19 @@ export class MapSearchPage implements OnInit {
   }
 
   meetingsAreCoLocated(i: LatLng, j: LatLng) {
-    console.log("meetingsAreCoLocated?")
     let areColocated = false;
     if (((Math.round(i.lat * 1000) / 1000) !== (Math.round(j.lat * 1000) / 1000)) ||
       ((Math.round(i.lng * 1000) / 1000) !== (Math.round(j.lng * 1000) / 1000))) {
       areColocated = false;
-      console.log("not colocated")
     } else {
       areColocated = true;
-      console.log("yes colocated")
     }
     return areColocated;
   }
 
 
-  pushStandaloneMeeting(meeting: any) {
-    console.log("pushStandAloneMeeting")
+  pushStandaloneMeetingMarker(meeting: any) {
+    console.log("pushStandaloneMeetingMarker")
     let markerLatLng: LatLng = {lat: Number(meeting['latitude']), lng: Number(meeting['longitude'])}
     this.data = {
       coordinate: markerLatLng,
@@ -259,7 +273,8 @@ export class MapSearchPage implements OnInit {
         y: 100,
       }
     };
-
+    console.log("Standalone meeting marker data")
+    console.log(this.data)
     this.currentMarkerList.push(this.data);
   }
 
@@ -325,8 +340,9 @@ export class MapSearchPage implements OnInit {
       }
     }
 
-  openMeetingModal(meetingID: any) {
-    this.meetingListService.getMeetingsByIDs(meetingID).then((response) => {
+  openMeetingModal(meetingIDs: any) {
+    console.log(meetingIDs)
+    this.meetingListService.getMeetingsByIDs(meetingIDs).then((response) => {
       this.meeting = response.data;
       this.meeting.filter((i: any) => i.start_time_raw = this.convertTo12Hr(i.start_time));
       this.openModal(this.meeting);
