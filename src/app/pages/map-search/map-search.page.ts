@@ -326,7 +326,7 @@ export class MapSearchPage implements OnInit {
     }
 
   openMeetingModal(meetingID: any) {
-    this.meetingListService.getSingleMeetingByID(meetingID).then((response) => {
+    this.meetingListService.getMeetingsByIDs(meetingID).then((response) => {
       this.meeting = response.data;
       this.meeting.filter((i: any) => i.start_time_raw = this.convertTo12Hr(i.start_time));
       this.openModal(this.meeting);

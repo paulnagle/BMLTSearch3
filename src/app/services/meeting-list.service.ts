@@ -102,10 +102,10 @@ export class MeetingListService {
     return response.data;
   }
 
-  async getSingleMeetingByID(id: any) {
+  async getMeetingsByIDs(ids_string: any) {
     const getSingleMeetingByIDURL: any = this.tomatoBMLT
       + '?switcher=GetSearchResults&meeting_ids[]='
-      + id;
+      + ids_string;
 
     const response: HttpResponse = await CapacitorHttp.get({url: getSingleMeetingByIDURL});
     return response;
