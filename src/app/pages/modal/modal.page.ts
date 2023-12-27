@@ -22,8 +22,7 @@ export class ModalPage implements OnInit {
     private modalController: ModalController,
     private tomatoFormatsService: TomatoFormatsService,
     private storage: StorageService) {
-
-    this.meetingList = this.navParams.data['data'];
+      this.meetingList = this.navParams.data['data'];
   }
 
   ngOnInit() {

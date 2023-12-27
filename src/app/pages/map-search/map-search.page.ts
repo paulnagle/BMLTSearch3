@@ -126,7 +126,6 @@ export class MapSearchPage implements OnInit {
 
       this.map.setOnCameraIdleListener((event) => {
         if (this.performSearch === false) {
-          console.log("Skipping a new search");
           this.performSearch = true;
           return;
         }
@@ -143,11 +142,9 @@ export class MapSearchPage implements OnInit {
 
         let mapRadiusMeters = google.maps.geometry.spherical.computeDistanceBetween(event.bounds.center,event.bounds.southwest);
         this.mapRadius = Math.ceil(Number(mapRadiusMeters)/1000);
-        console.log("Radius of map in KMs = " + this.mapRadius);
 
         if (this.currentMarkerIDs.length > 0) {
           this.map.removeMarkers(this.currentMarkerIDs).then(result => {
-            console.log("removeMarkers response");
             this.map.disableClustering().then(clusteringDisabled => {
               this.getMeetings(event);
             });
@@ -161,6 +158,7 @@ export class MapSearchPage implements OnInit {
 
         console.log("Marker clicked")
         console.log(event)
+        this.openMeetingModal(event.title)
       })
     }); // create map
 
@@ -177,7 +175,6 @@ export class MapSearchPage implements OnInit {
 
       // this.currentMeetings.forEach( (meeting, index: number) => {
       for (let i = 0; i < this.currentMeetings.length; i++) {
-        console.log(i)
         let meeting: any = this.currentMeetings[i];
         if (i === this.currentMeetings.length - 1) {
           this.pushStandaloneMeeting(meeting);
@@ -223,7 +220,6 @@ export class MapSearchPage implements OnInit {
   }
 
   addMarkers() {
-    console.log("About to addmarkers")
     if (this.currentMarkerList.length > 0) {
       this.map.addMarkers(this.currentMarkerList).then(markerIDs => {
         this.currentMarkerIDs = markerIDs;
@@ -265,7 +261,6 @@ export class MapSearchPage implements OnInit {
     };
 
     this.currentMarkerList.push(this.data);
-    console.log(this.currentMarkerList)
   }
 
 
@@ -331,8 +326,8 @@ export class MapSearchPage implements OnInit {
     }
 
   openMeetingModal(meetingID: any) {
-    this.meetingListService.getSingleMeetingByID(meetingID).then((meeting) => {
-      this.meeting = meeting;
+    this.meetingListService.getSingleMeetingByID(meetingID).then((response) => {
+      this.meeting = response.data;
       this.meeting.filter((i: any) => i.start_time_raw = this.convertTo12Hr(i.start_time));
       this.openModal(this.meeting);
     });

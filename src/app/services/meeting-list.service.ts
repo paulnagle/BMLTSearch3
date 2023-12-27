@@ -48,8 +48,7 @@ export class MeetingListService {
       + '&lat_val='
       + lat
       + '&sort_keys=longitude,latitude&callingApp=bmlt_search_3_ionic';
-
-    console.log("tomato url : " + getRadiusMeetingsURL)  
+ 
     const response = await CapacitorHttp.get({url: getRadiusMeetingsURL});
     return response;
   }
