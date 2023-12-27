@@ -5,8 +5,11 @@
     </ion-buttons>
 
     <div *ngIf="areaName != '' ; else BMLT_List">
-      <ion-buttons slot="end">
-        <ion-button color="primary" size="small" (click)="showServiceStructure()">Back</ion-button>
+      <ion-buttons slot="primary">
+        <ion-button fill="solid" color='primary' (click)="showServiceStructure()">
+          <ion-icon slot="start" name="arrow-back-circle-outline"></ion-icon>
+          Back
+        </ion-button>
       </ion-buttons>
     </div>
 

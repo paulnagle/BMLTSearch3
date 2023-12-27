@@ -71,7 +71,6 @@ export class MeetingListComponent implements OnInit, OnChanges {
     this.meetingList = this.data;
     this.localMeetingType = this.meetingType;
     this.localExpandAll = this.expandAll;
-    console.log("[ngOnInit] Expandall = " + this.localExpandAll)
 
     if (this.localMeetingType === 'virt') {
       // Get the formats
