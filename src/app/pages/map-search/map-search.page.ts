@@ -107,7 +107,11 @@ export class MapSearchPage implements OnInit {
   async createMap(): Promise<void> {
     const mapRef: HTMLElement = document.getElementById('map')!;
 
-    let currentLatLng: LatLng = { lat: this.addressLatitude, lng: this.addressLongitude }
+    let mapLatitude: any = 34.2359855;
+    let mapLongitude: any = -118.5656689;
+    if (this.addressLatitude) { mapLatitude = this.addressLatitude }
+    if (this.addressLongitude) { mapLongitude = this.addressLongitude}
+    let currentLatLng: LatLng = { lat: mapLatitude, lng: mapLongitude }
 
     const mapArgs = {
       id: 'google-map',
