@@ -12,7 +12,16 @@ https://play.google.com/store/apps/details?id=ie.nasouth.bmltsearch&hl=en
 
 ## Build it yourself (on a mac)
 
-You will need to follow the guidelines to build ionic capacitor apps at https://capacitorjs.com/docs
+You will need to follow the guidelines to build ionic capacitor apps at https://capacitorjs.com/docs.
+
+At a minimum, run the following commands to run the app in a browser
+
+```
+npm install -g @ionic/cli
+npm install
+ionic build
+ionic serve
+```
 
 ## Branches
 The default branch is called version_5

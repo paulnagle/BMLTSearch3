@@ -155,9 +155,7 @@ export class MapSearchPage implements OnInit {
       });  // setOnCameraIdleListener
 
       this.map.setOnMarkerClickListener((event) => {
-
-        console.log("Marker clicked")
-        console.log(event)
+        this.performSearch = false
         this.openMeetingModal(event.title)
       })
     }); // create map

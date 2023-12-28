@@ -101,5 +101,12 @@
       </ion-button> 
     </div>
 
+    <div *ngIf="canShare">
+      <ion-button expand="block" (click)="shareMeeting(meeting)" class="ion-text-wrap">
+        <ion-ripple-effect></ion-ripple-effect>
+        <ion-icon name="share-outline"> </ion-icon>&nbsp;Share meeting details
+      </ion-button>
+    </div>
+
   </ion-card-content>
 </ion-card>
