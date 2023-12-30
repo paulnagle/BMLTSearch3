@@ -127,6 +127,7 @@ export class MapSearchPage implements OnInit {
 
     await GoogleMap.create(mapArgs).then(map => {
       this.map = map;
+      this.map.enableCurrentLocation(true)
 
       this.map.setOnCameraIdleListener((event) => {
         if (this.performSearch === false) {
