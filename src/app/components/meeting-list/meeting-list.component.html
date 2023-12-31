@@ -45,7 +45,9 @@
         <h3>{{'SATURDAY' | translate}} ({{dayCount[6]}})</h3></div>
       <div *ngSwitchDefault>Nothing Found.</div>
     </div>
-    <ion-icon size="large" slot="end" [name]="isDayShown(i) ? 'close-circle' : 'add-circle'"></ion-icon>
+    <div *ngIf="isExpandAll() === false">
+      <ion-icon size="large" slot="right" [name]="isDayShown(i) ? 'close-circle' : 'add-circle'"></ion-icon>
+    </div>
 
   </ion-item-divider>
 
