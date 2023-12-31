@@ -150,6 +150,7 @@ export class MapSearchPage implements OnInit {
 
         if (this.currentMarkerIDs.length > 0) {
           this.map.removeMarkers(this.currentMarkerIDs).then(result => {
+            this.currentMarkerIDs = []
             this.map.disableClustering().then(clusteringDisabled => {
               this.getMeetings(event);
             });
@@ -164,14 +165,18 @@ export class MapSearchPage implements OnInit {
         this.openMeetingModal(event.title)
       })
     }); // create map
-
-
   }
 
 
   getMeetings(event: CameraIdleCallbackData) {
     this.currentMarkerList = []
     this.meetingListService.getRadiusMeetings(event.bounds.center.lat, event.bounds.center.lng, this.mapRadius).then(meetingList => {
+
+      // Empty result set edge case
+      if (meetingList.data =='{}') {
+        meetingList.data = []
+      }
+
       meetingList.data = meetingList.data.filter((meeting: { latitude: any }) => meeting.latitude = parseFloat(meeting.latitude));
       meetingList.data = meetingList.data.filter((meeting: { longitude: any }) => meeting.longitude = parseFloat(meeting.longitude));
       this.currentMeetings = meetingList.data
@@ -228,9 +233,7 @@ export class MapSearchPage implements OnInit {
               lat:this.currentMeetings[i+1]['latitude'],
               lng:this.currentMeetings[i+1]['longitude']
             }));
-
-            console.log("Pushing RED marker")
-            console.log(this.data)  
+ 
             this.currentMarkerList.push(this.data);
           }
         }
@@ -238,6 +241,7 @@ export class MapSearchPage implements OnInit {
       this.addMarkers();
     });
   }
+
 
   addMarkers() {
     if (this.currentMarkerList.length > 0) {
@@ -252,6 +256,7 @@ export class MapSearchPage implements OnInit {
     }
   }
 
+
   meetingsAreCoLocated(i: LatLng, j: LatLng) {
     let areColocated = false;
     if (((Math.round(i.lat * 1000) / 1000) !== (Math.round(j.lat * 1000) / 1000)) ||
@@ -265,7 +270,6 @@ export class MapSearchPage implements OnInit {
 
 
   pushStandaloneMeetingMarker(meeting: any) {
-    console.log("pushStandaloneMeetingMarker")
     let markerLatLng: LatLng = {lat: Number(meeting['latitude']), lng: Number(meeting['longitude'])}
     this.data = {
       coordinate: markerLatLng,
@@ -276,8 +280,6 @@ export class MapSearchPage implements OnInit {
         y: 100,
       }
     };
-    console.log("Standalone meeting marker data")
-    console.log(this.data)
     this.currentMarkerList.push(this.data);
   }
 
@@ -342,6 +344,7 @@ export class MapSearchPage implements OnInit {
       this.loader = null;
       }
     }
+
 
   openMeetingModal(meetingIDs: any) {
     console.log(meetingIDs)
