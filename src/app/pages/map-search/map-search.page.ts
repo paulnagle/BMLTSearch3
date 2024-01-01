@@ -40,6 +40,8 @@ export class MapSearchPage implements OnInit {
   meeting!: any;
   data!: any;
 
+  debounceTimestamp: number = 0;
+
   constructor(
     private translate: TranslateService, 
     private storage: StorageService, 
@@ -80,12 +82,15 @@ export class MapSearchPage implements OnInit {
         });
       } else {
         this.language = 'en';
+        setTimeout(async () => {
+          await this.createMap();
+        }, 500);
       }
     });
   }
 
 
-  locatePhone() {
+  async locatePhone() {
     this.translate.get('LOCATING').subscribe(value => { this.presentLoader(value); });
     Geolocation.getCurrentPosition().then((resp) => {
       this.addressLatitude = resp.coords.latitude;
@@ -97,10 +102,8 @@ export class MapSearchPage implements OnInit {
 
     }).catch((error) => {
       console.log('Error getting location', error);
-
       this.dismissLoader();
     });
-    this.dismissLoader();
   }
 
 
@@ -127,7 +130,6 @@ export class MapSearchPage implements OnInit {
 
     await GoogleMap.create(mapArgs).then(map => {
       this.map = map;
-      this.map.enableCurrentLocation(true)
 
       this.map.setOnCameraIdleListener((event) => {
         if (this.performSearch === false) {
@@ -163,12 +165,25 @@ export class MapSearchPage implements OnInit {
       this.map.setOnMarkerClickListener((event) => {
         this.performSearch = false
         this.openMeetingModal(event.title)
-      })
+      }); // setOnMarkerClickListener
+
+      this.map.setOnBoundsChangedListener(event => {
+      }); // setOnBoundsChangedListener
+
     }); // create map
   }
 
 
   getMeetings(event: CameraIdleCallbackData) {
+    const timeCheck = Date.now() - this.debounceTimestamp
+
+    if (( timeCheck < 1000 ) && (this.debounceTimestamp != 0)) {
+      this.dismissLoader()
+      this.debounceTimestamp = Date.now()
+      return
+    }
+    this.debounceTimestamp = Date.now()
+
     this.currentMarkerList = []
     this.meetingListService.getRadiusMeetings(event.bounds.center.lat, event.bounds.center.lng, this.mapRadius).then(meetingList => {
 
@@ -217,22 +232,13 @@ export class MapSearchPage implements OnInit {
               if (i === (this.currentMeetings.length - 1)) {
                 break
               }
-              let currentMeetingLatLng: LatLng = {
-                lat:this.currentMeetings[i]['latitude'],
-                lng:this.currentMeetings[i]['longitude'],
-              }
-              let nextNextMeetingLatlng: LatLng = {
-                lat:this.currentMeetings[i + 1]['latitude'],
-                lng:this.currentMeetings[i + 1]['longitude'],
-              }
+              let currentMeetingLatLng: LatLng = {lat:this.currentMeetings[i]['latitude'],lng:this.currentMeetings[i]['longitude']}
+              let nextNextMeetingLatlng: LatLng = {lat:this.currentMeetings[i + 1]['latitude'],lng:this.currentMeetings[i + 1]['longitude']}
 
-            } while (this.meetingsAreCoLocated({
-              lat:this.currentMeetings[i]['latitude'],
-              lng:this.currentMeetings[i]['longitude']
-            }, {
-              lat:this.currentMeetings[i+1]['latitude'],
-              lng:this.currentMeetings[i+1]['longitude']
-            }));
+            } while (this.meetingsAreCoLocated(
+              {lat:this.currentMeetings[i]['latitude'],lng:this.currentMeetings[i]['longitude']}, 
+              {lat:this.currentMeetings[i+1]['latitude'],lng:this.currentMeetings[i+1]['longitude']}
+              ));
  
             this.currentMarkerList.push(this.data);
           }
@@ -347,7 +353,6 @@ export class MapSearchPage implements OnInit {
 
 
   openMeetingModal(meetingIDs: any) {
-    console.log(meetingIDs)
     this.meetingListService.getMeetingsByIDs(meetingIDs).then((response) => {
       this.meeting = response.data;
       this.meeting.filter((i: any) => i.start_time_raw = this.convertTo12Hr(i.start_time));
