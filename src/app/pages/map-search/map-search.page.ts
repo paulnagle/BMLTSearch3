@@ -74,7 +74,7 @@ export class MapSearchPage implements OnInit {
               }
             });
           } else {
-            // this.locatePhone();
+            this.locatePhone();
             setTimeout(async () => {
               await this.createMap();
             }, 500);
