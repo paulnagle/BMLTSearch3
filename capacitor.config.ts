@@ -4,6 +4,9 @@ const config: CapacitorConfig = {
   appId: 'ie.nasouth.bmltsearch',
   appName: 'BMLT Search',
   webDir: 'www',
+  ios: {
+    scheme: 'BMLT Search'
+  },
   server: {
     androidScheme: 'https'
   },
