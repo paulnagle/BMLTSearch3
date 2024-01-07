@@ -35,6 +35,7 @@ export class MeetingCardComponent implements OnInit, AfterContentInit {
       }
    });
   }
+  
 
   shareMeeting(meeting: any) {
 
@@ -55,7 +56,7 @@ export class MeetingCardComponent implements OnInit, AfterContentInit {
           + daysOfWeek[meeting.weekday_tinyint] + ' '
           + meeting.start_time_raw + ' - ' + meeting.end_time_formatted + ' : '
           
-        if (meeting.location_text) { shareText += ' , ' + meeting.location_text }
+        if (meeting.location_text) { shareText += + meeting.location_text }
         if (meeting.location_street) { shareText += ' , ' + meeting.location_street }
         if (meeting.location_city_subsection) { shareText += ' , ' + meeting.location_city_subsection }
         if (meeting.location_neighborhood) { shareText += ' , ' + meeting.location_neighborhood }
@@ -66,13 +67,13 @@ export class MeetingCardComponent implements OnInit, AfterContentInit {
         if (meeting.comments) { shareText += ' , ' + meeting.comments }
         if (meeting.train_lines) { shareText += ' , ' + meeting.train_lines }
         if (meeting.bus_lines) { shareText += ' , ' + meeting.bus_lines }
-        if (meeting.phone_meeting_number) { shareText += meeting.phone_meeting_number }
+        if (meeting.phone_meeting_number) { shareText += ' , ' + meeting.phone_meeting_number }
 
         let shareLink = ''
         if (meeting.virtual_meeting_link) {
-        shareLink = meeting.virtual_meeting_link
+          shareLink = meeting.virtual_meeting_link
         } else {
-        shareLink = 'https://www.google.com/maps/search/?api=1&query=' + meeting.latitude + ',' + meeting.longitude
+          shareLink = 'https://www.google.com/maps/search/?api=1&query=' + meeting.latitude + ',' + meeting.longitude
         }
 
         shareText += '    url: ' + shareLink
@@ -80,7 +81,7 @@ export class MeetingCardComponent implements OnInit, AfterContentInit {
         Share.share({
           title: meeting.meeting_name,
           text: shareText,
-          url: meeting.virtual_meeting_link,
+          url: shareLink,
           dialogTitle: 'Share this meeting',
         });
       } else {
@@ -88,6 +89,7 @@ export class MeetingCardComponent implements OnInit, AfterContentInit {
       }
     });
   }
+
 
   public openMapsLink(destLatitude: string, destLongitude: string) {
     const browser = Browser.open({url: 'https://www.google.com/maps/search/?api=1&query=' + destLatitude + ',' + destLongitude});

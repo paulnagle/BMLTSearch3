@@ -1,6 +1,6 @@
-import { Component, ElementRef, NgZone, OnInit, ViewChild } from '@angular/core';
+import { Component, NgZone, OnDestroy } from '@angular/core';
 import { StorageService } from '../../services/storage.service';
-import { Platform, ModalController, RangeCustomEvent } from '@ionic/angular';
+import { ModalController } from '@ionic/angular';
 import { MeetingListService } from '../../services/meeting-list.service';
 import { LoadingService } from '../../services/loading.service';
 import { TranslateService } from '@ngx-translate/core';
@@ -16,11 +16,11 @@ declare const google: any;
   templateUrl: './map-search.page.html',
   styleUrls: ['./map-search.page.scss'],
 })
-export class MapSearchPage implements OnInit {
+export class MapSearchPage implements OnDestroy {
 
   performSearch: boolean = true;
 
-  public map!: GoogleMap;
+  map!: GoogleMap ;
   addressLatitude: any;
   addressLongitude: any;
   loader!: Promise<void> | Promise<boolean> | null;
@@ -52,9 +52,17 @@ export class MapSearchPage implements OnInit {
     private zone: NgZone) {
 
     }
-                
+      
+  ngOnDestroy() {
+    this.map.removeAllMapListeners();
+    this.map.destroy();
+    this.currentMarkerIDs = [];
+    this.currentMarkerList = [];
+    this.currentMeetings = [];
+    // this.map = null;
+  }
 
-  async ngOnInit() {
+  async ionViewDidEnter() {
     this.GoogleAutocomplete = new google.maps.places.AutocompleteService();
 
     this.storage.get('language').then(langValue => {
@@ -223,7 +231,7 @@ export class MapSearchPage implements OnInit {
               this.data = {
                 coordinate: markerLatLng,
                 title: this.ids,
-                iconUrl: './assets/markercluster/MarkerRed.png',
+                iconUrl: 'assets/markercluster/MarkerRed.png',
                 iconAnchor: { x: 29, y: 100 }
               };
               
@@ -280,7 +288,7 @@ export class MapSearchPage implements OnInit {
     this.data = {
       coordinate: markerLatLng,
       title: meeting['id_bigint'],
-      iconUrl: './assets/markercluster/MarkerBlue.png',
+      iconUrl: 'assets/markercluster/MarkerBlue.png',
       iconAnchor: {
         x: 29,
         y: 100,
