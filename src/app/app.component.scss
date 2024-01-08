@@ -1,5 +1,10 @@
 ion-menu ion-content {
-  --background: var(--ion-item-background, var(--ion-background-color, #fff));
+  --background: #ddd;
+}
+
+ion-list {
+
+  background: var(--ion-item-background, var(--ion-background-color, #ddd));
 }
 
 ion-menu.md ion-content {
@@ -10,6 +15,7 @@ ion-menu.md ion-content {
 }
 
 ion-menu.md ion-list {
+  --background: #ddd;
   padding: 20px 0;
 }
 
@@ -70,6 +76,7 @@ ion-menu.ios ion-content {
 }
 
 ion-menu.ios ion-list {
+  --background: #ddd;
   padding: 20px 0 0 0;
 }
 
