@@ -367,12 +367,20 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
+<<<<<<< HEAD
 				CURRENT_PROJECT_VERSION = 5.2.1;
+=======
+				CURRENT_PROJECT_VERSION = 5.1.6;
+>>>>>>> bd0b634 (ITSAppUsesNonExemptEncryption in info.plist)
 				DEVELOPMENT_TEAM = T3V4RRZHWV;
 				INFOPLIST_FILE = App/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+<<<<<<< HEAD
 				MARKETING_VERSION = 5.2.1;
+=======
+				MARKETING_VERSION = 5.1.6;
+>>>>>>> bd0b634 (ITSAppUsesNonExemptEncryption in info.plist)
 				OTHER_SWIFT_FLAGS = "$(inherited) \"-D\" \"COCOAPODS\" \"-DDEBUG\"";
 				PRODUCT_BUNDLE_IDENTIFIER = ie.nasouth.bmltsearch;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -390,12 +398,20 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
+<<<<<<< HEAD
 				CURRENT_PROJECT_VERSION = 5.2.1;
+=======
+				CURRENT_PROJECT_VERSION = 5.1.6;
+>>>>>>> bd0b634 (ITSAppUsesNonExemptEncryption in info.plist)
 				DEVELOPMENT_TEAM = T3V4RRZHWV;
 				INFOPLIST_FILE = App/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+<<<<<<< HEAD
 				MARKETING_VERSION = 5.2.1;
+=======
+				MARKETING_VERSION = 5.1.6;
+>>>>>>> bd0b634 (ITSAppUsesNonExemptEncryption in info.plist)
 				PRODUCT_BUNDLE_IDENTIFIER = ie.nasouth.bmltsearch;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
