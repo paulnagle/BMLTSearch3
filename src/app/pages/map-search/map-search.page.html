@@ -7,11 +7,11 @@
       {{'MAP_SEARCH' | translate}}
     </ion-title>
   </ion-toolbar>
+  <ion-searchbar class="ion-no-padding" color="primary" placeholder="Tertiary" [debounce]="250" (ionInput)="updateSearchResults($event)" placeholder="search">
+  </ion-searchbar>
 </ion-header>
 
 <ion-content>
-  <ion-searchbar no-padding color="primary" placeholder="Tertiary" no-padding [debounce]="250" (ionInput)="updateSearchResults($event)" placeholder="search">
-  </ion-searchbar>
   <ion-list class="ion-no-padding" [hidden]="autocompleteItems.length == 0">
     <ion-item *ngFor="let item of autocompleteItems" tappable (click)="selectSearchResult(item)">
       {{ item.description }}
