@@ -1,4 +1,3 @@
-
 <ion-header>
   <ion-toolbar color="primary">
     <ion-buttons slot="start">
@@ -6,8 +5,12 @@
     </ion-buttons>
 
     <div *ngIf="areaName != '' ; else BMLT_List">
-      <ion-title>{{ areaName }}</ion-title>
-      <ion-button color="primary" slot="end" size="small" (click)="showServiceStructure()">Back</ion-button>
+      <ion-buttons slot="primary">
+        <ion-button fill="solid" color='primary' (click)="showServiceStructure()">
+          <ion-icon slot="start" name="arrow-back-circle-outline"></ion-icon>
+          Back
+        </ion-button>
+      </ion-buttons>
     </div>
 
     <ng-template #BMLT_List>
@@ -22,131 +25,94 @@
 <ion-content no-padding>
 
   <div *ngIf="HTMLGrouping == 'areas'">
-
-    <div *ngFor="let L1 of serviceGroupHierarchy; let i = index">
+    <ion-accordion-group value="first">
+    <div *ngFor="let L1 of serviceGroupHierarchy">
       <div *ngIf="L1.childServiceGroup;else L1_no_children">
-        <ion-item-divider  sticky="true" (click)="toggleL1Group(i)" [ngClass]="{active: isL1GroupShown(i)}" [color]="isL1GroupShown(i) ? 'secondary' : 'primary'" >
-          <h3>{{ L1.name }}</h3>
-          <ion-icon size="large" [color]="isL1GroupShown(i) ? 'primary' : 'secondary'" slot="end" [name]="isL1GroupShown(i) ? 'close-circle' : 'add-circle'"></ion-icon>
-        </ion-item-divider>
+        <ion-accordion  class="no-padding" value="first">
+          <ion-item slot="header">{{ L1.name }}</ion-item>
+          <div class="ion-padding" slot="content">
+
+            <ion-accordion-group>
+
+            <div *ngFor="let L2 of L1.childServiceGroup">
+              <div *ngIf="L2.childServiceGroup;else L2_no_children">
+                <ion-accordion>
+                  <ion-item slot="header">{{ L2.name }}</ion-item>
+
+                  <div class="ion-padding" slot="content">
+                    <ion-accordion-group>
+                    <div *ngFor="let L3 of L2.childServiceGroup">
+                      <div *ngIf="L3.childServiceGroup;else L3_no_children">
+                        <ion-accordion>
+                          <ion-item slot="header">{{ L3.name }}</ion-item>
+        
+                          <div class="ion-padding" slot="content">
+        
+                            <div *ngFor="let L4 of L3.childServiceGroup">
+                              <div *ngIf="L4.childServiceGroup;else L4_no_children">
+                                <ion-accordion>
+                                  <ion-item slot="header">{{ L4.name }}</ion-item>
+                
+                                  <div class="ion-padding" slot="content">
+                
+                
+                
+                                  </div>
+                
+                                </ion-accordion>
+                              </div>
+                              <ng-template #L4_no_children>
+                                  <ion-item slot="content" (click)="getMeetingsByVirtArea(L4.id, L4.name)">{{ L4.name }} </ion-item>
+                              </ng-template>
+                            </div>        
+
+  
+                          </div>
+        
+                        </ion-accordion>
+                      </div>
+                      <ng-template #L3_no_children>
+                          <ion-item slot="content" (click)="getMeetingsByVirtArea(L3.id, L3.name)">{{ L3.name }} </ion-item>
+                      </ng-template>
+                    </div>
+                  </ion-accordion-group>
+                  </div>
+
+                </ion-accordion>
+              </div>
+              <ng-template #L2_no_children>
+                  <ion-item slot="content" (click)="getMeetingsByVirtArea(L2.id, L2.name)">{{ L2.name }} </ion-item>
+              </ng-template>
+            </div>
+
+          </ion-accordion-group>
+
+          </div>
+        </ion-accordion>
       </div>
       <ng-template #L1_no_children>
-        <ion-item-divider sticky="true" (click)="getMeetingsByVirtArea(L1.id, L1.name)" color="primary">
-          <h3>{{ L1.name }} </h3>
-          <ion-icon size="large" color="secondary" slot="end" name="play"></ion-icon>
-        </ion-item-divider>
+          <ion-item slot="header" (click)="getMeetingsByVirtArea(L1.id, L1.name)">{{ L1.name }} </ion-item>
       </ng-template>
 
-      <div *ngIf="isL1GroupShown(i)">
-        <div *ngFor="let L2 of L1.childServiceGroup; let j = index">
-          <div *ngIf="L2.childServiceGroup;else L2_no_children">
-            <ion-item-divider sticky="true" (click)="toggleL2Group(j)" [ngClass]="{active: isL2GroupShown(j)}" [color]="isL2GroupShown(j) ? 'tertiary' : 'secondary'">
-              <ion-icon name="chevron-forward-outline" slot="start" size="large"></ion-icon>
-              <h3>{{ L2.name }}</h3>
-              <ion-icon size="large" [color]="isL2GroupShown(j) ? 'secondary' : 'tertiary'" slot="end" [name]="isL2GroupShown(j) ? 'close-circle' : 'add-circle'"></ion-icon>
-            </ion-item-divider>
-          </div>
-          <ng-template #L2_no_children>
-            <ion-item-divider sticky="true" (click)="getMeetingsByVirtArea(L2.id, L2.name)" [color]="isL2GroupShown(j) ? 'tertiary' : 'secondary'">
-              <ion-icon name="chevron-forward-outline" slot="start" size="large"></ion-icon>
-              <h3>{{ L2.name }}</h3>
-              <ion-icon size="large" [color]="isL2GroupShown(j) ? 'secondary' : 'tertiary'" slot="end" name="play"></ion-icon>
-            </ion-item-divider>
-          </ng-template>
 
-
-          <div *ngIf="isL2GroupShown(j)">
-            <div *ngFor="let L3 of L2.childServiceGroup; let k = index" [ngClass]="{active: isL3GroupShown(k)}">
-              <div *ngIf="L3.childServiceGroup;else L3_no_children">
-                <ion-item-divider sticky="true" (click)="toggleL3Group(k)" [ngClass]="{active: isL3GroupShown(k)}" [color]="isL3GroupShown(k) ? 'four' : 'tertiary'">
-                  <ion-icon name="chevron-forward-outline" slot="start" size="large"></ion-icon>
-                  <ion-icon name="chevron-forward-outline" slot="start" size="large"></ion-icon>     
-                  <h3>{{ L3.name }}</h3>
-                  <ion-icon size="large" [color]="isL3GroupShown(k) ? 'tertiary' : 'warning'" slot="end" [name]="isL3GroupShown(k) ? 'close-circle' : 'add-circle'"></ion-icon>
-                </ion-item-divider>
-              </div>
-              <ng-template #L3_no_children>
-                <ion-item-divider sticky="true" (click)="getMeetingsByVirtArea(L3.id, L3.name)" [color]="isL3GroupShown(k) ? 'four' : 'tertiary'">
-                  <ion-icon name="chevron-forward-outline" slot="start" size="large"></ion-icon>
-                  <ion-icon name="chevron-forward-outline" slot="start" size="large"></ion-icon>
-                  <h3>{{ L3.name }}</h3>
-                  <ion-icon size="large" [color]="isL3GroupShown(k) ? 'tertiary' : 'warning'" slot="end" name="play"></ion-icon>
-                </ion-item-divider>
-              </ng-template>
-
-
-              <div *ngIf="isL3GroupShown(k)">
-                <div *ngFor="let L4 of L3.childServiceGroup; let l = index" [ngClass]="{active: isL4GroupShown(k)}">
-                  <div *ngIf="L4.childServiceGroup;else L4_no_children">
-                    <ion-item-divider sticky="true">
-                      <ion-icon name="chevron-forward-outline" slot="start" size="large"></ion-icon>
-                      <ion-icon name="chevron-forward-outline" slot="start" size="large"></ion-icon>
-                      <ion-icon name="chevron-forward-outline" slot="start" size="large"></ion-icon>
-                      <h3>{{ L4.name }}</h3>
-                      <ion-icon size="large" color="icon" slot="end" [name]="isL1GroupShown(i) ? 'close-circle' : 'add-circle'"></ion-icon>
-                    </ion-item-divider>
-                  </div>
-                  <ng-template #L4_no_children>
-                    <ion-item-divider sticky="true" (click)="getMeetingsByVirtArea(L4.id, L4.name)">
-                      <ion-icon name="chevron-forward-outline" slot="start" size="large"></ion-icon>
-                      <ion-icon name="chevron-forward-outline" slot="start" size="large"></ion-icon>
-                      <ion-icon name="chevron-forward-outline" slot="start" size="large"></ion-icon>
-                      <h3>{{ L4.name }}</h3>
-                      <ion-icon size="large" color="icon" slot="end" name="play"></ion-icon>
-                    </ion-item-divider>
-                  </ng-template>
-
-
-                  <div *ngFor="let L5 of L4.childServiceGroup; let m = index">
-                    <div *ngIf="L5.childServiceGroup;else L5_no_children">
-                      <ion-item-divider sticky="true">
-                        <ion-icon name="chevron-forward-outline" slot="start" size="large"></ion-icon>
-                        <ion-icon name="chevron-forward-outline" slot="start" size="large"></ion-icon>
-                        <ion-icon name="chevron-forward-outline" slot="start" size="large"></ion-icon>
-                        <ion-icon name="chevron-forward-outline" slot="start" size="large"></ion-icon>
-                        <h3>{{ L5.name }}</h3>
-                        <ion-icon size="large" color="icon" slot="end" [name]="isL1GroupShown(i) ? 'close-circle' : 'add-circle'"></ion-icon>
-                      </ion-item-divider>
-                    </div>
-                    <ng-template #L5_no_children>
-                      <ion-item-divider sticky="true" (click)="getMeetingsByVirtArea(L5.id, L5.name)">
-                        <ion-icon name="chevron-forward-outline" slot="start" size="large"></ion-icon>
-                        <ion-icon name="chevron-forward-outline" slot="start" size="large"></ion-icon>
-                        <ion-icon name="chevron-forward-outline" slot="start" size="large"></ion-icon>
-                        <ion-icon name="chevron-forward-outline" slot="start" size="large"></ion-icon>
-                        <h3>{{ L5.name }}</h3>
-                        <ion-icon size="large" color="icon" slot="end" name="play"></ion-icon>
-                      </ion-item-divider>
-                    </ng-template>
-
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
     </div>
-
-    <div>
-      <ion-card text-wrap>
-  
-        <ion-card-header>{{'VIRTUAL_MEETINGS' | translate }}</ion-card-header>
-        <ion-card-content>
-          <p>{{ 'VIRTUAL_NA' | translate }} </p>
-        </ion-card-content>
-  
-      </ion-card>
-    </div>
-
+    </ion-accordion-group>
   </div>
 
 
   <div *ngIf="HTMLGrouping == 'meetings'">
-    <div *ngIf="isLoaded">
-      <app-meeting-list [data]="meetingListArea" meetingType='virt' expandAll='false'></app-meeting-list>
+
+    <div *ngIf = "isLoaded">
+      <app-meeting-list [data]="meetingListArea" meetingType='regular' expandAll='false'></app-meeting-list>
     </div>
+    
   </div>
-
-
 </ion-content>
+
+<ion-footer>
+  <ion-toolbar>
+    <div *ngIf="areaName != ''">
+      <ion-title>{{ areaName }}</ion-title>
+    </div>
+  </ion-toolbar>
+</ion-footer>

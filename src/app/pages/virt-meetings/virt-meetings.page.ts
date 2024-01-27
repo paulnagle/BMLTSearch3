@@ -17,11 +17,6 @@ export class VirtMeetingsPage  {
 
   serviceGroups: any;
   serviceGroupHierarchy: any = [];
-  shownDay = null;
-  shownGroupL1 = null;
-  shownGroupL2 = null;
-  shownGroupL3 = null;
-  shownGroupL4 = null;
   HTMLGrouping = 'areas';
   loader!: Promise<void> | Promise<boolean> | null;
   meetingListArea: any = [];
@@ -63,57 +58,6 @@ export class VirtMeetingsPage  {
     return serviceGroupHierarchy;
   }
 
-  toggleDay(day: any) {
-    if (this.isDayShown(day)) {
-      this.shownDay = null;
-    } else {
-      this.shownDay = day;
-    }
-  }
-
-  toggleL1Group(L1group: any) {
-    if (this.isL1GroupShown(L1group)) {
-      this.shownGroupL1 = null;
-    } else {
-      this.shownGroupL1 = L1group;
-      this.shownGroupL2 = null;
-      this.shownGroupL3 = null;
-      this.shownGroupL4 = null;
-    }
-  }
-
-  toggleL2Group(L2group: any) {
-    if (this.isL2GroupShown(L2group)) {
-      this.shownGroupL2 = null;
-    } else {
-      this.shownGroupL2 = L2group;
-      this.shownGroupL3 = null;
-      this.shownGroupL4 = null;
-    }
-  }
-
-  toggleL3Group(L3group: any) {
-    if (this.isL3GroupShown(L3group)) {
-      this.shownGroupL3 = null;
-    } else {
-      this.shownGroupL3 = L3group;
-      this.shownGroupL4 = null;
-    }
-  }
-
-  toggleL4Group(L4group: any) {
-    if (this.isL4GroupShown(L4group)) {
-      this.shownGroupL4 = null;
-    } else {
-      this.shownGroupL4 = L4group;
-    }
-  }
-
-  isDayShown(day: any) { return this.shownDay === day; }
-  isL1GroupShown(L1group: any) { return this.shownGroupL1 === L1group; }
-  isL2GroupShown(L2group: any) { return this.shownGroupL2 === L2group; }
-  isL3GroupShown(L3group: any) { return this.shownGroupL3 === L3group; }
-  isL4GroupShown(L4group: any) { return this.shownGroupL4 === L4group; }
 
   getMeetingsByVirtArea(areaID: any, areaName: any) {
     this.translate.get('FINDING_MTGS').subscribe(value => { this.presentLoader(value); });
@@ -148,11 +92,10 @@ export class VirtMeetingsPage  {
 
 
   showServiceStructure() {
-
     this.HTMLGrouping = 'areas';
     this.areaName = '';
-    this.shownDay = null;
   }
+
 
   public openLink(url: any) {
     Browser.open({url: url});
