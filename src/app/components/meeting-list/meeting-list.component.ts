@@ -1,4 +1,5 @@
-import { Component, OnInit, Input, OnChanges } from '@angular/core';
+import { Component, OnInit, Input, OnChanges, ViewChild } from '@angular/core';
+import { IonAccordionGroup } from '@ionic/angular';
 import { firstBy } from 'thenby';
 import { Storage } from '@ionic/storage';
 import { TranslateService } from '@ngx-translate/core';
@@ -16,6 +17,8 @@ import { RangeCustomEvent } from '@ionic/angular';
   styleUrls: ['./meeting-list.component.scss'],
 })
 export class MeetingListComponent implements OnInit, OnChanges {
+
+  @ViewChild('accordionGroup', { static: true }) accordionGroup!: IonAccordionGroup;
 
   @Input() data: any;
   @Input() meetingType: any;
@@ -71,6 +74,16 @@ export class MeetingListComponent implements OnInit, OnChanges {
     this.meetingList = this.data;
     this.localMeetingType = this.meetingType;
     this.localExpandAll = this.expandAll;
+
+    if (this.localExpandAll === "false") {
+      console.log("expand All === false");
+      this.accordionGroup.value = undefined;
+      this.accordionGroup.multiple = undefined;
+    } else {
+      console.log("expand All === true");
+      this.accordionGroup.value = ['1', '2', '3', '4', '5', '6', '7'];
+      this.accordionGroup.multiple = true;
+    }
 
     if (this.localMeetingType === 'virt') {
       // Get the formats
@@ -145,19 +158,6 @@ export class MeetingListComponent implements OnInit, OnChanges {
     return meetingList;
   }
 
-
-  toggleDay(dayGrouping: any) {
-    if (this.isDayShown(dayGrouping)) {
-      this.shownDay = null;
-    } else {
-      this.shownDay = dayGrouping;
-    }
-  }
-
-
-  isDayShown(dayGrouping: any) {
-      return this.shownDay === dayGrouping || this.isExpandAll();
-  }
 
   isExpandAll() {
     if (this.localExpandAll == "true") {
