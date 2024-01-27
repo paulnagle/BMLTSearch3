@@ -59,7 +59,7 @@
 
       </ion-item>
 
-      <div class="ion-padding" slot="content">
+      <div slot="content">
 
         <ion-list *ngFor="let meeting of dailyList; let j = index">
           <app-meeting-card [data]="meeting" MeetingType="{{ localMeetingType }}"></app-meeting-card>
