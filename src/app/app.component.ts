@@ -1,9 +1,11 @@
-import { Component } from '@angular/core';
+import { Component, NgZone } from '@angular/core';
 
 import { Platform } from '@ionic/angular';
 import { TranslateService } from '@ngx-translate/core';
 import { StorageService } from './services/storage.service'
 import { SplashScreen } from '@capacitor/splash-screen';
+import { App, URLOpenListenerEvent } from '@capacitor/app';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-root',
@@ -57,7 +59,9 @@ export class AppComponent {
   constructor(
     private platform: Platform,
     private translate: TranslateService,
-    private storage: StorageService
+    private storage: StorageService,
+    private router: Router,
+    private zone: NgZone
   ) {
     this.initializeApp();
   }
@@ -74,5 +78,19 @@ export class AppComponent {
       this.translate.use('en');
       this.storage.set('language', 'en');
     }
+
+      App.addListener('appUrlOpen', (event: URLOpenListenerEvent) => {
+          this.zone.run(() => {
+              // Example url: https://beerswift.app/tabs/tab2
+              // slug = /tabs/tab2
+              const slug = event.url.split(".app").pop();
+              if (slug) {
+                  this.router.navigateByUrl(slug);
+              }
+              // If no match, do nothing - let regular routing
+              // logic take over
+          });
+      });
   }
+
 }

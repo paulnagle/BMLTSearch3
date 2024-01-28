@@ -26,48 +26,33 @@
   </ion-list>
 </div>
 
-
-
-
 <ion-accordion-group  #accordionGroup>
-<!-- <ng-template #elseBlock><ion-accordion-group [multiple]="true" [value]="['all']" [disabled]="true"></ng-template> -->
-
-
-
-    <div *ngFor="let dailyList of meetingListGroupedByDay">
-
-      <ion-accordion  value="{{ dailyList[0].weekday_tinyint }}">
-        <ion-item slot="header" [color]="isToday(dailyList[0].weekday_tinyint) ? 'secondary' : 'primary'">
-
-        <div ngSwitch="{{ dailyList[0].weekday_tinyint }}">
-          <div *ngSwitchCase="'1'">
-            <ion-label>{{'SUNDAY' | translate}} ({{dayCount[0]}})</ion-label></div>
-          <div *ngSwitchCase="'2'">
-            <ion-label>{{'MONDAY' | translate}} ({{dayCount[1]}})</ion-label></div>
-          <div *ngSwitchCase="'3'">
-            <ion-label>{{'TUESDAY' | translate}} ({{dayCount[2]}})</ion-label></div>
-          <div *ngSwitchCase="'4'">
-            <ion-label>{{'WEDNESDAY' | translate}} ({{dayCount[3]}})</ion-label></div>
-          <div *ngSwitchCase="'5'">
-            <ion-label>{{'THURSDAY' | translate}} ({{dayCount[4]}})</ion-label></div>
-          <div *ngSwitchCase="'6'">
-            <ion-label>{{'FRIDAY' | translate}} ({{dayCount[5]}})</ion-label></div>
-          <div *ngSwitchCase="'7'">
-            <ion-label>{{'SATURDAY' | translate}} ({{dayCount[6]}})</ion-label></div>
-          <div *ngSwitchDefault>Nothing Found.</div>
-        </div>
-
-      </ion-item>
-
-      <div slot="content">
-
-        <ion-list *ngFor="let meeting of dailyList; let j = index">
-          <app-meeting-card [data]="meeting" MeetingType="{{ localMeetingType }}"></app-meeting-card>
-        </ion-list>
+  <div *ngFor="let dailyList of meetingListGroupedByDay">
+    <ion-accordion  value="{{ dailyList[0].weekday_tinyint }}">
+      <ion-item slot="header" [color]="isToday(dailyList[0].weekday_tinyint) ? 'secondary' : 'primary'">
+      <div ngSwitch="{{ dailyList[0].weekday_tinyint }}">
+        <div *ngSwitchCase="'1'">
+          <ion-label>{{'SUNDAY' | translate}} ({{dayCount[0]}})</ion-label></div>
+        <div *ngSwitchCase="'2'">
+          <ion-label>{{'MONDAY' | translate}} ({{dayCount[1]}})</ion-label></div>
+        <div *ngSwitchCase="'3'">
+          <ion-label>{{'TUESDAY' | translate}} ({{dayCount[2]}})</ion-label></div>
+        <div *ngSwitchCase="'4'">
+          <ion-label>{{'WEDNESDAY' | translate}} ({{dayCount[3]}})</ion-label></div>
+        <div *ngSwitchCase="'5'">
+          <ion-label>{{'THURSDAY' | translate}} ({{dayCount[4]}})</ion-label></div>
+        <div *ngSwitchCase="'6'">
+          <ion-label>{{'FRIDAY' | translate}} ({{dayCount[5]}})</ion-label></div>
+        <div *ngSwitchCase="'7'">
+          <ion-label>{{'SATURDAY' | translate}} ({{dayCount[6]}})</ion-label></div>
+        <div *ngSwitchDefault>Nothing Found.</div>
       </div>
-
-    </ion-accordion>
+    </ion-item>
+    <div slot="content">
+      <ion-list *ngFor="let meeting of dailyList; let j = index">
+        <app-meeting-card [data]="meeting" MeetingType="{{ localMeetingType }}"></app-meeting-card>
+      </ion-list>
     </div>
-
-
+  </ion-accordion>
+  </div>
 </ion-accordion-group>
