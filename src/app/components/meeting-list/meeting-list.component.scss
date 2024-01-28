@@ -13,6 +13,10 @@ ion-accordion.accordion-expanded {
   border-style: solid;
   border-radius: 5px 5px 5px 5px;
   border-color: var(--ion-color-primary);
+  ion-item[slot=header] {
+    border-radius: 5px 5px 5px 5px;
+    border-color: var(--ion-color-primary);
+  }
 }
 
 ion-list {

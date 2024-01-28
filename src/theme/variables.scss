@@ -20,6 +20,10 @@
     padding: 0px;
   }
 
+  --ion-grid-padding: 0px;
+  --ion-grid-column-padding: 0px;
+  --ion-grid-row-padding: 0px;
+
   ion-range::part(pin) {
     display: inline-flex;
     align-items: center;

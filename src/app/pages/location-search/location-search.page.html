@@ -30,13 +30,28 @@
 <ion-footer class="no-padding">
   <ion-toolbar class="no-padding">
 
-    <ion-item class="text-wrap">
-      {{radius}} {{'MEETINGS_NEAREST' | translate}} <b>&nbsp;"{{ currentAddress }}"</b>
 
-      <ion-button slot="end" shape="round" expand="block" color="primary" id="LocationButton" (click)="locatePhone()" >
-        <ion-icon slot="end" name="locate-outline"></ion-icon>{{'SEARCH' | translate }}
-      </ion-button>
-    </ion-item>
+
+    <ion-grid>
+      <ion-row>
+        <ion-col>
+          <ion-button shape="round" expand="block" color="primary" id="LocationButton" (click)="locatePhone()" >
+            <ion-icon slot="end" name="locate-outline"></ion-icon>{{'SEARCH' | translate }}
+          </ion-button>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col >
+          <ion-item class="text-wrap">
+            {{radius}} {{'MEETINGS_NEAREST' | translate}} <b>&nbsp;"{{ currentAddress }}"</b>
+          </ion-item>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+
+
+
+
 
     <ion-range id="RadiusRange" min="5" max="50" [value]=radius (ionKnobMoveEnd)="getAllMeetings($event)"  pin="true" debounce="500">
       <ion-label color="primary" slot="start">5 {{'MEETINGS' | translate}}</ion-label>
