@@ -76,11 +76,9 @@ export class MeetingListComponent implements OnInit, OnChanges {
     this.localExpandAll = this.expandAll;
 
     if (this.localExpandAll === "false") {
-      console.log("expand All === false");
       this.accordionGroup.value = undefined;
       this.accordionGroup.multiple = undefined;
     } else {
-      console.log("expand All === true");
       this.accordionGroup.value = ['1', '2', '3', '4', '5', '6', '7'];
       this.accordionGroup.multiple = true;
     }
