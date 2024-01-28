@@ -12,6 +12,31 @@
 
   --ion-font-family: 'Plex'; 
 
+  ion-list {
+    padding: 0px;
+  }
+
+  ion-range {
+    padding: 0px;
+  }
+
+  ion-range::part(pin) {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  
+    z-index: 100000000000;
+    position:relative;
+    border-radius: 50%;
+    transform: scale(1.01);
+  
+    top: -1px;
+  
+    min-width: 28px;
+    height: 28px;
+    transition: transform 120ms ease, background 120ms ease;
+  }
+
 ion-card {
     --background: #eeeeee;
     --color: #ffffff;

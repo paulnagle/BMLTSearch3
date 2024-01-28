@@ -72,7 +72,6 @@ export class LocationSearchPage  {
   }
 
   getAllMeetingsAfterLocate() {
-    console.log("Calling getAllMeetingsAfterLocate")
     this.MeetingListService.getAddressMeetings(this.addressLatitude, this.addressLongitude, this.radius).then((response) => {
       this.addressMeetingList = response.data;
       this.isLoaded = true;

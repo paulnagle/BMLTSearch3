@@ -84,7 +84,6 @@ export class DoIHaveTheBmltPage  {
 
   dismissLoader() {
     if (this.loader) {
-      console.log('Dismissing loader..');
       this.loader = this.loaderCtrl.dismiss();
       this.loader = null;
     }
