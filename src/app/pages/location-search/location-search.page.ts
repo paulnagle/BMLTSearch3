@@ -54,7 +54,7 @@ export class LocationSearchPage  {
               this.storage.get('savedAddress').then(value => {
                 if (value) {
                   this.currentAddress = value;
-                  this.getAllMeetingsAfterLocate();
+                  this.locatePhone();
                 } else {
                   this.locatePhone();
                 }
