@@ -27,7 +27,7 @@ jobs:
         run: npm install
 
       - name: Build Script for browser
-        run: ionic build
+        run: ionic build --prod --source-map --platform=browser
 
       - name: Push to https://bmltsearch.bmlt.app
         uses: peaceiris/actions-gh-pages@v3
