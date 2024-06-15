@@ -2,15 +2,15 @@ apply plugin: 'com.android.application'
 
 android {
 
-  buildToolsVersion '33'
+  buildToolsVersion '34'
   namespace "ie.nasouth.bmltsearch"
-  compileSdkVersion 33
+  compileSdkVersion 34
   defaultConfig {
         applicationId "ie.nasouth.bmltsearch"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 50302
-        versionName '5.03.02'
+        versionCode 50303
+        versionName '5.03.03'
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         aaptOptions {
              // Files and dirs to omit from the packaged assets dir, modified to accommodate modern web apps.
