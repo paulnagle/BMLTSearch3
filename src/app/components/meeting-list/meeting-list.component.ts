@@ -2,13 +2,11 @@ import { Component, OnInit, Input, OnChanges, ViewChild } from '@angular/core';
 import { IonAccordionGroup } from '@ionic/angular';
 import { firstBy } from 'thenby';
 import { Storage } from '@ionic/storage';
-import { TranslateService } from '@ngx-translate/core';
 import { VirtFormatsService } from '../../services/virt-formats.service';
 import { TomatoFormatsService } from '../../services/tomato-formats.service';
-import { MeetingListService } from '../../services/meeting-list.service';
 import { LoadingService } from 'src/app/services/loading.service';
-import * as moment from 'moment';
-import 'moment-timezone';
+import { format, setDay, setHours, setMinutes, getHours, addWeeks, isAfter, isSameDay } from 'date-fns';
+import { toZonedTime, formatInTimeZone } from 'date-fns-tz';
 import { RangeCustomEvent } from '@ionic/angular';
 
 @Component({
@@ -27,9 +25,7 @@ export class MeetingListComponent implements OnInit, OnChanges {
   meetingList: any = [];
   savedList: any = [];
   meetingListGroupedByDay: any;
-  shownDay = null;
   meetingsListGrouping = 'weekday_tinyint';
-  timeDisplay: any;
   localMeetingType: any;
   localExpandAll: any;
   dayCount = [0, 0, 0, 0, 0, 0, 0];
@@ -38,7 +34,6 @@ export class MeetingListComponent implements OnInit, OnChanges {
   language = 'english';
   selectedDay = 'WEEKDAYS';
   loader!: Promise<void> | Promise<boolean> | null;
-  isLoaded = false;
 
   days = ['WEEKDAYS', 'SUNDAY', 'MONDAY', 'TUESDAY', 'WEDNESDAY', 'THURSDAY', 'FRIDAY', 'SATURDAY'];
   hourRangeValues: any = {
@@ -51,12 +46,10 @@ export class MeetingListComponent implements OnInit, OnChanges {
 
   constructor(
     private storage: Storage,
-    private translate: TranslateService,
     private virtFormatsProvider: VirtFormatsService,
-    private meetingListProvider: MeetingListService,
     private tomatoFormatsService: TomatoFormatsService,
     private loaderCtrl: LoadingService
-    ) { }
+  ) { }
 
 
   ngOnChanges() {
@@ -187,55 +180,49 @@ export class MeetingListComponent implements OnInit, OnChanges {
         );
 
         meeting.start_time_moment = startTimeRaw;
-        meeting.start_time_raw = startTimeRaw.format('HH:mm (h:mm a)');
-
-        const timeZoneName = moment.tz.guess();
-        meeting.start_time_raw += ' (' + timeZoneName + ' )';
+        meeting.start_time_raw = formatInTimeZone(
+          startTimeRaw,
+          meeting.time_zone,
+          'HH:mm (h:mm a)'
+        );
+        meeting.start_time_raw += ` (${meeting.time_zone})`;
       } else {
-        meeting.start_time_moment = moment({
-          hour: meeting.start_time.split(':')[0],
-          minute: meeting.start_time.split(':')[1],
-          second: 0
-        }).isoWeekday(parseInt(meeting.weekday_tinyint, 10) === 1 ? 7 : parseInt(meeting.weekday_tinyint, 10) - 1);
+        const [hours, minutes] = meeting.start_time.split(':').map(Number);
+        const now = new Date();
+        const meetingDate = setDay(
+          setMinutes(setHours(now, hours), minutes),
+          parseInt(meeting.weekday_tinyint, 10) === 1 ? 7 : parseInt(meeting.weekday_tinyint, 10) - 1
+        );
 
-        meeting.start_time_raw = this.convertTo12Hr(meeting.start_time);
+        // If the meeting time has passed today, schedule for next week
+        if (isAfter(now, meetingDate) || isSameDay(now, meetingDate)) {
+          meetingDate.setDate(meetingDate.getDate() + 7);
+        }
+
+        meeting.start_time_moment = meetingDate;
+        meeting.start_time_raw = format(meetingDate, 'HH:mm (h:mm a)');
       }
     }
   }
 
 
   getAdjustedDateTime(meetingDay: number, meetingTime: string, meetingTimeZone: string) {
-    let meetingDateTimeObj;
+    const [hours, minutes] = meetingTime.split(':').map(Number);
+    const now = new Date();
+    const meetingDate = setDay(
+      setMinutes(setHours(now, hours), minutes),
+      meetingDay
+    );
 
-    if (!meetingTimeZone) {
-      meetingTimeZone = 'UTC';
+    // Convert to the meeting's timezone
+    const zonedDate = toZonedTime(meetingDate, meetingTimeZone || 'UTC');
+
+    // If the meeting time has passed today, schedule for next week
+    if (isAfter(now, zonedDate) || isSameDay(now, zonedDate)) {
+      return addWeeks(zonedDate, 1);
     }
 
-    // Get an object that represents the meeting in its time zone
-    meetingDateTimeObj = moment.tz(meetingTimeZone).set({
-      hour: Number(meetingTime.split(':')[0]),
-      minute: Number(meetingTime.split(':')[1]),
-      second: 0
-    }).isoWeekday(meetingDay);
-
-    // Convert meeting to target (local) time zone
-    meetingDateTimeObj = meetingDateTimeObj.clone().tz(moment.tz.guess());
-
-    const now = moment.tz(moment.tz.guess());
-    if (now > meetingDateTimeObj || now.isoWeekday() === meetingDateTimeObj.isoWeekday()) {
-      meetingDateTimeObj.add(1, 'weeks');
-    }
-
-    return meetingDateTimeObj;
-  }
-
-
-  public convertTo12Hr(timeString: string) {
-    const H = +timeString.substr(0, 2);
-    const h = H % 12 || 12;
-    const ampm = (H < 12 || H === 24) ? ' am' : ' pm';
-    timeString = h + timeString.substr(2, 3) + ampm;
-    return timeString;
+    return zonedDate;
   }
 
 
@@ -245,22 +232,13 @@ export class MeetingListComponent implements OnInit, OnChanges {
 
 
   public setHourRangeValues(ev: Event) {
+    this.hourRangeValues = (ev as RangeCustomEvent).detail.value;
 
-    this.hourRangeValues = (ev as RangeCustomEvent).detail.value
+    const upperDate = setMinutes(setHours(new Date(), this.hourRangeValues.upper), 59);
+    this.displayUpper = format(upperDate, 'HH:mm (h:mm a)');
 
-    const upperMoment = moment({
-      hour: this.hourRangeValues.upper,
-      minute: 59,
-      second: 0
-    });
-    this.displayUpper = upperMoment.format('HH:mm (h:mm a)');
-
-    const lowerMoment = moment({
-      hour: this.hourRangeValues.lower,
-      minute: 0,
-      second: 0
-    });
-    this.displayLower = lowerMoment.format('HH:mm (h:mm a)');
+    const lowerDate = setMinutes(setHours(new Date(), this.hourRangeValues.lower), 0);
+    this.displayLower = format(lowerDate, 'HH:mm (h:mm a)');
 
     this.filterMeetings();
   }
@@ -270,25 +248,29 @@ export class MeetingListComponent implements OnInit, OnChanges {
     let tempMeetingListGroupedByDay = [];
     tempMeetingListGroupedByDay = this.savedList;
 
-    //  Filter by Day
+    // Filter by Day
     if (this.days.indexOf(this.selectedDay) > 0) {
-       tempMeetingListGroupedByDay = tempMeetingListGroupedByDay.filter(
-         (        meeting: { weekday_tinyint: string; }) => parseInt(meeting.weekday_tinyint, 10) === this.days.indexOf(this.selectedDay)
+      tempMeetingListGroupedByDay = tempMeetingListGroupedByDay.filter(
+        (meeting: { weekday_tinyint: string; }) => parseInt(meeting.weekday_tinyint, 10) === this.days.indexOf(this.selectedDay)
       );
     }
 
     // Filter by hour
-    let rangeLower = moment(this.hourRangeValues.lower, 'HH');
-    let rangeUpper = moment(this.hourRangeValues.upper, 'HH');
+    const rangeLower = this.hourRangeValues.lower;
+    const rangeUpper = this.hourRangeValues.upper;
 
     tempMeetingListGroupedByDay = tempMeetingListGroupedByDay.filter(
-      (      meeting: { start_time_moment: { hour: () => number; }; }) => meeting.start_time_moment.hour() >= rangeLower.hour() &&
-                 meeting.start_time_moment.hour() <= rangeUpper.hour()
+      (meeting: { start_time_moment: Date }) => {
+        const hour = getHours(meeting.start_time_moment);
+        return hour >= rangeLower && hour <= rangeUpper;
+      }
     );
 
     // Count the newly filtered list by day
     for (let i = 0; i < 7; i++) {
-      this.dayCount[i] = tempMeetingListGroupedByDay.filter((list: { weekday_tinyint: string; }) => parseInt(list.weekday_tinyint, 10) === i + 1).length;
+      this.dayCount[i] = tempMeetingListGroupedByDay.filter(
+        (list: { weekday_tinyint: string; }) => parseInt(list.weekday_tinyint, 10) === i + 1
+      ).length;
     }
 
     // Arrange the list into an array by day
@@ -296,25 +278,10 @@ export class MeetingListComponent implements OnInit, OnChanges {
 
     // Sort each day in the array
     for (let i of tempMeetingListGroupedByDay) {
-      i.sort(firstBy('weekday_tinyint').thenBy('start_time_raw'));
+      i.sort(firstBy('weekday_tinyint').thenBy('start_time_moment'));
     }
 
     // Overwrite the display list with the newly filtered list
     this.meetingListGroupedByDay = tempMeetingListGroupedByDay;
   }
-
-  public presentLoader(loaderText: any) {
-    if (!this.loader) {
-      this.loader = this.loaderCtrl.present(loaderText);
-    }
-  }
-
-
-  public dismissLoader() {
-    if (this.loader) {
-      this.loader = this.loaderCtrl.dismiss();
-      this.loader = null;
-    }
-  }
-
 }

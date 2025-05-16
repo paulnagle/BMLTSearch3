@@ -2,7 +2,7 @@ import { Component, OnInit, Input, AfterContentInit } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { Browser } from '@capacitor/browser';
 import { Share } from '@capacitor/share';
-import { Observable } from 'rxjs';
+import { addHours, addMinutes, format } from 'date-fns';
 
 @Component({
   selector: 'app-meeting-card',
@@ -35,7 +35,7 @@ export class MeetingCardComponent implements OnInit, AfterContentInit {
       }
    });
   }
-  
+
 
   shareMeeting(meeting: any) {
 
@@ -55,7 +55,7 @@ export class MeetingCardComponent implements OnInit, AfterContentInit {
         let shareText = meeting.meeting_name + ' : '
           + daysOfWeek[meeting.weekday_tinyint] + ' '
           + meeting.start_time_raw + ' - ' + meeting.end_time_formatted + ' : '
-          
+
         if (meeting.location_text) { shareText += + meeting.location_text }
         if (meeting.location_street) { shareText += ' , ' + meeting.location_street }
         if (meeting.location_city_subsection) { shareText += ' , ' + meeting.location_city_subsection }
@@ -126,7 +126,7 @@ export class MeetingCardComponent implements OnInit, AfterContentInit {
       return 'NOT-TEMPCLOSED';
     }
   }
-  
+
 
   getMeetingType(meeting: { formats: string | string[]; }) {
     if ( meeting.formats === "" ) {
@@ -149,8 +149,12 @@ export class MeetingCardComponent implements OnInit, AfterContentInit {
 
 
   setMeetingEnd() {
-    var duration = this.meeting.duration_time.split(":");
-    this.meeting.end_time_formatted = this.meeting.start_time_moment.clone().add(duration[0], 'hours').add(duration[1], 'minutes').format("h:mm a");
+    const duration = this.meeting.duration_time.split(":");
+    const endTime = addMinutes(
+      addHours(this.meeting.start_time_moment, parseInt(duration[0], 10)),
+      parseInt(duration[1], 10)
+    );
+    this.meeting.end_time_formatted = format(endTime, "h:mm a");
   }
 
 }
