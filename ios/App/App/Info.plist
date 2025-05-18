@@ -26,6 +26,8 @@
 	<true/>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>We use your location to find the distance to the nearest NA meeting.</string>
+	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+	<string>We use your location to find the distance to the nearest NA meeting.</string>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
 	<key>UIMainStoryboardFile</key>
