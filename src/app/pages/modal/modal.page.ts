@@ -4,6 +4,7 @@ import { NavParams, ModalController } from '@ionic/angular';
 import { Browser } from '@capacitor/browser';
 import { TomatoFormatsService } from '../../services/tomato-formats.service';
 import { StorageService } from '../../services/storage.service';
+import {Capacitor} from "@capacitor/core";
 
 @Component({
   selector: 'app-modal',
@@ -40,7 +41,15 @@ export class ModalPage implements OnInit {
   }
 
   public openMapsLink(destLatitude: string, destLongitude: string) {
-    Browser.open({url: 'https://www.google.com/maps/search/?api=1&query=' + destLatitude + ',' + destLongitude});
+    let mapsLink = `https://www.google.com/maps/search/?api=1&query=${destLatitude},${destLongitude}`;
+
+    if (Capacitor.getPlatform() === 'ios') {
+      mapsLink = `https://maps.apple.com/?daddr=${destLatitude},${destLongitude}`;
+    }
+
+    Browser.open({url: mapsLink}).catch((error: any) => {
+      console.log(error);
+    });
   }
 
   public openLink(url: any) {
