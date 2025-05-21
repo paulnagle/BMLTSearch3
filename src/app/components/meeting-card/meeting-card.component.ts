@@ -1,5 +1,6 @@
 import { Component, OnInit, Input, AfterContentInit } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
+import { Capacitor } from '@capacitor/core';
 import { Browser } from '@capacitor/browser';
 import { Share } from '@capacitor/share';
 import { addHours, addMinutes, format } from 'date-fns';
@@ -90,11 +91,17 @@ export class MeetingCardComponent implements OnInit, AfterContentInit {
     });
   }
 
-
   public openMapsLink(destLatitude: string, destLongitude: string) {
-    const browser = Browser.open({url: 'https://www.google.com/maps/search/?api=1&query=' + destLatitude + ',' + destLongitude});
-  }
+    let mapsLink = `https://www.google.com/maps/search/?api=1&query=${destLatitude},${destLongitude}`;
 
+    if (Capacitor.getPlatform() === 'ios') {
+      mapsLink = `https://maps.apple.com/?daddr=${destLatitude},${destLongitude}`;
+    }
+
+    Browser.open({url: mapsLink}).catch((error: any) => {
+      console.log(error);
+    });
+  }
 
   public openLink(url: any) {
     const browser = Browser.open({url: url});
