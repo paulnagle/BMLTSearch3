@@ -3,9 +3,10 @@ import { StorageService } from '../../services/storage.service';
 import { TranslateService } from '@ngx-translate/core';
 
 @Component({
-  selector: 'app-settings',
-  templateUrl: './settings.page.html',
-  styleUrls: ['./settings.page.scss'],
+    selector: 'app-settings',
+    templateUrl: './settings.page.html',
+    styleUrls: ['./settings.page.scss'],
+    standalone: false
 })
 export class SettingsPage implements OnInit {
 

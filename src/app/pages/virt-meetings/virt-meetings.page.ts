@@ -9,9 +9,10 @@ import { firstBy } from 'thenby';
 import { Browser } from '@capacitor/browser';
 
 @Component({
-  selector: 'app-virt-meetings',
-  templateUrl: './virt-meetings.page.html',
-  styleUrls: ['./virt-meetings.page.scss'],
+    selector: 'app-virt-meetings',
+    templateUrl: './virt-meetings.page.html',
+    styleUrls: ['./virt-meetings.page.scss'],
+    standalone: false
 })
 export class VirtMeetingsPage  {
 

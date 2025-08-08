@@ -9,9 +9,10 @@ import { RangeCustomEvent } from '@ionic/angular';
 import { Geolocation } from '@capacitor/geolocation';
 
 @Component({
-  selector: 'app-location-search',
-  templateUrl: './location-search.page.html',
-  styleUrls: ['./location-search.page.scss'],
+    selector: 'app-location-search',
+    templateUrl: './location-search.page.html',
+    styleUrls: ['./location-search.page.scss'],
+    standalone: false
 })
 export class LocationSearchPage  {
 

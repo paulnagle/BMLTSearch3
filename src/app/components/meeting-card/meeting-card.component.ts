@@ -6,9 +6,10 @@ import { Share } from '@capacitor/share';
 import { addHours, addMinutes, format } from 'date-fns';
 
 @Component({
-  selector: 'app-meeting-card',
-  templateUrl: './meeting-card.component.html',
-  styleUrls: ['./meeting-card.component.scss'],
+    selector: 'app-meeting-card',
+    templateUrl: './meeting-card.component.html',
+    styleUrls: ['./meeting-card.component.scss'],
+    standalone: false
 })
 export class MeetingCardComponent implements OnInit, AfterContentInit {
 

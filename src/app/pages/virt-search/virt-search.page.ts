@@ -5,9 +5,10 @@ import { MeetingListService } from '../../services/meeting-list.service';
 import { StorageService } from '../../services/storage.service';
 
 @Component({
-  selector: 'app-virt-search',
-  templateUrl: './virt-search.page.html',
-  styleUrls: ['./virt-search.page.scss'],
+    selector: 'app-virt-search',
+    templateUrl: './virt-search.page.html',
+    styleUrls: ['./virt-search.page.scss'],
+    standalone: false
 })
 export class VirtSearchPage implements OnInit {
 
