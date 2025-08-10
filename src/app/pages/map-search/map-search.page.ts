@@ -12,9 +12,10 @@ import { CameraConfig, CameraIdleCallbackData, LatLng, Point, Size } from '@capa
 
 declare const google: any;
 @Component({
-  selector: 'app-map-search',
-  templateUrl: './map-search.page.html',
-  styleUrls: ['./map-search.page.scss'],
+    selector: 'app-map-search',
+    templateUrl: './map-search.page.html',
+    styleUrls: ['./map-search.page.scss'],
+    standalone: false
 })
 export class MapSearchPage implements OnDestroy {
 

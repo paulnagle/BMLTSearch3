@@ -3,9 +3,10 @@ import { Browser } from '@capacitor/browser';
 
 
 @Component({
-  selector: 'app-contact',
-  templateUrl: './contact.page.html',
-  styleUrls: ['./contact.page.scss'],
+    selector: 'app-contact',
+    templateUrl: './contact.page.html',
+    styleUrls: ['./contact.page.scss'],
+    standalone: false
 })
 export class ContactPage {
 

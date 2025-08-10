@@ -10,9 +10,10 @@ import { Geolocation } from '@capacitor/geolocation';
 import { HttpResponse } from '@angular/common/http';
 
 @Component({
-  selector: 'app-do-i-have-the-bmlt',
-  templateUrl: './do-i-have-the-bmlt.page.html',
-  styleUrls: ['./do-i-have-the-bmlt.page.scss'],
+    selector: 'app-do-i-have-the-bmlt',
+    templateUrl: './do-i-have-the-bmlt.page.html',
+    styleUrls: ['./do-i-have-the-bmlt.page.scss'],
+    standalone: false
 })
 export class DoIHaveTheBmltPage  {
 

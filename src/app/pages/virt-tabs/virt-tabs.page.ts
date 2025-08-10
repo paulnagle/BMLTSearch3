@@ -4,9 +4,10 @@ import { TranslateService } from '@ngx-translate/core';
 import { Browser } from '@capacitor/browser';
 
 @Component({
-  selector: 'app-virt-tabs',
-  templateUrl: './virt-tabs.page.html',
-  styleUrls: ['./virt-tabs.page.scss'],
+    selector: 'app-virt-tabs',
+    templateUrl: './virt-tabs.page.html',
+    styleUrls: ['./virt-tabs.page.scss'],
+    standalone: false
 })
 export class VirtTabsPage implements OnInit {
 

@@ -8,9 +8,10 @@ import { firstBy } from 'thenby';
 import { HttpResponse } from '@capacitor/core';
 
 @Component({
-  selector: 'app-listfull',
-  templateUrl: './listfull.page.html',
-  styleUrls: ['./listfull.page.scss'],
+    selector: 'app-listfull',
+    templateUrl: './listfull.page.html',
+    styleUrls: ['./listfull.page.scss'],
+    standalone: false
 })
 export class ListfullPage {
 

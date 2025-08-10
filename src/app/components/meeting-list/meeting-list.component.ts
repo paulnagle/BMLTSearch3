@@ -10,9 +10,10 @@ import { toZonedTime, formatInTimeZone } from 'date-fns-tz';
 import { RangeCustomEvent } from '@ionic/angular';
 
 @Component({
-  selector: 'app-meeting-list',
-  templateUrl: './meeting-list.component.html',
-  styleUrls: ['./meeting-list.component.scss'],
+    selector: 'app-meeting-list',
+    templateUrl: './meeting-list.component.html',
+    styleUrls: ['./meeting-list.component.scss'],
+    standalone: false
 })
 export class MeetingListComponent implements OnInit, OnChanges {
 
