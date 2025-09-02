@@ -11,6 +11,16 @@ import { GeocodeService } from '../../services/geocode.service'
 import { CameraConfig, CameraIdleCallbackData, LatLng, Point, Size } from '@capacitor/google-maps/dist/typings/definitions';
 
 declare const google: any;
+
+// Define our own interface to match what the API actually returns
+interface PlaceSuggestion {
+  description: string;
+  place_id: string;
+  structured_formatting?: {
+    main_text: string;
+    secondary_text: string;
+  };
+}
 @Component({
     selector: 'app-map-search',
     templateUrl: './map-search.page.html',
@@ -27,10 +37,10 @@ export class MapSearchPage implements OnDestroy {
   loader!: Promise<void> | Promise<boolean> | null;
   isLoaded = false;
 
-  GoogleAutocomplete!: { getPlacePredictions: (arg0: { input: any; }, arg1: (predictions: any, status: any) => void) => void; };
-  autocompleteItems: any[] = [];
-  autocomplete: { input: any; } = {input: ''};
+  autocompleteItems: PlaceSuggestion[] = [];
+  autocomplete: { input: string; } = {input: ''};
   language: string = 'en';
+  sessionToken: any;
 
   mapRadius!: Number;
   currentMeetings!: [];
@@ -64,7 +74,8 @@ export class MapSearchPage implements OnDestroy {
   }
 
   async ionViewDidEnter() {
-    this.GoogleAutocomplete = new google.maps.places.AutocompleteService();
+    // Using the new AutocompleteSuggestion API
+    this.sessionToken = new google.maps.places.AutocompleteSessionToken();
 
     this.storage.get('language').then(langValue => {
       if (langValue) {
@@ -299,18 +310,99 @@ export class MapSearchPage implements OnDestroy {
   }
 
 
-  selectSearchResult(item: { description: string }) {
+  selectSearchResult(item: PlaceSuggestion) {
     this.autocompleteItems = [];
     this.autocomplete.input = item.description;
 
-    this.GeocodeService.convertAddress(item.description).subscribe((geocode_reponse: any) => {
+    // Get the place ID from the suggestion
+    const placeId = item.place_id;
+    
+    if (placeId) {
+      this.translate.get('LOCATING').subscribe(value => { this.presentLoader(value); });
+      
+      // Using the new Place API instead of PlacesService
+      // Create a new Place instance with the place ID
+      const place = new google.maps.places.Place({
+        id: placeId,
+        requestedLanguage: this.language
+      });
+      
+      // Fetch the place details
+      place.fetchFields({fields: ['location']})
+        .then(() => {
+          // After fetching, access the location directly from the place object
+          if (place.location) {
+            try {
+              // Check if location.lat and location.lng are functions
+              if (typeof place.location.lat === 'function' && typeof place.location.lng === 'function') {
+                this.addressLatitude = place.location.lat();
+                this.addressLongitude = place.location.lng();
+              } else {
+                // Otherwise treat them as properties
+                this.addressLatitude = Number(place.location.lat);
+                this.addressLongitude = Number(place.location.lng);
+              }
+              
+              console.log('Location found:', this.addressLatitude, this.addressLongitude);
+              
+              this.dismissLoader();
+              
+              // Check if coordinates are valid numbers before setting camera
+              if (!isNaN(this.addressLatitude) && !isNaN(this.addressLongitude) &&
+                  isFinite(this.addressLatitude) && isFinite(this.addressLongitude)) {
+                this.map.setCamera({
+                  coordinate: {
+                    lat: this.addressLatitude,
+                    lng: this.addressLongitude,
+                  },
+                  zoom: 10
+                });
+              } else {
+                console.error('Invalid coordinates:', this.addressLatitude, this.addressLongitude);
+                // Fallback to geocoding if coordinates are invalid
+                this.geocodeAddress(item.description);
+              }
+            } catch (error) {
+              console.error('Error processing location:', error);
+              // Fallback to geocoding
+              this.geocodeAddress(item.description);
+            }
+          } else {
+            // Fallback to geocoding if place details fails
+            this.geocodeAddress(item.description);
+          }
+          
+          // Create a new session token for the next search
+          this.sessionToken = new google.maps.places.AutocompleteSessionToken();
+        })
+        .catch((error: Error) => {
+          console.error('Error fetching place details:', error);
+          
+          // Log additional debugging information
+          console.log('Place ID:', placeId);
+          console.log('Item description:', item.description);
+          
+          // Fallback to geocoding if place details fails
+          this.geocodeAddress(item.description);
+          
+          // Create a new session token for the next search
+          this.sessionToken = new google.maps.places.AutocompleteSessionToken();
+        });
+    } else {
+      // Fallback to geocoding if no place_id is available
+      this.geocodeAddress(item.description);
+    }
+  }
+  
+  geocodeAddress(address: string) {
+    this.GeocodeService.convertAddress(address).subscribe((geocode_reponse: any) => {
       if (geocode_reponse.results[0]) {
         this.addressLatitude = geocode_reponse.results[0].geometry.location.lat;
         this.addressLongitude = geocode_reponse.results[0].geometry.location.lng;
         this.dismissLoader();
         this.map.setCamera({
           coordinate: {
-            lat: this.addressLatitude ,
+            lat: this.addressLatitude,
             lng: this.addressLongitude,
           },
           zoom: 10
@@ -318,6 +410,9 @@ export class MapSearchPage implements OnDestroy {
       } else {
         this.dismissLoader();
       }
+      
+      // Create a new session token for the next search
+      this.sessionToken = new google.maps.places.AutocompleteSessionToken();
     });
   }
 
@@ -329,20 +424,30 @@ export class MapSearchPage implements OnDestroy {
       return;
     }
 
-    let config = {
-      types: ['geocode'],
+    const request: google.maps.places.AutocompletionRequest = {
       input: event.detail.value,
-      language: this.language
-    }
+      types: ['geocode'],
+      language: this.language,
+      sessionToken: this.sessionToken
+    };
 
-    this.GoogleAutocomplete.getPlacePredictions(config, (predictions, status) => {
-      this.autocompleteItems = [];
-      this.zone.run(() => {
-        predictions.forEach((prediction: any) => {
-          this.autocompleteItems.push(prediction);
+    // Using the new Places API with promises
+    const autocompleteService = new google.maps.places.AutocompleteService();
+    
+    autocompleteService.getPlacePredictions(request)
+      .then((response: any) => {
+        this.zone.run(() => {
+          if (response && response.predictions) {
+            this.autocompleteItems = response.predictions;
+          } else {
+            this.autocompleteItems = [];
+          }
         });
+      })
+      .catch((error: Error) => {
+        console.error('Error getting place suggestions:', error);
+        this.autocompleteItems = [];
       });
-    });
   }
 
 
