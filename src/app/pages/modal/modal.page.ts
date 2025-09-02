@@ -42,14 +42,21 @@ export class ModalPage implements OnInit {
   }
 
   public openMapsLink(destLatitude: string, destLongitude: string) {
+    const platform = Capacitor.getPlatform();
     let mapsLink = `https://www.google.com/maps/search/?api=1&query=${destLatitude},${destLongitude}`;
 
-    if (Capacitor.getPlatform() === 'ios') {
-      mapsLink = `https://maps.apple.com/?daddr=${destLatitude},${destLongitude}`;
+    if (platform === 'ios') {
+      mapsLink = `maps://?daddr=${destLatitude},${destLongitude}`;
+    } else if (platform === 'android') {
+      mapsLink = `geo:${destLatitude},${destLongitude}?q=${destLatitude},${destLongitude}`;
     }
 
     Browser.open({url: mapsLink}).catch((error: any) => {
       console.log(error);
+      if (platform !== 'web') {
+        const fallbackLink = `https://www.google.com/maps/search/?api=1&query=${destLatitude},${destLongitude}`;
+        Browser.open({url: fallbackLink});
+      }
     });
   }
 
