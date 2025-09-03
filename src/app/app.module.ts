@@ -1,19 +1,15 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { RouteReuseStrategy } from '@angular/router';
-import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
-import { HttpClient, provideHttpClient } from '@angular/common/http';
-import { TranslateHttpLoader } from '@ngx-translate/http-loader';
+import { TranslateModule } from '@ngx-translate/core';
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
+import { provideTranslateHttpLoader } from '@ngx-translate/http-loader';
 import { IonicModule, IonicRouteStrategy } from '@ionic/angular';
 import { IonicStorageModule } from '@ionic/storage-angular';
 import { Drivers } from '@ionic/storage';
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
 import { HashLocationStrategy, LocationStrategy } from '@angular/common';
-
-export function createTranslateLoader(http: HttpClient) {
-  return new TranslateHttpLoader(http, 'assets/translations/', '.json');
-}
 
 @NgModule({
   declarations: [
@@ -27,18 +23,16 @@ export function createTranslateLoader(http: HttpClient) {
       name: '__bmltsearchdb',
       driverOrder: [ Drivers.LocalStorage]
     }),
-    TranslateModule.forRoot({
-      loader: {
-        provide: TranslateLoader,
-        useFactory: (createTranslateLoader),
-        deps: [HttpClient]
-      }
-    })
+    TranslateModule.forRoot()
   ],
   providers: [
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
     { provide: LocationStrategy, useClass: HashLocationStrategy },
-    provideHttpClient()
+    provideHttpClient(),
+    ...provideTranslateHttpLoader({
+      prefix: './assets/translations/',
+      suffix: '.json'
+    })
   ],
   bootstrap: [AppComponent],
 })
