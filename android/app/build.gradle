@@ -4,13 +4,13 @@ android {
 
   buildToolsVersion '35'
   namespace "ie.nasouth.bmltsearch"
-  compileSdkVersion 35
+  compileSdkVersion 36
   defaultConfig {
         applicationId "ie.nasouth.bmltsearch"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 50404
-        versionName '5.04.04'
+        versionCode 50405
+        versionName '5.04.05'
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         aaptOptions {
              // Files and dirs to omit from the packaged assets dir, modified to accommodate modern web apps.
