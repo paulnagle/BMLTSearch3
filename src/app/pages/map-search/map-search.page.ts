@@ -40,7 +40,6 @@ export class MapSearchPage implements OnDestroy {
   autocompleteItems: PlaceSuggestion[] = [];
   autocomplete: { input: string; } = {input: ''};
   language: string = 'en';
-  sessionToken: any;
 
   mapRadius!: Number;
   currentMeetings!: [];
@@ -74,9 +73,6 @@ export class MapSearchPage implements OnDestroy {
   }
 
   async ionViewDidEnter() {
-    // Using the new AutocompleteSuggestion API
-    this.sessionToken = new google.maps.places.AutocompleteSessionToken();
-
     this.storage.get('language').then(langValue => {
       if (langValue) {
         this.language = langValue;
@@ -310,7 +306,7 @@ export class MapSearchPage implements OnDestroy {
   }
 
 
-  selectSearchResult(item: PlaceSuggestion) {
+  async selectSearchResult(item: PlaceSuggestion) {
     this.autocompleteItems = [];
     this.autocomplete.input = item.description;
 
@@ -320,74 +316,63 @@ export class MapSearchPage implements OnDestroy {
     if (placeId) {
       this.translate.get('LOCATING').subscribe(value => { this.presentLoader(value); });
       
-      // Using the new Place API instead of PlacesService
-      // Create a new Place instance with the place ID
-      const place = new google.maps.places.Place({
-        id: placeId,
-        requestedLanguage: this.language
-      });
-      
-      // Fetch the place details
-      place.fetchFields({fields: ['location']})
-        .then(() => {
-          // After fetching, access the location directly from the place object
-          if (place.location) {
-            try {
-              // Check if location.lat and location.lng are functions
-              if (typeof place.location.lat === 'function' && typeof place.location.lng === 'function') {
-                this.addressLatitude = place.location.lat();
-                this.addressLongitude = place.location.lng();
-              } else {
-                // Otherwise treat them as properties
-                this.addressLatitude = Number(place.location.lat);
-                this.addressLongitude = Number(place.location.lng);
-              }
-              
-              console.log('Location found:', this.addressLatitude, this.addressLongitude);
-              
-              this.dismissLoader();
-              
-              // Check if coordinates are valid numbers before setting camera
-              if (!isNaN(this.addressLatitude) && !isNaN(this.addressLongitude) &&
-                  isFinite(this.addressLatitude) && isFinite(this.addressLongitude)) {
-                this.map.setCamera({
-                  coordinate: {
-                    lat: this.addressLatitude,
-                    lng: this.addressLongitude,
-                  },
-                  zoom: 10
-                });
-              } else {
-                console.error('Invalid coordinates:', this.addressLatitude, this.addressLongitude);
-                // Fallback to geocoding if coordinates are invalid
-                this.geocodeAddress(item.description);
-              }
-            } catch (error) {
-              console.error('Error processing location:', error);
-              // Fallback to geocoding
-              this.geocodeAddress(item.description);
-            }
+      try {
+        // Import the Places library
+        const { Place } = await google.maps.importLibrary("places") as google.maps.PlacesLibrary;
+        
+        // Create a new Place instance using the place ID
+        const place = new Place({
+          id: placeId,
+        });
+
+        // Call fetchFields with the desired fields
+        await place.fetchFields({ fields: ['location'] });
+        
+        // After fetching, access the location directly from the place object
+        if (place && place.location) {
+          // Check if lat and lng are functions or direct values
+          if (typeof place.location.lat === 'function' && typeof place.location.lng === 'function') {
+            this.addressLatitude = place.location.lat();
+            this.addressLongitude = place.location.lng();
           } else {
-            // Fallback to geocoding if place details fails
-            this.geocodeAddress(item.description);
+            this.addressLatitude = place.location.lat;
+            this.addressLongitude = place.location.lng;
           }
           
-          // Create a new session token for the next search
-          this.sessionToken = new google.maps.places.AutocompleteSessionToken();
-        })
-        .catch((error: Error) => {
-          console.error('Error fetching place details:', error);
+          console.log('Location found:', this.addressLatitude, this.addressLongitude);
           
-          // Log additional debugging information
-          console.log('Place ID:', placeId);
-          console.log('Item description:', item.description);
+          this.dismissLoader();
           
+          // Check if coordinates are valid numbers before setting camera
+          if (!isNaN(this.addressLatitude) && !isNaN(this.addressLongitude) &&
+              isFinite(this.addressLatitude) && isFinite(this.addressLongitude)) {
+            this.map.setCamera({
+              coordinate: {
+                lat: this.addressLatitude,
+                lng: this.addressLongitude,
+              },
+              zoom: 10
+            });
+          } else {
+            console.error('Invalid coordinates:', this.addressLatitude, this.addressLongitude);
+            // Fallback to geocoding if coordinates are invalid
+            this.geocodeAddress(item.description);
+          }
+        } else {
+          console.error('No location data in place object');
           // Fallback to geocoding if place details fails
           this.geocodeAddress(item.description);
-          
-          // Create a new session token for the next search
-          this.sessionToken = new google.maps.places.AutocompleteSessionToken();
-        });
+        }
+      } catch (error) {
+        console.error('Error fetching place details:', error);
+        
+        // Log additional debugging information
+        console.log('Place ID:', placeId);
+        console.log('Item description:', item.description);
+        
+        // Fallback to geocoding if place details fails
+        this.geocodeAddress(item.description);
+      }
     } else {
       // Fallback to geocoding if no place_id is available
       this.geocodeAddress(item.description);
@@ -411,44 +396,62 @@ export class MapSearchPage implements OnDestroy {
         this.dismissLoader();
       }
       
-      // Create a new session token for the next search
-      this.sessionToken = new google.maps.places.AutocompleteSessionToken();
     });
   }
 
 
-  updateSearchResults(event: any) {
+  async updateSearchResults(event: any) {
     this.autocomplete.input = event.detail.value;
     if (this.autocomplete.input === '') {
       this.autocompleteItems = [];
       return;
     }
 
-    const request: google.maps.places.AutocompletionRequest = {
+    const request = {
       input: event.detail.value,
       types: ['geocode'],
-      language: this.language,
-      sessionToken: this.sessionToken
+      language: this.language
     };
 
-    // Using the new Places API with promises
-    const autocompleteService = new google.maps.places.AutocompleteService();
-    
-    autocompleteService.getPlacePredictions(request)
-      .then((response: any) => {
-        this.zone.run(() => {
-          if (response && response.predictions) {
-            this.autocompleteItems = response.predictions;
+    // Using the new Places API (New)
+      this.zone.run(async () => {
+        try {
+          // Create a session token
+          const token = new google.maps.places.AutocompleteSessionToken();
+          
+          // Create an extended request with sessionToken
+          const extendedRequest = {
+            input: request.input,
+            language: request.language,
+            sessionToken: token
+          };
+          
+          // Fetch autocomplete suggestions using the static method
+          const response = await google.maps.places.AutocompleteSuggestion.fetchAutocompleteSuggestions(extendedRequest);
+          
+          if (response && response.suggestions && response.suggestions.length > 0) {
+            // Convert the suggestions to the format expected by the app
+            this.autocompleteItems = response.suggestions.map((suggestion: any) => {
+              return {
+                description: suggestion.placePrediction.text.toString(),
+                place_id: suggestion.placePrediction.placeId,
+                structured_formatting: {
+                  main_text: suggestion.placePrediction.text.toString(),
+                  secondary_text: suggestion.placePrediction.secondaryText?.toString() || ''
+                }
+              };
+            });
           } else {
             this.autocompleteItems = [];
           }
-        });
-      })
-      .catch((error: Error) => {
-        console.error('Error getting place suggestions:', error);
-        this.autocompleteItems = [];
+        } catch (error) {
+          console.error('Error getting place suggestions:', error);
+          this.autocompleteItems = [];
+        }
       });
   }
+
+
 
 
   presentLoader(loaderText: any) {
@@ -498,3 +501,6 @@ export class MapSearchPage implements OnDestroy {
   }
 
 }
+
+// Made with Bob
+
