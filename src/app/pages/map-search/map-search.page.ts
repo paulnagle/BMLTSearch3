@@ -135,7 +135,7 @@ export class MapSearchPage implements OnDestroy {
     const mapArgs = {
       id: 'google-map',
       element: mapRef,
-      apiKey: 'AIzaSyAiowBMk_xPfnzaq7wZzcbyuCDpKqzZkyA',
+      apiKey: 'AIzaSyAtwUjsIB14f0aHgdLk_JYnUrI0jvczMXw',
       forceCreate: true,
       language: this.language,
       config: {
@@ -503,3 +503,4 @@ export class MapSearchPage implements OnDestroy {
 }
 
 // Made with Bob
+

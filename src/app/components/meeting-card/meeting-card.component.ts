@@ -96,7 +96,7 @@ export class MeetingCardComponent implements OnInit, AfterContentInit {
     let mapsLink = `https://www.google.com/maps/search/?api=1&query=${destLatitude},${destLongitude}`;
 
     if (Capacitor.getPlatform() === 'ios') {
-      mapsLink = `https://maps.apple.com/?daddr=${destLatitude},${destLongitude}`;
+      mapsLink = `https://maps.apple.com/?q=${this.meeting.meeting_name}&ll=${destLatitude},${destLongitude}`;
     }
 
     Browser.open({url: mapsLink}).catch((error: any) => {
