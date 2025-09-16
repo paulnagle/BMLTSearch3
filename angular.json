@@ -32,7 +32,12 @@
               }
             ],
             "styles": ["src/theme/variables.scss", "src/global.scss"],
-            "scripts": []
+            "scripts": [],
+            "allowedCommonJsDependencies": [
+              "fast-deep-equal",
+              "localforage",
+              "thenby"
+            ]
           },
           "configurations": {
             "production": {
