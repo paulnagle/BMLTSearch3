@@ -5,7 +5,7 @@ import { Injectable } from '@angular/core';
 @Injectable()
 export class GeocodeService {
 
-  googleAPIKey = '&key=AIzaSyDg5AKBNjMvoBBlLgXpy-dLxLAcVJYpOq8';
+  googleAPIKey = '&key=AIzaSyAtwUjsIB14f0aHgdLk_JYnUrI0jvczMXw';
   convertLatLongUrl = 'https://maps.googleapis.com/maps/api/geocode/json?latlng=';
   convertAddressUrl = 'https://maps.googleapis.com/maps/api/geocode/json?address=';
 
