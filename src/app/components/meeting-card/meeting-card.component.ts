@@ -93,15 +93,17 @@ export class MeetingCardComponent implements OnInit, AfterContentInit {
   }
 
   public openMapsLink(destLatitude: string, destLongitude: string) {
-    let mapsLink = `https://www.google.com/maps/search/?api=1&query=${destLatitude},${destLongitude}`;
+    const platform = Capacitor.getPlatform();
 
-    if (Capacitor.getPlatform() === 'ios') {
-      mapsLink = `https://maps.apple.com/?q=${this.meeting.meeting_name}&ll=${destLatitude},${destLongitude}`;
+    if (platform === 'ios') {
+      window.open(`maps://?daddr=${destLatitude},${destLongitude}`, '_system');
+    } else if (platform === 'android') {
+      window.open(`geo:${destLatitude},${destLongitude}?q=${destLatitude},${destLongitude}`, '_system');
+    } else {
+      Browser.open({url: `https://www.google.com/maps/search/?api=1&query=${destLatitude},${destLongitude}`}).catch((error: any) => {
+        console.log(error);
+      });
     }
-
-    Browser.open({url: mapsLink}).catch((error: any) => {
-      console.log(error);
-    });
   }
 
   public openLink(url: any) {
