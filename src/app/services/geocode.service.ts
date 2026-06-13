@@ -2,7 +2,9 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 
 
-@Injectable()
+@Injectable({
+  providedIn: 'root'
+})
 export class GeocodeService {
 
   googleAPIKey = '&key=AIzaSyAtwUjsIB14f0aHgdLk_JYnUrI0jvczMXw';
